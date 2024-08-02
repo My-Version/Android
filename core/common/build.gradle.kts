@@ -2,7 +2,6 @@ plugins {
     id("my.version.plugin.library")
     id("my.version.plugin.compose")
     id("my.version.plugin.hilt")
-    alias(libs.plugins.jetbrains.kotlin.android)
 }
 
 android {

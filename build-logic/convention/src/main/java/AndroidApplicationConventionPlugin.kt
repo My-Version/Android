@@ -19,7 +19,6 @@ internal class AndroidApplicationConventionPlugin : Plugin<Project> {
 
             configureKotlinAndroid()
 
-
             dependencies {
                 add("implementation", libs.findLibrary("material").get())
                 add("testImplementation", libs.findLibrary("junit").get())

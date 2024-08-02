@@ -2,12 +2,25 @@ plugins {
     id("my.version.plugin.library")
     id("my.version.plugin.compose")
     id("my.version.plugin.hilt")
-    alias(libs.plugins.jetbrains.kotlin.android)
+    id("my.version.plugin.feature")
 }
 
 android {
     namespace = "com.my.version.feature.main"
 
+    defaultConfig {
+        consumerProguardFiles("consumer-rules.pro")
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
 }
 
 dependencies {
@@ -15,13 +28,5 @@ dependencies {
     implementation(project(":feature:home"))
     implementation(project(":feature:cover"))
     implementation(project(":feature:evaluate"))
-    implementation(project(":core:designsystem"))
 
-
-    implementation(libs.timber)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.junit.ktx)
-    testImplementation(libs.junit)
 }
