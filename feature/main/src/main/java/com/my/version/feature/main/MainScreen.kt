@@ -1,39 +1,27 @@
 package com.my.version.feature.main
 
-import android.graphics.Insets
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.my.version.core.common.extension.noScaffoldPadding
 import com.my.version.core.common.navigation.Route
 import com.my.version.core.designsystem.theme.Purple40
-import com.my.version.core.designsystem.theme.Purple80
-import com.my.version.feature.auth.signin.navigation.navigateToSignIn
 import com.my.version.feature.auth.signin.navigation.signInScreen
 import com.my.version.feature.auth.signup.navigation.signUpScreen
 import com.my.version.feature.cover.navigation.coverScreen
@@ -90,7 +78,7 @@ fun MainNavHost(
         )
         signInScreen(
             modifier = insetModifier,
-            onButtonClick = {navController.navigateToHome()}
+            onButtonClick = { navController.navigateToHome() }
         )
         signUpScreen(
             modifier = insetModifier
@@ -111,7 +99,8 @@ private fun MainBottomBar(
         exit = fadeOut()
     ) {
         NavigationBar(
-            containerColor = Purple40) {
+            containerColor = Purple40
+        ) {
             tabs.forEach { itemType ->
                 NavigationBarItem(
                     interactionSource = NoRippleInteractionSource,
