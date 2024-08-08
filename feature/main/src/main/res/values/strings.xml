@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bottom_nav_home">Home</string>
+    <string name="bottom_nav_cover">Cover</string>
+    <string name="bottom_nav_evaluate">Evaluate</string>
+    <string name="bottom_nav_my_page">My Page</string>
+
+    <string name="bottom_nav_content_description">nav_icon</string>
+</resources>
