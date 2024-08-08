@@ -1,11 +1,18 @@
 package com.my.version.feature.main
 
+import android.graphics.Insets
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -19,13 +26,20 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.my.version.core.common.extension.noScaffoldPadding
+import com.my.version.core.common.navigation.Route
+import com.my.version.core.designsystem.theme.Purple40
 import com.my.version.core.designsystem.theme.Purple80
+import com.my.version.feature.auth.signin.navigation.navigateToSignIn
 import com.my.version.feature.auth.signin.navigation.signInScreen
 import com.my.version.feature.auth.signup.navigation.signUpScreen
 import com.my.version.feature.cover.navigation.coverScreen
 import com.my.version.feature.evaluate.navigation.evaluateScreen
 import com.my.version.feature.home.navigation.homeScreen
+import com.my.version.feature.home.navigation.navigateToHome
 import com.terning.core.util.NoRippleInteractionSource
 
 @Composable
@@ -42,29 +56,45 @@ fun MainScreen(
             )
         }
     ) { paddingValues ->
-        Column(
-            modifier = Modifier.padding(paddingValues)
-        ) {
-            MainNavHost(
-                navigator = navigator
-            )
-        }
+        val scaffoldModifier = Modifier.padding(paddingValues)
+        val insetModifier = Modifier.noScaffoldPadding()
+
+        MainNavHost(
+            navController = navigator.navController,
+            startDestination = navigator.startDestination,
+            scaffoldModifier = scaffoldModifier,
+            insetModifier = insetModifier
+        )
     }
 }
 
 @Composable
 fun MainNavHost(
-    navigator: MainNavigator
+    scaffoldModifier: Modifier,
+    insetModifier: Modifier,
+    navController: NavHostController,
+    startDestination: Route,
 ) {
     NavHost(
-        navController = navigator.navController,
-        startDestination = navigator.startDestination
+        navController = navController,
+        startDestination = startDestination
     ) {
-        homeScreen()
-        coverScreen()
-        evaluateScreen()
-        signInScreen()
-        signUpScreen()
+        homeScreen(
+            modifier = scaffoldModifier
+        )
+        coverScreen(
+            modifier = scaffoldModifier
+        )
+        evaluateScreen(
+            modifier = scaffoldModifier
+        )
+        signInScreen(
+            modifier = insetModifier,
+            onButtonClick = {navController.navigateToHome()}
+        )
+        signUpScreen(
+            modifier = insetModifier
+        )
     }
 }
 
@@ -77,12 +107,11 @@ private fun MainBottomBar(
 ) {
     AnimatedVisibility(
         visible = isVisible,
-        enter = expandVertically(expandFrom = Alignment.Top) { 20 },
-        exit = shrinkVertically(animationSpec = tween()) { fullHeight ->
-            fullHeight / 2
-        },
+        enter = fadeIn(),
+        exit = fadeOut()
     ) {
-        NavigationBar(containerColor = Purple80) {
+        NavigationBar(
+            containerColor = Purple40) {
             tabs.forEach { itemType ->
                 NavigationBarItem(
                     interactionSource = NoRippleInteractionSource,
@@ -99,7 +128,7 @@ private fun MainBottomBar(
                     label = {
                         Text(
                             stringResource(id = itemType.contentDescriptionId),
-                            fontSize = 9.sp
+                            fontSize = 12.sp
                         )
                     },
                     colors = androidx.compose.material3.NavigationBarItemDefaults
@@ -108,7 +137,7 @@ private fun MainBottomBar(
                             selectedTextColor = White,
                             unselectedIconColor = LightGray,
                             unselectedTextColor = LightGray,
-                            indicatorColor = White
+                            indicatorColor = Purple40
                         )
 
                 )

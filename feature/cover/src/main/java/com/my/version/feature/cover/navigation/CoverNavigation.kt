@@ -1,5 +1,6 @@
 package com.my.version.feature.cover.navigation
 
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -10,9 +11,13 @@ import kotlinx.serialization.Serializable
 
 fun NavController.navigateToCover(navOptions: NavOptions) = navigate(Cover, navOptions)
 
-fun NavGraphBuilder.coverScreen() {
+fun NavGraphBuilder.coverScreen(
+    modifier: Modifier
+) {
     composable<Cover>{
-        CoverRoute()
+        CoverRoute(
+            modifier = modifier
+        )
     }
 }
 

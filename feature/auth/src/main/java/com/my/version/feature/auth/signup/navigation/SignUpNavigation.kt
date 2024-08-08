@@ -1,5 +1,6 @@
 package com.my.version.feature.auth.signup.navigation
 
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -12,9 +13,13 @@ import kotlinx.serialization.Serializable
 
 fun NavController.navigateToSignUp(navOptions: NavOptions) = navigate(SignUp, navOptions)
 
-fun NavGraphBuilder.signUpScreen() {
+fun NavGraphBuilder.signUpScreen(
+    modifier: Modifier
+) {
     composable<SignUp>{
-        SignUpRoute()
+        SignUpRoute(
+            modifier = modifier
+        )
     }
 }
 

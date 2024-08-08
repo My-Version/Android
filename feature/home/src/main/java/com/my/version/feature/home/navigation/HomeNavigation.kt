@@ -1,5 +1,6 @@
 package com.my.version.feature.home.navigation
 
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -8,11 +9,15 @@ import com.my.version.core.common.navigation.MainTabRoute
 import com.my.version.feature.home.HomeRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateToHome(navOptions: NavOptions) = navigate(Home, navOptions)
+fun NavController.navigateToHome(navOptions: NavOptions? = null) = navigate(Home, navOptions)
 
-fun NavGraphBuilder.homeScreen() {
+fun NavGraphBuilder.homeScreen(
+    modifier: Modifier
+) {
     composable<Home>{
-        HomeRoute()
+        HomeRoute(
+            modifier = modifier
+        )
     }
 }
 
