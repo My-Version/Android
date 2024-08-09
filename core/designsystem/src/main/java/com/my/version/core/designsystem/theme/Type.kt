@@ -19,7 +19,7 @@ val MyVersionTypography = Typography(
         fontFamily = PretendardSemiBold,
         fontWeight = FontWeight.SemiBold,
         fontSize = 36.sp,
-        lineHeight = 44.sp,
+        lineHeight = 36.sp,
         letterSpacing = (-0.005).em,
     ),
     headlineMedium = TextStyle(
@@ -30,8 +30,8 @@ val MyVersionTypography = Typography(
         letterSpacing = (-0.005).em,
     ),
     headlineSmall = TextStyle(
-        fontFamily = PretendardSemiBold,
-        fontWeight = FontWeight.SemiBold,
+        fontFamily = PretendardMedium,
+        fontWeight = FontWeight.Medium,
         fontSize = 21.sp,
         lineHeight = 27.sp,
         letterSpacing = (-0.005).em,
@@ -41,21 +41,21 @@ val MyVersionTypography = Typography(
         fontWeight = FontWeight.SemiBold,
         fontSize = 19.sp,
         lineHeight = 23.sp,
-        letterSpacing = (-0.005).em,
+        letterSpacing = (-0.002).em,
     ),
     titleMedium = TextStyle(
         fontFamily = PretendardSemiBold,
         fontWeight = FontWeight.SemiBold,
         fontSize = 17.sp,
         lineHeight = 22.sp,
-        letterSpacing = (-0.005).em,
+        letterSpacing = (-0.002).em,
     ),
     titleSmall = TextStyle(
         fontFamily = PretendardMedium,
         fontWeight = FontWeight.Medium,
         fontSize = 15.sp,
         lineHeight = 19.sp,
-        letterSpacing = (-0.005).em,
+        letterSpacing = (-0.002).em,
     ),
     bodyLarge = TextStyle(
         fontFamily = PretendardMedium,
@@ -79,15 +79,15 @@ val MyVersionTypography = Typography(
         letterSpacing = (-0.005).em,
     ),
     labelLarge = TextStyle(
-        fontFamily = PretendardRegular,
-        fontWeight = FontWeight.Normal,
+        fontFamily = PretendardSemiBold,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 14.sp,
         lineHeight = 14.sp,
         letterSpacing = (-0.005).em,
     ),
     labelMedium = TextStyle(
-        fontFamily = PretendardLight,
-        fontWeight = FontWeight.Light,
+        fontFamily = PretendardRegular,
+        fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
         lineHeight = 12.sp,
         letterSpacing = (-0.005).em,
@@ -95,8 +95,8 @@ val MyVersionTypography = Typography(
     labelSmall = TextStyle(
         fontFamily = PretendardLight,
         fontWeight = FontWeight.Light,
-        fontSize = 11.sp,
-        lineHeight = 11.sp,
+        fontSize = 12.sp,
+        lineHeight = 12.sp,
         letterSpacing = (-0.005).em,
     )
 )
