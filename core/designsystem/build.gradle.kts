@@ -1,7 +1,6 @@
 plugins {
     id("my.version.plugin.library")
     id("my.version.plugin.compose")
-    alias(libs.plugins.jetbrains.kotlin.android)
 }
 
 android {
@@ -18,9 +17,6 @@ android {
             )
         }
     }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
 }
 
 dependencies {
@@ -29,5 +25,8 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.junit.ktx)
+    implementation(libs.coroutines.core)
+    implementation(libs.coroutines.android)
+
     testImplementation(libs.junit)
 }
