@@ -3,8 +3,10 @@ package com.my.version.feature.main
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -15,13 +17,11 @@ import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.my.version.core.common.extension.noScaffoldPadding
 import com.my.version.core.common.navigation.Route
-import com.my.version.core.designsystem.theme.Purple40
+import com.my.version.core.designsystem.theme.MyVersionMain
 import com.my.version.feature.auth.signin.navigation.signInScreen
 import com.my.version.feature.auth.signup.navigation.signUpScreen
 import com.my.version.feature.cover.navigation.coverScreen
@@ -44,25 +44,23 @@ fun MainScreen(
             )
         }
     ) { paddingValues ->
-        val scaffoldModifier = Modifier.padding(paddingValues)
-        val insetModifier = Modifier.noScaffoldPadding()
-
         MainNavHost(
             navController = navigator.navController,
             startDestination = navigator.startDestination,
-            scaffoldModifier = scaffoldModifier,
-            insetModifier = insetModifier
+            paddingValues = paddingValues
         )
     }
 }
 
 @Composable
 fun MainNavHost(
-    scaffoldModifier: Modifier,
-    insetModifier: Modifier,
+    paddingValues: PaddingValues,
     navController: NavHostController,
     startDestination: Route,
 ) {
+    val scaffoldModifier = Modifier.padding(paddingValues)
+    val noScaffoldModifier = Modifier.noScaffoldPadding()
+
     NavHost(
         navController = navController,
         startDestination = startDestination
@@ -77,11 +75,11 @@ fun MainNavHost(
             modifier = scaffoldModifier
         )
         signInScreen(
-            modifier = insetModifier,
+            modifier = noScaffoldModifier,
             onButtonClick = { navController.navigateToHome() }
         )
         signUpScreen(
-            modifier = insetModifier
+            modifier = noScaffoldModifier
         )
     }
 }
@@ -99,7 +97,7 @@ private fun MainBottomBar(
         exit = fadeOut()
     ) {
         NavigationBar(
-            containerColor = Purple40
+            containerColor = MyVersionMain
         ) {
             tabs.forEach { itemType ->
                 NavigationBarItem(
@@ -117,7 +115,7 @@ private fun MainBottomBar(
                     label = {
                         Text(
                             stringResource(id = itemType.contentDescriptionId),
-                            fontSize = 12.sp
+                            style = MaterialTheme.typography.labelMedium
                         )
                     },
                     colors = androidx.compose.material3.NavigationBarItemDefaults
@@ -126,7 +124,7 @@ private fun MainBottomBar(
                             selectedTextColor = White,
                             unselectedIconColor = LightGray,
                             unselectedTextColor = LightGray,
-                            indicatorColor = Purple40
+                            indicatorColor = MyVersionMain
                         )
 
                 )
