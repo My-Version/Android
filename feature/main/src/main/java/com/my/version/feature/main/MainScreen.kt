@@ -13,15 +13,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.LightGray
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.my.version.core.common.extension.noScaffoldPadding
 import com.my.version.core.common.navigation.Route
+import com.my.version.core.designsystem.theme.Grey200
+import com.my.version.core.designsystem.theme.Grey400
 import com.my.version.core.designsystem.theme.MyVersionMain
+import com.my.version.core.designsystem.theme.White
 import com.my.version.feature.auth.signin.navigation.signInScreen
 import com.my.version.feature.auth.signup.navigation.signUpScreen
 import com.my.version.feature.cover.navigation.coverScreen
@@ -122,8 +123,8 @@ private fun MainBottomBar(
                         .colors(
                             selectedIconColor = White,
                             selectedTextColor = White,
-                            unselectedIconColor = LightGray,
-                            unselectedTextColor = LightGray,
+                            unselectedIconColor = Grey400,
+                            unselectedTextColor = Grey400,
                             indicatorColor = MyVersionMain
                         )
 
