@@ -19,54 +19,23 @@ import com.my.version.core.designsystem.theme.MyVersionTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyVersionTopAppBar(
-    canNavigateBack: Boolean,
-    navigateUp: () -> Unit,
+internal fun MyVersionTopAppBar(
+    navigationIcon: @Composable () -> Unit,
     modifier: Modifier = Modifier,
-    @StringRes title: Int? = null
+    title: String = ""
 ) {
     TopAppBar(
         title = {
             Text(
-                text = if(title == null) "" else stringResource(id = title),
+                text = title,
                 style = MaterialTheme.typography.titleMedium
             )
         },
-        navigationIcon = {
-            if (canNavigateBack) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_back),
-                    contentDescription = stringResource(id = R.string.top_app_bar_navigate_up),
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .noRippleClickable { navigateUp() }
-                )
-            }
-        }
+        navigationIcon = navigationIcon,
+        modifier = modifier.padding(horizontal = 12.dp)
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun MyVersionTopAppBarPreview() {
-    MyVersionTheme {
-        MyVersionTopAppBar(
-            title = R.string.preview_title,
-            canNavigateBack = true,
-            navigateUp = {}
-        )
-    }
-}
 
-@Preview(showBackground = true)
-@Composable
-fun MyVersionTopAppBarEmptyPreview() {
-    MyVersionTheme {
-        MyVersionTopAppBar(
-            canNavigateBack = false,
-            navigateUp = {}
-        )
-    }
-}
 
 
