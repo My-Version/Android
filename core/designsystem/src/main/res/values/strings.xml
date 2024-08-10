@@ -7,4 +7,8 @@
     //TopAppBar
     <string name="top_app_bar_navigate_up">back</string>
 
+    //Button
+    <string name="btn_sorting_unfold">unfold</string>
+    <string name="btn_sorting_fold">fold</string>
+
 </resources>
