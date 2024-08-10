@@ -20,6 +20,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:common"))
+
     implementation(libs.timber)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -27,6 +29,5 @@ dependencies {
     implementation(libs.androidx.junit.ktx)
     implementation(libs.coroutines.core)
     implementation(libs.coroutines.android)
-
     testImplementation(libs.junit)
 }
