@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="preview_title">Preview</string>
+
+    //TopAppBar
+    <string name="top_app_bar_navigate_up">back</string>
+
+</resources>
