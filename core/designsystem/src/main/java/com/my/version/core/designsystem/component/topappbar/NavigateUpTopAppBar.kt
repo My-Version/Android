@@ -15,7 +15,7 @@ fun NavigateUpTopAppBar(
     modifier: Modifier = Modifier,
     title: String,
 ) {
-    MyVersionTopAppBar(
+    MyVersionBasicTopAppBar(
         title = title,
         navigationIcon = {
             Icon(

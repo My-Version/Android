@@ -8,7 +8,7 @@ import androidx.compose.ui.tooling.preview.Preview
 fun LogoTopAppBar(
     modifier: Modifier = Modifier
 ) {
-    MyVersionTopAppBar(
+    MyVersionBasicTopAppBar(
         navigationIcon = {
 
         },

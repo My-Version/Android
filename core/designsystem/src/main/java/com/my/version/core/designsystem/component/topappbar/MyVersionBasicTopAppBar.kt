@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun MyVersionTopAppBar(
+internal fun MyVersionBasicTopAppBar(
     navigationIcon: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     title: String = ""
