@@ -19,19 +19,20 @@ import androidx.compose.ui.unit.dp
 import com.my.version.core.designsystem.R
 import com.my.version.core.designsystem.component.button.MyVersionBasicIconButton
 import com.my.version.core.designsystem.component.text.SingleLineText
+import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.MyVersionMain
 import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.theme.White
+import com.my.version.core.designsystem.type.VerticalItemType
 
 @Composable
 fun VerticalListItem(
-    @DrawableRes icon: Int,
-    iconColor: Color,
+    itemType: VerticalItemType,
     onClick: () -> Unit,
     title: String,
     subTitle: String,
-
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    iconColor: Color = Black
 ) {
     MyVersionBasicItem(
         color = White,
@@ -60,7 +61,8 @@ fun VerticalListItem(
             }
             
             MyVersionBasicIconButton(
-                icon = icon,
+                icon = itemType.icon,
+                contentDescription = stringResource(id = itemType.contentDescription),
                 onClick = onClick,
                 color = iconColor
             )
@@ -73,7 +75,7 @@ fun VerticalListItem(
 fun VerticalMusicListItemPreview() {
     MyVersionTheme {
         VerticalListItem(
-            icon = R.drawable.ic_play,
+            itemType = VerticalItemType.MUSIC,
             iconColor = MyVersionMain,
             onClick = {},
             title = stringResource(id = R.string.preview_title), 

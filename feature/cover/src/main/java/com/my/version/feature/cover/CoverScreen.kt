@@ -4,7 +4,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,7 +38,9 @@ import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.theme.White
 import com.my.version.core.designsystem.type.TempItem
+import com.my.version.core.designsystem.type.VerticalItemType
 import com.my.version.core.designsystem.type.tempList1
+import com.my.version.feature.cover.component.verticalItemList
 
 @Composable
 fun CoverRoute(
@@ -47,7 +48,8 @@ fun CoverRoute(
     viewModel: CoverViewModel = hiltViewModel()
 ) {
     CoverScreen(
-        modifier = modifier
+        modifier = modifier,
+        coverList = tempList1
     )
 }
 
@@ -59,69 +61,64 @@ private fun CoverScreen(
 ) {
     var isSelected by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = modifier.padding(horizontal = 20.dp),
-    ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            stickyHeader {
-                Row(
-                    modifier = Modifier
-                        .background(color = MyVersionBackground)
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .padding(top = 30.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.cover_main_title),
-                        style = MaterialTheme.typography.titleSmall,
-                        color = White
-                    )
-                    SortingButton(
-                        isSelected = isSelected,
-                        text = "최신순",
-                        onClick = { isSelected = !isSelected }
-                    )
-                }
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 20.dp)
 
-                HorizontalDivider(
-                    thickness = 1.dp,
-                    color = Grey400,
-                    modifier = Modifier
-                        .background(color = MyVersionBackground)
-                        .fillMaxWidth()
-                        .padding(vertical = 6.dp)
+    ) {
+        item{
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+        stickyHeader {
+            Row(
+                modifier = Modifier
+                    .background(color = MyVersionBackground)
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(top = 30.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(id = R.string.cover_main_title),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = White
+                )
+                SortingButton(
+                    isSelected = isSelected,
+                    text = "최신순",
+                    onClick = { isSelected = !isSelected }
                 )
             }
 
-            if (coverList.isEmpty()) {
-                item {
-                    EmptyScreen()
-                }
-            } else {
-                successScreen(coverList = coverList)
-            }
+            HorizontalDivider(
+                thickness = 1.dp,
+                color = Grey400,
+                modifier = Modifier
+                    .background(color = MyVersionBackground)
+                    .fillMaxWidth()
+                    .padding(vertical = 6.dp)
+            )
         }
-    }
-}
 
-private fun LazyListScope.successScreen(
-    coverList: List<TempItem>,
-) {
-    items(coverList) {cover ->
-        VerticalListItem(
-            icon = com.my.version.core.designsystem.R.drawable.ic_play,
-            iconColor = Black,
-            onClick = { /*TODO*/ },
-            title = cover.title,
-            subTitle = cover.body
-        )
-
-        if (coverList.last() != cover) {
-            Spacer(modifier = Modifier.height(16.dp))
+        if (coverList.isEmpty()) {
+            item {
+                EmptyScreen()
+            }
+        } else {
+            items(coverList) { cover ->
+                VerticalListItem(
+                    itemType = VerticalItemType.COVER,
+                    iconColor = Black,
+                    onClick = { /*TODO*/ },
+                    title = cover.title,
+                    subTitle = cover.body
+                )
+                if (coverList.last() != cover) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
         }
     }
 }

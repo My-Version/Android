@@ -26,6 +26,7 @@ import com.my.version.core.designsystem.theme.White
 import com.my.version.feature.auth.signin.navigation.signInScreen
 import com.my.version.feature.auth.signup.navigation.signUpScreen
 import com.my.version.feature.cover.navigation.coverScreen
+import com.my.version.feature.cover.navigation.coverSecondScreen
 import com.my.version.feature.evaluate.navigation.evaluateScreen
 import com.my.version.feature.home.navigation.homeScreen
 import com.my.version.feature.home.navigation.navigateToHome
@@ -71,6 +72,9 @@ fun MainNavHost(
         )
         coverScreen(
             modifier = scaffoldModifier
+        )
+        coverSecondScreen(
+            modifier = noScaffoldModifier
         )
         evaluateScreen(
             modifier = scaffoldModifier
