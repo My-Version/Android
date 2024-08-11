@@ -4,7 +4,10 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -19,6 +22,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.my.version.core.common.extension.noScaffoldPadding
 import com.my.version.core.common.navigation.Route
+import com.my.version.core.designsystem.component.topappbar.LogoTopAppBar
 import com.my.version.core.designsystem.theme.Grey200
 import com.my.version.core.designsystem.theme.Grey400
 import com.my.version.core.designsystem.theme.MyVersionMain
@@ -37,6 +41,9 @@ fun MainScreen(
     navigator: MainNavigator = rememberMainNavigator(),
 ) {
     Scaffold(
+        topBar = {
+            LogoTopAppBar()
+        },
         bottomBar = {
             MainBottomBar(
                 isVisible = navigator.showBottomBar(),
@@ -61,7 +68,9 @@ fun MainNavHost(
     startDestination: Route,
 ) {
     val scaffoldModifier = Modifier.padding(paddingValues)
-    val noScaffoldModifier = Modifier.noScaffoldPadding()
+    val noScaffoldModifier = Modifier
+        .padding(top = paddingValues.calculateTopPadding())
+        .navigationBarsPadding()
 
     NavHost(
         navController = navController,

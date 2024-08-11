@@ -10,7 +10,7 @@ fun LogoTopAppBar(
 ) {
     MyVersionBasicTopAppBar(
         navigationIcon = {
-
+            
         },
         modifier = modifier
     )
