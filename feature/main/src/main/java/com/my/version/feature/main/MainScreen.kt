@@ -29,6 +29,7 @@ import com.my.version.core.designsystem.theme.MyVersionMain
 import com.my.version.core.designsystem.theme.White
 import com.my.version.feature.auth.signin.navigation.signInScreen
 import com.my.version.feature.auth.signup.navigation.signUpScreen
+import com.my.version.feature.cover.navigation.coverFirstScreen
 import com.my.version.feature.cover.navigation.coverScreen
 import com.my.version.feature.cover.navigation.coverSecondScreen
 import com.my.version.feature.evaluate.navigation.evaluateScreen
@@ -67,8 +68,8 @@ fun MainNavHost(
     navController: NavHostController,
     startDestination: Route,
 ) {
-    val scaffoldModifier = Modifier.padding(paddingValues)
-    val noScaffoldModifier = Modifier
+    val bottomBarModifier = Modifier.padding(paddingValues)
+    val noBottomBarModifier = Modifier
         .padding(top = paddingValues.calculateTopPadding())
         .navigationBarsPadding()
 
@@ -77,23 +78,26 @@ fun MainNavHost(
         startDestination = startDestination
     ) {
         homeScreen(
-            modifier = scaffoldModifier
+            modifier = bottomBarModifier
         )
         coverScreen(
-            modifier = scaffoldModifier
+            modifier = bottomBarModifier
+        )
+        coverFirstScreen(
+            modifier = noBottomBarModifier
         )
         coverSecondScreen(
-            modifier = noScaffoldModifier
+            modifier = noBottomBarModifier
         )
         evaluateScreen(
-            modifier = scaffoldModifier
+            modifier = bottomBarModifier
         )
         signInScreen(
-            modifier = noScaffoldModifier,
+            modifier = noBottomBarModifier,
             onButtonClick = { navController.navigateToHome() }
         )
         signUpScreen(
-            modifier = noScaffoldModifier
+            modifier = noBottomBarModifier
         )
     }
 }
@@ -140,7 +144,6 @@ private fun MainBottomBar(
                             unselectedTextColor = Grey400,
                             indicatorColor = MyVersionMain
                         )
-
                 )
             }
         }

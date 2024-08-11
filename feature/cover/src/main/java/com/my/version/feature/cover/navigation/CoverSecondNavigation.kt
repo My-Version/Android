@@ -6,11 +6,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.my.version.core.common.navigation.Route
-import com.my.version.feature.cover.CoverRoute
+import com.my.version.feature.cover.CoverFirstRoute
 import com.my.version.feature.cover.CoverSecondRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateToCoverSecond(navOptions: NavOptions) = navigate(CoverSecond, navOptions)
+fun NavController.navigateToCoverSecond(navOptions: NavOptions? = null) = navigate(CoverSecond, navOptions)
 
 fun NavGraphBuilder.coverSecondScreen(
     modifier: Modifier
