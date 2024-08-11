@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_heading_music">Music Available</string>
+    <string name="home_heading_cover">Recent Voice Cover</string>
+    <string name="home_heading_evaluation">Recent Voice Evaluation</string>
+</resources>

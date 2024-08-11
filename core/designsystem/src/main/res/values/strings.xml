@@ -7,4 +7,9 @@
     //TopAppBar
     <string name="top_app_bar_navigate_up">back</string>
 
+    //Icon Content Description
+    <string name="icon_content_description_next">next</string>
+    <string name="icon_content_description_back">back</string>
+    <string name="icon_content_description_play">play</string>
+
 </resources>
