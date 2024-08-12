@@ -11,6 +11,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.my.version.feature.cover.navigation.CoverSecond
 import com.my.version.feature.cover.navigation.navigateToCover
+import com.my.version.feature.evaluate.navigation.Evaluation
+import com.my.version.feature.evaluate.navigation.EvaluationFirst
 import com.my.version.feature.evaluate.navigation.navigateToEvaluation
 import com.my.version.feature.home.navigation.navigateToHome
 
@@ -21,7 +23,7 @@ class MainNavigator(
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
 
-    val startDestination = CoverSecond
+    val startDestination = EvaluationFirst
 
     val currentTab: MainTab?
         @Composable get() = MainTab.find { tab ->

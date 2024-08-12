@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="evaluation_main_title">Evaluation List</string>
+    <string name="evaluation_on_boarding_title1">Select Cover</string>
+    <string name="evaluation_on_boarding_title2">Lyric</string>"
 </resources>

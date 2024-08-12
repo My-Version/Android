@@ -64,9 +64,6 @@ private fun EvaluationScreen(
             .padding(horizontal = 20.dp)
 
     ) {
-        item {
-            Spacer(modifier = Modifier.height(20.dp))
-        }
         stickyHeader {
             Row(
                 modifier = Modifier
