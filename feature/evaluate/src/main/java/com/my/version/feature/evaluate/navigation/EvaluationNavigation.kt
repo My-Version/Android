@@ -6,20 +6,20 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.my.version.core.common.navigation.MainTabRoute
-import com.my.version.feature.evaluate.EvaluateRoute
+import com.my.version.feature.evaluate.EvaluationRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateToEvaluate(navOptions: NavOptions) = navigate(Evaluate, navOptions)
+fun NavController.navigateToEvaluation(navOptions: NavOptions) = navigate(Evaluation, navOptions)
 
-fun NavGraphBuilder.evaluateScreen(
+fun NavGraphBuilder.evaluationScreen(
     modifier: Modifier
 ) {
-    composable<Evaluate>{
-        EvaluateRoute(
+    composable<Evaluation>{
+        EvaluationRoute(
             modifier = modifier
         )
     }
 }
 
 @Serializable
-data object Evaluate: MainTabRoute
+data object Evaluation: MainTabRoute

@@ -20,7 +20,7 @@ enum class VerticalItemType(
         icon = R.drawable.ic_close,
         contentDescription = R.string.btn_close
     ),
-    EVALUATE(
+    EVALUATION(
         icon = R.drawable.ic_forward,
         contentDescription = R.string.btn_next
     ),

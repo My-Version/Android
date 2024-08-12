@@ -9,12 +9,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.my.version.feature.auth.signin.navigation.SignIn
-import com.my.version.feature.cover.navigation.Cover
 import com.my.version.feature.cover.navigation.CoverSecond
 import com.my.version.feature.cover.navigation.navigateToCover
-import com.my.version.feature.evaluate.navigation.navigateToEvaluate
-import com.my.version.feature.home.navigation.Home
+import com.my.version.feature.evaluate.navigation.navigateToEvaluation
 import com.my.version.feature.home.navigation.navigateToHome
 
 class MainNavigator(
@@ -43,7 +40,7 @@ class MainNavigator(
         when (tab) {
             MainTab.HOME -> navController.navigateToHome(navOptions)
             MainTab.COVER -> navController.navigateToCover(navOptions)
-            MainTab.EVALUATE -> navController.navigateToEvaluate(navOptions)
+            MainTab.EVALUATE -> navController.navigateToEvaluation(navOptions)
         }
     }
 
