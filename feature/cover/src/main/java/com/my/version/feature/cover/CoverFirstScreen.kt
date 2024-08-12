@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.my.version.core.designsystem.component.button.OnBoardingButton
+import com.my.version.core.designsystem.component.button.RectangleButton
 import com.my.version.core.designsystem.component.divider.TitleWithDivider
 import com.my.version.core.designsystem.component.item.MyVersionVerticalItem
 import com.my.version.core.designsystem.theme.Black
@@ -33,7 +33,6 @@ import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.type.TempItem
 import com.my.version.core.designsystem.type.VerticalItemType
 import com.my.version.core.designsystem.type.tempList1
-import com.my.version.feature.cover.state.CoverFirstUiState
 
 @Composable
 fun CoverFirstRoute(
@@ -99,7 +98,7 @@ fun CoverFirstScreen(
             modifier = Modifier.wrapContentHeight(),
             contentAlignment = Alignment.TopCenter
         ) {
-            OnBoardingButton(
+            RectangleButton(
                 isEnabled = false,
                 text = "Next",
                 textStyle = MaterialTheme.typography.titleMedium,

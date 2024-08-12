@@ -22,16 +22,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.my.version.core.designsystem.component.button.OnBoardingButton
+import com.my.version.core.designsystem.component.button.RectangleButton
 import com.my.version.core.designsystem.component.button.OutlinedButton
-import com.my.version.core.designsystem.component.divider.MyVersionHorizontalDivider
 import com.my.version.core.designsystem.component.divider.TitleWithDivider
 import com.my.version.core.designsystem.component.item.MyVersionVerticalItem
-import com.my.version.core.designsystem.component.text.SingleLineText
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionTheme
-import com.my.version.core.designsystem.theme.White
 import com.my.version.core.designsystem.type.TempItem
 import com.my.version.core.designsystem.type.VerticalItemType
 import com.my.version.core.designsystem.type.tempList1
@@ -112,7 +109,7 @@ fun CoverSecondScreen(
             modifier = Modifier.wrapContentHeight(),
             contentAlignment = Alignment.TopCenter
         ) {
-            OnBoardingButton(
+            RectangleButton(
                 isEnabled = false,
                 text = "Next",
                 textStyle = MaterialTheme.typography.titleMedium,
