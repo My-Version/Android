@@ -1,7 +1,7 @@
 package com.my.version.feature.cover.select
 
 import androidx.lifecycle.ViewModel
-import com.my.version.feature.cover.state.CoverFirstUiState
+import com.my.version.feature.cover.select.state.CoverFirstUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
