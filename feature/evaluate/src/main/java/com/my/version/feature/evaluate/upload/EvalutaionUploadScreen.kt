@@ -35,10 +35,11 @@ import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.theme.White
 import com.my.version.feature.evaluate.R
+import com.my.version.feature.evaluate.upload.navigation.EvaluationUpload
 import com.my.version.core.designsystem.R as DesignSystemR
 
 @Composable
-fun EvaluationRecordRoute(
+fun EvaluationUploadRoute(
     modifier: Modifier = Modifier,
     viewModel: EvaluationUploadViewModel = hiltViewModel()
 ) {
