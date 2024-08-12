@@ -13,6 +13,7 @@
     <string name="btn_play">play</string>
     <string name="btn_close">close</string>
     <string name="btn_next">next</string>
+    <string name="btn_add">add</string>
     <string name="btn_next_capital">Next</string>
     <string name="btn_upload_capital">Upload</string>
 

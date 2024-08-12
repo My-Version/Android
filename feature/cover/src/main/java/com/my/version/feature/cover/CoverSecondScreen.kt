@@ -26,6 +26,7 @@ import com.my.version.core.designsystem.component.button.RectangleButton
 import com.my.version.core.designsystem.component.button.OutlinedButton
 import com.my.version.core.designsystem.component.divider.TitleWithDivider
 import com.my.version.core.designsystem.component.item.MyVersionVerticalItem
+import com.my.version.core.designsystem.component.text.SingleLineText
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionTheme
@@ -71,22 +72,28 @@ fun CoverSecondScreen(
                         .padding(horizontal = 10.dp)
                 ) {
                     OutlinedButton(
-                        text = stringResource(id = R.string.cover_button_audio_record),
-                        textStyle = MaterialTheme.typography.titleMedium,
                         onClick = { /*TODO*/ },
                         modifier = Modifier
                             .wrapContentHeight()
                             .weight(1f),
-                    )
+                    ){
+                        SingleLineText(
+                            text = stringResource(id = R.string.cover_button_audio_record),
+                            style = MaterialTheme.typography.titleMedium,
+                        )
+                    }
                     Spacer(modifier = Modifier.width(10.dp))
                     OutlinedButton(
-                        text = stringResource(id = R.string.cover_button_audio_record),
-                        textStyle = MaterialTheme.typography.titleMedium,
                         onClick = { /*TODO*/ },
                         modifier = Modifier
                             .wrapContentHeight()
                             .weight(1f),
-                    )
+                    ) {
+                        SingleLineText(
+                            text = stringResource(id = R.string.cover_button_audio_record),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(6.dp))
             }

@@ -4,6 +4,9 @@
     // Cover Main Page
     <string name="cover_main_title">Cover List</string>
 
+    //Cover TopBar title
+    <string name = "cover_topbar_main">New Cover</string>
+
     // Cover OnBoarding 1
     <string name="cover_on_boarding_title1">Select music to cover</string>
 
