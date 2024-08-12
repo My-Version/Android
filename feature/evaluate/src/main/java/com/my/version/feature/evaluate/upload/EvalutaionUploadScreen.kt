@@ -101,7 +101,7 @@ private fun EvaluationUploadScreen(
         )
 
         Row(
-            modifier = commonModifier.padding(top = 20.dp),
+            modifier = commonModifier,
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
