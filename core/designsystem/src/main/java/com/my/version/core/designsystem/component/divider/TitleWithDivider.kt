@@ -30,7 +30,7 @@ fun TitleWithDivider(
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
-        Spacer(modifier = Modifier.height(20.dp))
+        BasicSpacer(height = 20.dp)
         SingleLineText(
             text = text,
             style = textStyle,

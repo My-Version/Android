@@ -29,6 +29,7 @@ import com.my.version.core.designsystem.component.button.MyVersionBasicIconButto
 import com.my.version.core.designsystem.component.button.RectangleButton
 import com.my.version.core.designsystem.component.divider.MyVersionHorizontalDivider
 import com.my.version.core.designsystem.component.divider.TitleWithDivider
+import com.my.version.core.designsystem.component.topappbar.NavigateUpTopAppBar
 import com.my.version.core.designsystem.theme.Grey200
 import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionTheme
@@ -58,6 +59,11 @@ private fun EvaluationUploadScreen(
     Column(
         modifier = modifier.fillMaxSize()
     ) {
+        NavigateUpTopAppBar(
+            onNavigateUp = { /*TODO*/ },
+            title = stringResource(id = R.string.evaluation_topbar_upload)
+        )
+
         TitleWithDivider(
             text = stringResource(id = R.string.evaluation_main_title),
             textStyle = MaterialTheme.typography.titleMedium,

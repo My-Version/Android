@@ -18,7 +18,7 @@ fun MyVersionHorizontalDivider(
 ) {
     HorizontalDivider(
         modifier = modifier
-            .padding(vertical = 6.dp)
+            .padding(top = 6.dp)
             .fillMaxWidth(),
         color = color,
         thickness = thickness
