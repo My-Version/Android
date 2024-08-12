@@ -12,14 +12,14 @@ import com.my.version.core.designsystem.theme.Grey300
 
 @Composable
 fun MyVersionHorizontalDivider(
-    modifier: Modifier = Modifier
-        .padding(vertical = 6.dp)
-        .fillMaxWidth(),
+    modifier: Modifier = Modifier,
     thickness: Dp = 1.dp,
     color: Color = Grey300,
 ) {
     HorizontalDivider(
-        modifier = modifier,
+        modifier = modifier
+            .padding(vertical = 6.dp)
+            .fillMaxWidth(),
         color = color,
         thickness = thickness
     )
