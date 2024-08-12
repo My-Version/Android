@@ -3,9 +3,8 @@ package com.my.version.feature.home.component
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import com.my.version.core.designsystem.component.item.HorizontalListItem
+import com.my.version.core.designsystem.component.item.MyVersionHorizontalItem
 import com.my.version.core.designsystem.theme.Black
-import com.my.version.feature.home.R as HomeR
 import com.my.version.core.designsystem.R as DesignSystemR
 import com.my.version.feature.home.TempItem
 
@@ -72,7 +71,7 @@ private fun toComposableList(
     val composableList = mutableListOf<@Composable () -> Unit>()
     itemList.forEach { item ->
         composableList.add {
-            HorizontalListItem(
+            MyVersionHorizontalItem(
                 icon = icon,
                 contentDescription = stringResource(id = DesignSystemR.string.icon_content_description_play),
                 iconColor = Black,

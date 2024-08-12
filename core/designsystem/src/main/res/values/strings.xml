@@ -7,6 +7,13 @@
     //TopAppBar
     <string name="top_app_bar_navigate_up">back</string>
 
+    //Button
+    <string name="btn_sorting_unfold">unfold</string>
+    <string name="btn_sorting_fold">fold</string>
+    <string name="btn_play">play</string>
+    <string name="btn_close">close</string>
+    <string name="btn_next">next</string>
+
     //Icon Content Description
     <string name="icon_content_description_next">next</string>
     <string name="icon_content_description_back">back</string>

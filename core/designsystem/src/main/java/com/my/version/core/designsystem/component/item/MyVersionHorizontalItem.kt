@@ -24,7 +24,7 @@ import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.theme.White
 
 @Composable
-fun HorizontalListItem(
+fun MyVersionHorizontalItem(
     @DrawableRes icon: Int,
     contentDescription: String,
     iconColor: Color,
@@ -85,7 +85,7 @@ fun HorizontalListItem(
 @Composable
 fun HorizontalListItemPreview() {
     MyVersionTheme {
-        HorizontalListItem(
+        MyVersionHorizontalItem(
             icon = R.drawable.ic_forward,
             iconColor = MyVersionMain,
             contentDescription = "",

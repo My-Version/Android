@@ -5,21 +5,21 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.my.version.core.common.navigation.MainTabRoute
-import com.my.version.feature.cover.CoverRoute
+import com.my.version.core.common.navigation.Route
+import com.my.version.feature.cover.CoverFirstRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateToCover(navOptions: NavOptions? = null) = navigate(Cover, navOptions)
+fun NavController.navigateToCoverFirst(navOptions: NavOptions? = null) = navigate(CoverFirst, navOptions)
 
-fun NavGraphBuilder.coverScreen(
+fun NavGraphBuilder.coverFirstScreen(
     modifier: Modifier
 ) {
-    composable<Cover>{
-        CoverRoute(
+    composable<CoverFirst>{
+        CoverFirstRoute(
             modifier = modifier
         )
     }
 }
 
 @Serializable
-data object Cover: MainTabRoute
+data object CoverFirst: Route

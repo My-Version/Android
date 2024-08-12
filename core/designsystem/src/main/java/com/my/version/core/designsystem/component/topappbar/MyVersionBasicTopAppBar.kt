@@ -16,6 +16,7 @@ import com.my.version.core.designsystem.theme.White
 internal fun MyVersionBasicTopAppBar(
     navigationIcon: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    actions: List<@Composable () -> Unit> = emptyList(),
     title: String = ""
 ) {
     TopAppBar(
@@ -31,7 +32,8 @@ internal fun MyVersionBasicTopAppBar(
             titleContentColor = White,
             containerColor = MaterialTheme.colorScheme.background
         ),
-        modifier = Modifier.padding(horizontal = 12.dp)
+        actions = { actions.forEach { it() } },
+        modifier = modifier.padding(horizontal = 12.dp)
     )
 }
 
