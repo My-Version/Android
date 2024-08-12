@@ -1,4 +1,4 @@
-package com.my.version.feature.evaluate
+package com.my.version.feature.evaluate.first
 
 import androidx.lifecycle.ViewModel
 import javax.inject.Inject

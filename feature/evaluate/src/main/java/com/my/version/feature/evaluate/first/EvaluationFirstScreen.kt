@@ -1,4 +1,4 @@
-package com.my.version.feature.evaluate
+package com.my.version.feature.evaluate.first
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -26,11 +26,11 @@ import com.my.version.core.designsystem.component.divider.TitleWithDivider
 import com.my.version.core.designsystem.component.item.MyVersionVerticalItem
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.MyVersionBackground
-import com.my.version.core.designsystem.theme.MyVersionMain
 import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.type.TempItem
 import com.my.version.core.designsystem.type.VerticalItemType
 import com.my.version.core.designsystem.type.tempList1
+import com.my.version.feature.evaluate.R
 
 @Composable
 fun EvaluationFirstRoute(

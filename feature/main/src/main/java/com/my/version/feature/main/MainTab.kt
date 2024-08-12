@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import com.my.version.core.common.navigation.MainTabRoute
 import com.my.version.core.common.navigation.Route
 import com.my.version.feature.cover.navigation.Cover
-import com.my.version.feature.evaluate.navigation.Evaluation
+import com.my.version.feature.evaluate.main.navigation.Evaluation
 import com.my.version.feature.home.navigation.Home
 
 enum class MainTab(

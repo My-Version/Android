@@ -28,8 +28,8 @@ import com.my.version.feature.auth.signup.navigation.signUpScreen
 import com.my.version.feature.cover.navigation.coverFirstScreen
 import com.my.version.feature.cover.navigation.coverScreen
 import com.my.version.feature.cover.navigation.coverSecondScreen
-import com.my.version.feature.evaluate.navigation.evaluationFirstScreen
-import com.my.version.feature.evaluate.navigation.evaluationScreen
+import com.my.version.feature.evaluate.first.navigation.evaluationFirstScreen
+import com.my.version.feature.evaluate.main.navigation.evaluationScreen
 import com.my.version.feature.home.navigation.homeScreen
 import com.my.version.feature.home.navigation.navigateToHome
 import com.terning.core.util.NoRippleInteractionSource
