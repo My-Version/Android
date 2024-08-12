@@ -1,98 +1,101 @@
-package com.my.version.feature.cover
+package com.my.version.feature.cover.upload
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.my.version.core.designsystem.component.button.RectangleButton
+import com.my.version.core.designsystem.component.divider.BasicSpacer
 import com.my.version.core.designsystem.component.divider.TitleWithDivider
 import com.my.version.core.designsystem.component.item.MyVersionVerticalItem
 import com.my.version.core.designsystem.component.topappbar.NavigateUpTopAppBar
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.MyVersionBackground
-import com.my.version.core.designsystem.theme.MyVersionMain
 import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.type.TempItem
 import com.my.version.core.designsystem.type.VerticalItemType
 import com.my.version.core.designsystem.type.tempList1
+import com.my.version.feature.cover.R
+import com.my.version.feature.cover.component.OutlinedTextButton
 
 @Composable
-fun CoverFirstRoute(
+fun CoverUploadRoute(
     modifier: Modifier = Modifier,
-    viewModel: CoverFirstViewModel = CoverFirstViewModel()
+    viewModel: CoverUploadViewModel = hiltViewModel()
 ) {
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle(lifecycleOwner = lifecycleOwner)
-
-    CoverFirstScreen(
-        modifier = modifier,
-        musicList = uiState.musicList,
-        selectedIndex = uiState.selected,
-        onItemClicked = viewModel::updateSelectedIndex
+    CoverUploadScreen(
+        modifier = modifier
     )
 }
 
 @Composable
-fun CoverFirstScreen(
+fun CoverUploadScreen(
     modifier: Modifier = Modifier,
-    selectedIndex: Int,
-    musicList: List<TempItem>,
-    onItemClicked: (Int) -> Unit
+    fileList: List<TempItem> = emptyList()
 ) {
+    val paddingModifier = modifier.padding(horizontal = 20.dp)
+
     Column(
         modifier = modifier.fillMaxSize()
     ) {
         NavigateUpTopAppBar(
-            onNavigateUp = {  },
-            title = stringResource(id = R.string.cover_topbar_selection)
+            onNavigateUp = {},
+            title = stringResource(id = R.string.cover_topbar_upload)
         )
 
         TitleWithDivider(
-            text = stringResource(id = R.string.cover_on_boarding_title1),
+            text = stringResource(id = R.string.cover_on_boarding_title2),
             textStyle = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(horizontal = 20.dp)
+            modifier = paddingModifier
         )
 
-        LazyColumn(
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .weight(1f),
-            contentPadding = PaddingValues(bottom = 10.dp)
+        Row(
+            modifier = paddingModifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp)
         ) {
-            items(musicList) { cover ->
-                val currentIndex = musicList.indexOf(cover)
-                val selected = selectedIndex == currentIndex
+            OutlinedTextButton(
+                onClick = { /*TODO*/ },
+                text = stringResource(id = R.string.cover_button_audio_record)
+            )
+            BasicSpacer(width = 10.dp)
+            OutlinedTextButton(
+                onClick = { /*TODO*/ },
+                text = stringResource(id = R.string.cover_button_file_system)
+            )
+        }
+        BasicSpacer(height = 6.dp)
 
+        LazyColumn(
+            modifier = paddingModifier
+                .weight(1f),
+            contentPadding = PaddingValues(bottom = 20.dp)
+        ) {
+            items(fileList) { file ->
                 MyVersionVerticalItem(
-                    itemType = VerticalItemType.MUSIC,
-                    iconColor = if(selected) MyVersionMain else Black,
-                    onClick = {
-                        onItemClicked(currentIndex)
-                    },
-                    title = cover.title,
-                    subTitle = cover.body
+                    itemType = VerticalItemType.AUDIO,
+                    iconColor = Black,
+                    onClick = { /*TODO*/ },
+                    title = file.title,
+                    subTitle = file.body
                 )
-                if (musicList.last() != cover) {
-                    Spacer(modifier = Modifier.height(16.dp))
+                if (fileList.last() != file) {
+                    BasicSpacer(height = 16.dp)
                 }
             }
         }
@@ -114,16 +117,11 @@ fun CoverFirstScreen(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun CoverFirstScreenPreview() {
+private fun CoverUploadScreenPreview() {
     MyVersionTheme {
-        Box(
+        CoverUploadScreen(
+            fileList = tempList1,
             modifier = Modifier.background(MyVersionBackground)
-        ) {
-            CoverFirstScreen(
-                musicList = tempList1,
-                selectedIndex = 1,
-                onItemClicked = {}
-            )
-        }
+        )
     }
 }
