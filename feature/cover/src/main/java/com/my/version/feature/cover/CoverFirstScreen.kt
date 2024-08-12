@@ -26,6 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.my.version.core.designsystem.component.button.RectangleButton
 import com.my.version.core.designsystem.component.divider.TitleWithDivider
 import com.my.version.core.designsystem.component.item.MyVersionVerticalItem
+import com.my.version.core.designsystem.component.topappbar.NavigateUpTopAppBar
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionMain
@@ -50,7 +51,6 @@ fun CoverFirstRoute(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CoverFirstScreen(
     modifier: Modifier = Modifier,
@@ -61,20 +61,23 @@ fun CoverFirstScreen(
     Column(
         modifier = modifier.fillMaxSize()
     ) {
+        NavigateUpTopAppBar(
+            onNavigateUp = {  },
+            title = stringResource(id = R.string.cover_topbar_selection)
+        )
+
+        TitleWithDivider(
+            text = stringResource(id = R.string.cover_on_boarding_title1),
+            textStyle = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(horizontal = 20.dp)
+        )
+
         LazyColumn(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
                 .weight(1f),
             contentPadding = PaddingValues(bottom = 10.dp)
         ) {
-
-            stickyHeader {
-                TitleWithDivider(
-                    text = stringResource(id = R.string.cover_on_boarding_title1),
-                    textStyle = MaterialTheme.typography.titleMedium
-                )
-            }
-
             items(musicList) { cover ->
                 val currentIndex = musicList.indexOf(cover)
                 val selected = selectedIndex == currentIndex
