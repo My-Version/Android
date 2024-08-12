@@ -1,6 +1,5 @@
 package com.my.version.core.designsystem.component.item
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,7 +25,7 @@ import com.my.version.core.designsystem.theme.White
 import com.my.version.core.designsystem.type.VerticalItemType
 
 @Composable
-fun VerticalListItem(
+fun MyVersionVerticalItem(
     itemType: VerticalItemType,
     onClick: () -> Unit,
     title: String,
@@ -74,7 +73,7 @@ fun VerticalListItem(
 @Composable
 fun VerticalMusicListItemPreview() {
     MyVersionTheme {
-        VerticalListItem(
+        MyVersionVerticalItem(
             itemType = VerticalItemType.MUSIC,
             iconColor = MyVersionMain,
             onClick = {},
