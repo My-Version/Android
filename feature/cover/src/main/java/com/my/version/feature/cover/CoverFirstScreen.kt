@@ -15,28 +15,39 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.my.version.core.designsystem.component.button.OnBoardingButton
-import com.my.version.core.designsystem.component.item.VerticalListItem
+import com.my.version.core.designsystem.component.divider.TitleWithDivider
+import com.my.version.core.designsystem.component.item.MyVersionVerticalItem
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.MyVersionBackground
+import com.my.version.core.designsystem.theme.MyVersionMain
 import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.type.TempItem
 import com.my.version.core.designsystem.type.VerticalItemType
 import com.my.version.core.designsystem.type.tempList1
-import com.my.version.feature.cover.component.TitleWithDivider
+import com.my.version.feature.cover.state.CoverFirstUiState
 
 @Composable
 fun CoverFirstRoute(
     modifier: Modifier = Modifier,
+    viewModel: CoverFirstViewModel = CoverFirstViewModel()
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle(lifecycleOwner = lifecycleOwner)
+
     CoverFirstScreen(
         modifier = modifier,
-        musicList = tempList1
+        musicList = uiState.musicList,
+        selectedIndex = uiState.selected,
+        onItemClicked = viewModel::updateSelectedIndex
     )
 }
 
@@ -44,7 +55,9 @@ fun CoverFirstRoute(
 @Composable
 fun CoverFirstScreen(
     modifier: Modifier = Modifier,
-    musicList: List<TempItem> = emptyList()
+    selectedIndex: Int,
+    musicList: List<TempItem>,
+    onItemClicked: (Int) -> Unit
 ) {
     Column(
         modifier = modifier.fillMaxSize()
@@ -53,7 +66,7 @@ fun CoverFirstScreen(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
                 .weight(1f),
-            contentPadding = PaddingValues(bottom = 20.dp)
+            contentPadding = PaddingValues(bottom = 10.dp)
         ) {
 
             stickyHeader {
@@ -64,10 +77,15 @@ fun CoverFirstScreen(
             }
 
             items(musicList) { cover ->
-                VerticalListItem(
+                val currentIndex = musicList.indexOf(cover)
+                val selected = selectedIndex == currentIndex
+
+                MyVersionVerticalItem(
                     itemType = VerticalItemType.MUSIC,
-                    iconColor = Black,
-                    onClick = { /*TODO*/ },
+                    iconColor = if(selected) MyVersionMain else Black,
+                    onClick = {
+                        onItemClicked(currentIndex)
+                    },
                     title = cover.title,
                     subTitle = cover.body
                 )
@@ -94,13 +112,15 @@ fun CoverFirstScreen(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun CoverFirstScreenPreview() {
+private fun CoverFirstScreenPreview() {
     MyVersionTheme {
         Box(
             modifier = Modifier.background(MyVersionBackground)
         ) {
             CoverFirstScreen(
                 musicList = tempList1,
+                selectedIndex = 1,
+                onItemClicked = {}
             )
         }
     }

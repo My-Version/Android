@@ -11,6 +11,7 @@
     <string name="cover_on_boarding_title2">Upload your audio file</string>
     <string name="cover_button_audio_record">Record</string>
     <string name="cover_button_file_system">File System</string>
-    <string name="cover_time_check">[ %s/15:00 ]</string>
+    <string name="cover_time_check"> %s / 15:00 </string>
+
 
 </resources>

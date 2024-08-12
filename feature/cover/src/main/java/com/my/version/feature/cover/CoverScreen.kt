@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.my.version.core.designsystem.component.button.SortingButton
-import com.my.version.core.designsystem.component.item.VerticalListItem
+import com.my.version.core.designsystem.component.item.MyVersionVerticalItem
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.Grey300
 import com.my.version.core.designsystem.theme.Grey400
@@ -40,7 +39,6 @@ import com.my.version.core.designsystem.theme.White
 import com.my.version.core.designsystem.type.TempItem
 import com.my.version.core.designsystem.type.VerticalItemType
 import com.my.version.core.designsystem.type.tempList1
-import com.my.version.feature.cover.component.verticalItemList
 
 @Composable
 fun CoverRoute(
@@ -108,7 +106,7 @@ private fun CoverScreen(
             }
         } else {
             items(coverList) { cover ->
-                VerticalListItem(
+                MyVersionVerticalItem(
                     itemType = VerticalItemType.COVER,
                     iconColor = Black,
                     onClick = { /*TODO*/ },

@@ -24,7 +24,7 @@ class MainNavigator(
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
 
-    val startDestination = Home
+    val startDestination = CoverSecond
 
     val currentTab: MainTab?
         @Composable get() = MainTab.find { tab ->

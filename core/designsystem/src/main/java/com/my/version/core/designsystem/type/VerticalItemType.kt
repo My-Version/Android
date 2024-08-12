@@ -17,11 +17,11 @@ enum class VerticalItemType(
         contentDescription = R.string.btn_play
     ),
     AUDIO(
-        icon = R.drawable.ic_forward,
+        icon = R.drawable.ic_close,
         contentDescription = R.string.btn_close
     ),
     EVALUATE(
         icon = R.drawable.ic_forward,
         contentDescription = R.string.btn_next
-    )
+    ),
 }
