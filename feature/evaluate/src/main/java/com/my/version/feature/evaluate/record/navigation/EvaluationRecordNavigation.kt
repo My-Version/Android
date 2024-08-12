@@ -1,4 +1,4 @@
-package com.my.version.feature.evaluate.select.navigation
+package com.my.version.feature.evaluate.record.navigation
 
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
@@ -8,19 +8,20 @@ import androidx.navigation.compose.composable
 import com.my.version.core.common.navigation.Route
 import com.my.version.feature.evaluate.select.EvaluationSelectRoute
 import com.my.version.feature.evaluate.main.navigation.Evaluation
+import com.my.version.feature.evaluate.record.EvaluationRecordRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateToEvaluationSelect(navOptions: NavOptions? = null) = navigate(EvaluationSelect, navOptions)
+fun NavController.navigateToEvaluationRecord(navOptions: NavOptions? = null) = navigate(EvaluationRecord, navOptions)
 
-fun NavGraphBuilder.evaluationSelectScreen(
+fun NavGraphBuilder.evaluationRecordScreen(
     modifier: Modifier
 ) {
-    composable<EvaluationSelect>{
-        EvaluationSelectRoute(
+    composable<EvaluationRecord>{
+        EvaluationRecordRoute(
             modifier = modifier
         )
     }
 }
 
 @Serializable
-data object EvaluationSelect: Route
+data object EvaluationRecord: Route

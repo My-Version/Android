@@ -9,7 +9,7 @@ import com.my.version.core.common.navigation.MainTabRoute
 import com.my.version.feature.evaluate.main.EvaluationRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateToEvaluation(navOptions: NavOptions) = navigate(Evaluation, navOptions)
+fun NavController.navigateToEvaluation(navOptions: NavOptions? = null) = navigate(Evaluation, navOptions)
 
 fun NavGraphBuilder.evaluationScreen(
     modifier: Modifier
