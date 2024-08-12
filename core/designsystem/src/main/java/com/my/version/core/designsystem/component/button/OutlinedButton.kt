@@ -16,40 +16,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.my.version.core.common.extension.noRippleClickable
+import com.my.version.core.designsystem.component.text.SingleLineText
 import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionTheme
 
 @Composable
 fun OutlinedButton(
-    text: String,
-    textStyle: TextStyle,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     containerColor: Color = Color.Transparent,
-    contentColor: Color = Color.White,
     borderColor: Color = Color.White,
-    borderWidth: Int = 1,
-    cornerRadius: Int = 5,
+    borderWidth: Dp = 1.dp,
+    cornerRadius: Dp = 5.dp,
+    content: @Composable () -> Unit = {}
 ) {
     Box(
         modifier = modifier
             .noRippleClickable { onClick() }
             .background(containerColor)
             .border(
-                width = borderWidth.dp,
+                width = borderWidth,
                 color = borderColor,
-                shape = RoundedCornerShape(cornerRadius.dp)
+                shape = RoundedCornerShape(cornerRadius)
             ),
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = text,
-            color = contentColor,
-            style = textStyle,
-            modifier = Modifier.padding(vertical = 10.dp)
-        )
+        content()
     }
 }
 
@@ -59,11 +54,13 @@ fun OutlinedButtonPreview() {
     MyVersionTheme {
         Box(modifier = Modifier.background(MyVersionBackground)) {
             OutlinedButton(
-                text = "Record",
-                textStyle = MaterialTheme.typography.bodyMedium,
                 onClick = { /*TODO*/ },
                 modifier = Modifier.width(145.dp)
-            )
+            ) {
+                SingleLineText(
+                    text = "Record",
+                    style = MaterialTheme.typography.bodyMedium,)
+            }
         }
     }
 }

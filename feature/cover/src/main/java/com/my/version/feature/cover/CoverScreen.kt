@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.my.version.core.designsystem.component.button.SortingButton
 import com.my.version.core.designsystem.component.item.MyVersionVerticalItem
+import com.my.version.core.designsystem.component.topappbar.NewCreationTopAppBar
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.Grey300
 import com.my.version.core.designsystem.theme.Grey400
@@ -58,6 +60,15 @@ private fun CoverScreen(
     coverList: List<TempItem> = emptyList()
 ) {
     var isSelected by remember { mutableStateOf(false) }
+    Column {
+        NewCreationTopAppBar(
+            title = stringResource(
+                id = R.string.cover_main_title
+            ),
+            textStyle = MaterialTheme.typography.labelLarge,
+            onClick = {}
+        )
+
 
     LazyColumn(
         modifier = modifier
@@ -65,9 +76,6 @@ private fun CoverScreen(
             .padding(horizontal = 20.dp)
 
     ) {
-        item{
-            Spacer(modifier = Modifier.height(20.dp))
-        }
         stickyHeader {
             Row(
                 modifier = Modifier
@@ -119,6 +127,7 @@ private fun CoverScreen(
             }
         }
     }
+        }
 }
 
 @Composable

@@ -29,6 +29,7 @@ import com.my.version.core.designsystem.component.button.MyVersionBasicIconButto
 import com.my.version.core.designsystem.component.button.RectangleButton
 import com.my.version.core.designsystem.component.divider.MyVersionHorizontalDivider
 import com.my.version.core.designsystem.component.divider.TitleWithDivider
+import com.my.version.core.designsystem.component.topappbar.NavigateUpTopAppBar
 import com.my.version.core.designsystem.theme.Grey200
 import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionTheme
@@ -37,7 +38,7 @@ import com.my.version.feature.evaluate.R
 import com.my.version.core.designsystem.R as DesignSystemR
 
 @Composable
-fun EvaluationRecordRoute(
+fun EvaluationUploadRoute(
     modifier: Modifier = Modifier,
     viewModel: EvaluationUploadViewModel = hiltViewModel()
 ) {
@@ -58,8 +59,13 @@ private fun EvaluationUploadScreen(
     Column(
         modifier = modifier.fillMaxSize()
     ) {
+        NavigateUpTopAppBar(
+            onNavigateUp = { /*TODO*/ },
+            title = stringResource(id = R.string.evaluation_topbar_upload)
+        )
+
         TitleWithDivider(
-            text = stringResource(id = R.string.evaluation_main_title),
+            text = stringResource(id = R.string.evaluation_on_boarding_title2),
             textStyle = MaterialTheme.typography.titleMedium,
             modifier = commonModifier
         )
@@ -94,7 +100,7 @@ private fun EvaluationUploadScreen(
         )
 
         Row(
-            modifier = commonModifier.padding(top = 20.dp),
+            modifier = commonModifier,
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {

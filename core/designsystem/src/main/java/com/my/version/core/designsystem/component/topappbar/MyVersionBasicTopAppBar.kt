@@ -9,13 +9,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun MyVersionBasicTopAppBar(
-    navigationIcon: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    navigationIcon: @Composable () -> Unit = {},
     actions: List<@Composable () -> Unit> = emptyList(),
     title: String = ""
 ) {
@@ -30,7 +31,7 @@ internal fun MyVersionBasicTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             navigationIconContentColor = White,
             titleContentColor = White,
-            containerColor = MaterialTheme.colorScheme.background
+            containerColor = MyVersionBackground
         ),
         actions = { actions.forEach { it() } },
         modifier = modifier.padding(horizontal = 12.dp)

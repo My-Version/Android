@@ -24,14 +24,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.my.version.core.designsystem.component.button.RectangleButton
 import com.my.version.core.designsystem.component.button.OutlinedButton
+import com.my.version.core.designsystem.component.divider.BasicSpacer
 import com.my.version.core.designsystem.component.divider.TitleWithDivider
 import com.my.version.core.designsystem.component.item.MyVersionVerticalItem
+import com.my.version.core.designsystem.component.text.SingleLineText
+import com.my.version.core.designsystem.component.topappbar.NavigateUpTopAppBar
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.type.TempItem
 import com.my.version.core.designsystem.type.VerticalItemType
 import com.my.version.core.designsystem.type.tempList1
+import com.my.version.feature.cover.component.OutlinedTextButton
 
 @Composable
 fun CoverSecondRoute(
@@ -42,55 +46,49 @@ fun CoverSecondRoute(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CoverSecondScreen(
     modifier: Modifier = Modifier,
     fileList: List<TempItem> = emptyList()
 ) {
+    val paddingModifier = modifier.padding(horizontal = 20.dp)
+
     Column(
         modifier = modifier.fillMaxSize()
     ) {
+        NavigateUpTopAppBar(
+            onNavigateUp = {},
+            title = stringResource(id = R.string.cover_topbar_upload)
+        )
+
+        TitleWithDivider(
+            text = stringResource(id = R.string.cover_on_boarding_title2),
+            textStyle = MaterialTheme.typography.titleMedium,
+            modifier = paddingModifier
+        )
+
+        Row(
+            modifier = paddingModifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp)
+        ) {
+            OutlinedTextButton(
+                onClick = { /*TODO*/ },
+                text = stringResource(id = R.string.cover_button_audio_record)
+            )
+            BasicSpacer(width = 10.dp)
+            OutlinedTextButton(
+                onClick = { /*TODO*/ },
+                text = stringResource(id = R.string.cover_button_file_system)
+            )
+        }
+        BasicSpacer(height = 6.dp)
+
         LazyColumn(
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
+            modifier = paddingModifier
                 .weight(1f),
             contentPadding = PaddingValues(bottom = 20.dp)
         ) {
-
-            stickyHeader {
-
-                TitleWithDivider(
-                    text = stringResource(id = R.string.cover_on_boarding_title2),
-                    textStyle = MaterialTheme.typography.titleMedium
-                )
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp)
-                ) {
-                    OutlinedButton(
-                        text = stringResource(id = R.string.cover_button_audio_record),
-                        textStyle = MaterialTheme.typography.titleMedium,
-                        onClick = { /*TODO*/ },
-                        modifier = Modifier
-                            .wrapContentHeight()
-                            .weight(1f),
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    OutlinedButton(
-                        text = stringResource(id = R.string.cover_button_audio_record),
-                        textStyle = MaterialTheme.typography.titleMedium,
-                        onClick = { /*TODO*/ },
-                        modifier = Modifier
-                            .wrapContentHeight()
-                            .weight(1f),
-                    )
-                }
-                Spacer(modifier = Modifier.height(6.dp))
-            }
-
             items(fileList) { file ->
                 MyVersionVerticalItem(
                     itemType = VerticalItemType.AUDIO,
@@ -100,7 +98,7 @@ fun CoverSecondScreen(
                     subTitle = file.body
                 )
                 if (fileList.last() != file) {
-                    Spacer(modifier = Modifier.height(16.dp))
+                    BasicSpacer(height = 16.dp)
                 }
             }
         }
@@ -124,12 +122,9 @@ fun CoverSecondScreen(
 @Composable
 private fun CoverSecondScreenPreview() {
     MyVersionTheme {
-        Box(
+        CoverSecondScreen(
+            fileList = tempList1,
             modifier = Modifier.background(MyVersionBackground)
-        ) {
-            CoverSecondScreen(
-                fileList = tempList1,
-            )
-        }
+        )
     }
 }

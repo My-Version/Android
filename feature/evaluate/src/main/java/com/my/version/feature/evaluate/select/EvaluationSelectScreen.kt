@@ -22,8 +22,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.my.version.core.designsystem.component.button.RectangleButton
+import com.my.version.core.designsystem.component.divider.BasicSpacer
 import com.my.version.core.designsystem.component.divider.TitleWithDivider
 import com.my.version.core.designsystem.component.item.MyVersionVerticalItem
+import com.my.version.core.designsystem.component.topappbar.NavigateUpTopAppBar
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionTheme
@@ -43,7 +45,6 @@ fun EvaluationSelectRoute(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun EvaluationSelectScreen(
     modifier: Modifier = Modifier,
@@ -52,21 +53,25 @@ private fun EvaluationSelectScreen(
     Column(
         modifier = modifier.fillMaxSize()
     ) {
+        NavigateUpTopAppBar(
+            onNavigateUp = { /*TODO*/ },
+            title = stringResource(id = R.string.evaluation_topbar_selection)
+        )
+
+        TitleWithDivider(
+            text = stringResource(id = R.string.evaluation_on_boarding_title1),
+            textStyle = MaterialTheme.typography.titleMedium,
+            modifier = Modifier
+                .background(color = MyVersionBackground)
+                .padding(horizontal = 20.dp)
+        )
+
         LazyColumn(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
                 .weight(1f),
-            contentPadding = PaddingValues(bottom = 10.dp)
+            contentPadding = PaddingValues(vertical = 10.dp)
         ) {
-
-            stickyHeader {
-                TitleWithDivider(
-                    text = stringResource(id = R.string.evaluation_on_boarding_title1),
-                    textStyle = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.background(color = MyVersionBackground)
-                )
-            }
-
             items(coverList) { cover ->
 
                 MyVersionVerticalItem(
@@ -78,7 +83,7 @@ private fun EvaluationSelectScreen(
                     subTitle = cover.body
                 )
                 if (coverList.last() != cover) {
-                    Spacer(modifier = Modifier.height(16.dp))
+                    BasicSpacer(height = 16.dp)
                 }
             }
         }
