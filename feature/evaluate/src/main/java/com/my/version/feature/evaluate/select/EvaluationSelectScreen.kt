@@ -1,4 +1,4 @@
-package com.my.version.feature.evaluate.first
+package com.my.version.feature.evaluate.select
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -33,11 +33,11 @@ import com.my.version.core.designsystem.type.tempList1
 import com.my.version.feature.evaluate.R
 
 @Composable
-fun EvaluationFirstRoute(
+fun EvaluationSelectRoute(
     modifier: Modifier = Modifier,
-    viewModel: EvaluationFirstViewModel = hiltViewModel()
+    viewModel: EvaluationSelectViewModel = hiltViewModel()
 ) {
-    EvaluationFirstScreen(
+    EvaluationSelectScreen(
         modifier = modifier,
         coverList = tempList1
     )
@@ -45,7 +45,7 @@ fun EvaluationFirstRoute(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun EvaluationFirstScreen(
+private fun EvaluationSelectScreen(
     modifier: Modifier = Modifier,
     coverList: List<TempItem> = emptyList()
 ) {
@@ -100,10 +100,10 @@ private fun EvaluationFirstScreen(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun EvaluationFirstScreenPreview() {
+private fun EvaluationSelectScreenPreview() {
     MyVersionTheme {
         Box(modifier = Modifier.background(color = MyVersionBackground)) {
-            EvaluationFirstScreen(
+            EvaluationSelectScreen(
                 coverList = tempList1
             )
         }
