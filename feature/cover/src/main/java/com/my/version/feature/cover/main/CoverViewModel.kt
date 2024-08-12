@@ -1,4 +1,4 @@
-package com.my.version.feature.cover
+package com.my.version.feature.cover.main
 
 import androidx.lifecycle.ViewModel
 import javax.inject.Inject

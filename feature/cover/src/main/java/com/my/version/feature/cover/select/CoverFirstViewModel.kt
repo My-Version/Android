@@ -1,8 +1,6 @@
-package com.my.version.feature.cover
+package com.my.version.feature.cover.select
 
 import androidx.lifecycle.ViewModel
-import com.my.version.core.designsystem.type.TempItem
-import com.my.version.core.designsystem.type.tempList1
 import com.my.version.feature.cover.state.CoverFirstUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

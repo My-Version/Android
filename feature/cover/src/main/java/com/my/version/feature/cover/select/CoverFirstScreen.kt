@@ -1,6 +1,5 @@
-package com.my.version.feature.cover
+package com.my.version.feature.cover.select
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +33,7 @@ import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.type.TempItem
 import com.my.version.core.designsystem.type.VerticalItemType
 import com.my.version.core.designsystem.type.tempList1
+import com.my.version.feature.cover.R
 
 @Composable
 fun CoverFirstRoute(

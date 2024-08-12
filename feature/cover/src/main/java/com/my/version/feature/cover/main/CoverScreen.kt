@@ -1,4 +1,4 @@
-package com.my.version.feature.cover
+package com.my.version.feature.cover.main
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -41,6 +41,7 @@ import com.my.version.core.designsystem.theme.White
 import com.my.version.core.designsystem.type.TempItem
 import com.my.version.core.designsystem.type.VerticalItemType
 import com.my.version.core.designsystem.type.tempList1
+import com.my.version.feature.cover.R
 
 @Composable
 fun CoverRoute(

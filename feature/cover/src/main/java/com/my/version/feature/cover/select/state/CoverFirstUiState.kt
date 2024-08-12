@@ -1,4 +1,4 @@
-package com.my.version.feature.cover.state
+package com.my.version.feature.cover.select.state
 
 import com.my.version.core.designsystem.type.TempItem
 

@@ -9,7 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.my.version.feature.cover.navigation.navigateToCover
+import com.my.version.feature.cover.main.navigation.navigateToCover
 import com.my.version.feature.evaluate.main.navigation.navigateToEvaluation
 import com.my.version.feature.home.navigation.Home
 import com.my.version.feature.home.navigation.navigateToHome

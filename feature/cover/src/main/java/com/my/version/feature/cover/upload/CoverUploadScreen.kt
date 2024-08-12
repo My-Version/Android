@@ -1,17 +1,13 @@
-package com.my.version.feature.cover
+package com.my.version.feature.cover.upload
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,12 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.my.version.core.designsystem.component.button.RectangleButton
-import com.my.version.core.designsystem.component.button.OutlinedButton
 import com.my.version.core.designsystem.component.divider.BasicSpacer
 import com.my.version.core.designsystem.component.divider.TitleWithDivider
 import com.my.version.core.designsystem.component.item.MyVersionVerticalItem
-import com.my.version.core.designsystem.component.text.SingleLineText
 import com.my.version.core.designsystem.component.topappbar.NavigateUpTopAppBar
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.MyVersionBackground
@@ -35,19 +30,21 @@ import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.type.TempItem
 import com.my.version.core.designsystem.type.VerticalItemType
 import com.my.version.core.designsystem.type.tempList1
+import com.my.version.feature.cover.R
 import com.my.version.feature.cover.component.OutlinedTextButton
 
 @Composable
-fun CoverSecondRoute(
-    modifier: Modifier = Modifier
+fun CoverUploadRoute(
+    modifier: Modifier = Modifier,
+    viewModel: CoverUploadViewModel = hiltViewModel()
 ) {
-    CoverSecondScreen(
+    CoverUploadScreen(
         modifier = modifier
     )
 }
 
 @Composable
-fun CoverSecondScreen(
+fun CoverUploadScreen(
     modifier: Modifier = Modifier,
     fileList: List<TempItem> = emptyList()
 ) {
@@ -120,9 +117,9 @@ fun CoverSecondScreen(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun CoverSecondScreenPreview() {
+private fun CoverUploadScreenPreview() {
     MyVersionTheme {
-        CoverSecondScreen(
+        CoverUploadScreen(
             fileList = tempList1,
             modifier = Modifier.background(MyVersionBackground)
         )
