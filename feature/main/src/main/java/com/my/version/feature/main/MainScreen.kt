@@ -6,8 +6,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -20,10 +18,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.my.version.core.common.extension.noScaffoldPadding
 import com.my.version.core.common.navigation.Route
 import com.my.version.core.designsystem.component.topappbar.LogoTopAppBar
-import com.my.version.core.designsystem.theme.Grey200
 import com.my.version.core.designsystem.theme.Grey400
 import com.my.version.core.designsystem.theme.MyVersionMain
 import com.my.version.core.designsystem.theme.White
@@ -32,7 +28,9 @@ import com.my.version.feature.auth.signup.navigation.signUpScreen
 import com.my.version.feature.cover.navigation.coverFirstScreen
 import com.my.version.feature.cover.navigation.coverScreen
 import com.my.version.feature.cover.navigation.coverSecondScreen
-import com.my.version.feature.evaluate.navigation.evaluateScreen
+import com.my.version.feature.evaluate.select.navigation.evaluationSelectScreen
+import com.my.version.feature.evaluate.main.navigation.evaluationScreen
+import com.my.version.feature.evaluate.record.navigation.evaluationRecordScreen
 import com.my.version.feature.home.navigation.homeScreen
 import com.my.version.feature.home.navigation.navigateToHome
 import com.terning.core.util.NoRippleInteractionSource
@@ -89,8 +87,14 @@ fun MainNavHost(
         coverSecondScreen(
             modifier = noBottomBarModifier
         )
-        evaluateScreen(
+        evaluationScreen(
             modifier = bottomBarModifier
+        )
+        evaluationSelectScreen(
+            modifier = noBottomBarModifier
+        )
+        evaluationRecordScreen(
+            modifier = noBottomBarModifier
         )
         signInScreen(
             modifier = noBottomBarModifier,

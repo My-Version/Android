@@ -13,10 +13,13 @@
     <string name="btn_play">play</string>
     <string name="btn_close">close</string>
     <string name="btn_next">next</string>
+    <string name="btn_next_capital">Next</string>
+    <string name="btn_upload_capital">Upload</string>
 
     //Icon Content Description
     <string name="icon_content_description_next">next</string>
     <string name="icon_content_description_back">back</string>
     <string name="icon_content_description_play">play</string>
+
 
 </resources>

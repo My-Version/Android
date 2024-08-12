@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import com.my.version.core.common.navigation.MainTabRoute
 import com.my.version.core.common.navigation.Route
 import com.my.version.feature.cover.navigation.Cover
-import com.my.version.feature.evaluate.navigation.Evaluate
+import com.my.version.feature.evaluate.main.navigation.Evaluation
 import com.my.version.feature.home.navigation.Home
 
 enum class MainTab(
@@ -28,7 +28,7 @@ enum class MainTab(
     EVALUATE(
         titleId = R.string.bottom_nav_evaluate,
         iconId = R.drawable.ic_music_24,
-        route = Evaluate
+        route = Evaluation
     );
 
     companion object {
