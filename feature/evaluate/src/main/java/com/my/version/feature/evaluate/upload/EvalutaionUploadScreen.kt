@@ -35,7 +35,6 @@ import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.theme.White
 import com.my.version.feature.evaluate.R
-import com.my.version.feature.evaluate.upload.navigation.EvaluationUpload
 import com.my.version.core.designsystem.R as DesignSystemR
 
 @Composable
@@ -66,7 +65,7 @@ private fun EvaluationUploadScreen(
         )
 
         TitleWithDivider(
-            text = stringResource(id = R.string.evaluation_main_title),
+            text = stringResource(id = R.string.evaluation_on_boarding_title2),
             textStyle = MaterialTheme.typography.titleMedium,
             modifier = commonModifier
         )
