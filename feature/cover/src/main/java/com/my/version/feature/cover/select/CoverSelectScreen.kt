@@ -36,14 +36,14 @@ import com.my.version.core.designsystem.type.tempList1
 import com.my.version.feature.cover.R
 
 @Composable
-fun CoverFirstRoute(
+fun CoverSelectRoute(
     modifier: Modifier = Modifier,
-    viewModel: CoverFirstViewModel = CoverFirstViewModel()
+    viewModel: CoverSelectViewModel = CoverSelectViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle(lifecycleOwner = lifecycleOwner)
 
-    CoverFirstScreen(
+    CoverSelectScreen(
         modifier = modifier,
         musicList = uiState.musicList,
         selectedIndex = uiState.selected,
@@ -52,7 +52,7 @@ fun CoverFirstRoute(
 }
 
 @Composable
-fun CoverFirstScreen(
+fun CoverSelectScreen(
     modifier: Modifier = Modifier,
     selectedIndex: Int,
     musicList: List<TempItem>,
@@ -119,7 +119,7 @@ private fun CoverFirstScreenPreview() {
         Box(
             modifier = Modifier.background(MyVersionBackground)
         ) {
-            CoverFirstScreen(
+            CoverSelectScreen(
                 musicList = tempList1,
                 selectedIndex = 1,
                 onItemClicked = {}

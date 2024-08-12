@@ -6,20 +6,20 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.my.version.core.common.navigation.Route
-import com.my.version.feature.cover.select.CoverFirstRoute
+import com.my.version.feature.cover.select.CoverSelectRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateToCoverFirst(navOptions: NavOptions? = null) = navigate(CoverFirst, navOptions)
+fun NavController.navigateToCoverSelect(navOptions: NavOptions? = null) = navigate(CoverSelect, navOptions)
 
-fun NavGraphBuilder.coverFirstScreen(
+fun NavGraphBuilder.coverSelectScreen(
     modifier: Modifier
 ) {
-    composable<CoverFirst>{
-        CoverFirstRoute(
+    composable<CoverSelect>{
+        CoverSelectRoute(
             modifier = modifier
         )
     }
 }
 
 @Serializable
-data object CoverFirst: Route
+data object CoverSelect: Route
