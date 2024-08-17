@@ -29,4 +29,5 @@ dependencies {
     implementation(project(":feature:cover"))
     implementation(project(":feature:evaluate"))
 
+    implementation(libs.google.accompanist)
 }

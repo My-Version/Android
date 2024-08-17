@@ -38,6 +38,8 @@ import com.terning.core.util.NoRippleInteractionSource
 fun MainScreen(
     navigator: MainNavigator = rememberMainNavigator(),
 ) {
+    PermissionChecker()
+
     Scaffold(
         bottomBar = {
             MainBottomBar(
@@ -60,7 +62,7 @@ fun MainScreen(
 }
 
 @Composable
-fun MyVersionNavHost(
+private fun MyVersionNavHost(
     navController: NavHostController,
     startDestination: Route,
     modifier: Modifier = Modifier
