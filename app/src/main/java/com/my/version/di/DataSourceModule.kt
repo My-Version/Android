@@ -1,4 +1,4 @@
-package com.my.version
+package com.my.version.di
 
 import com.my.version.core.data.datasource.local.CoverLocalDataSource
 import com.my.version.core.data.datasourceimpl.local.CoverLocalDataSourceImpl

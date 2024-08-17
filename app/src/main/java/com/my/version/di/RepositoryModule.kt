@@ -1,4 +1,4 @@
-package com.my.version
+package com.my.version.di
 
 import com.my.version.core.data.repositoryimpl.CoverLocalRepositoryImpl
 import com.my.version.core.domain.repository.CoverLocalRepository
