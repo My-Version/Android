@@ -6,8 +6,9 @@ import android.provider.MediaStore
 import com.my.version.core.data.datasource.local.CoverLocalDataSource
 import com.my.version.core.data.service.LocalFileService
 import com.my.version.core.domain.entity.CoverAudioFile
+import javax.inject.Inject
 
-class CoverLocalDataSourceImpl(
+class CoverLocalDataSourceImpl @Inject constructor(
     localFileService: LocalFileService
 ): CoverLocalDataSource {
     override suspend fun getCoverList(): List<MediaStore.Audio> {

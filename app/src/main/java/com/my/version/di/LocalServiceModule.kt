@@ -13,7 +13,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 object LocalServiceModule {
-    @Binds
+    @Provides
     @Singleton
     fun provideLocalFileService(@ApplicationContext context: Context): LocalFileService {
         return LocalFileService(context)
