@@ -12,11 +12,14 @@ import kotlinx.serialization.Serializable
 fun NavController.navigateToCover(navOptions: NavOptions? = null) = navigate(Cover, navOptions)
 
 fun NavGraphBuilder.coverScreen(
-    modifier: Modifier
+    modifier: Modifier,
+    navigateToSelect: () -> Unit,
+
 ) {
     composable<Cover>{
         CoverRoute(
-            modifier = modifier
+            modifier = modifier,
+            navigateToSelect = navigateToSelect
         )
     }
 }

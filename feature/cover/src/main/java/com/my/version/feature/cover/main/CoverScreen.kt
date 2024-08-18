@@ -46,6 +46,7 @@ import java.io.File
 
 @Composable
 fun CoverRoute(
+    navigateToSelect: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CoverViewModel = hiltViewModel()
 ) {
@@ -57,6 +58,7 @@ fun CoverRoute(
     CoverScreen(
         modifier = modifier,
         uiState = uiState,
+        onCreateClicked = navigateToSelect,
         onCoverSelected = {
             viewModel.playCoverAudio(it)
         }
@@ -68,6 +70,7 @@ fun CoverRoute(
 private fun CoverScreen(
     modifier: Modifier = Modifier,
     uiState: CoverUiState,
+    onCreateClicked: () -> Unit,
     onCoverSelected: (File?) -> Unit
 ) {
     var isSelected by remember { mutableStateOf(false) }
@@ -77,7 +80,7 @@ private fun CoverScreen(
                 id = R.string.cover_main_title
             ),
             textStyle = MaterialTheme.typography.labelLarge,
-            onClick = {}
+            onClick = onCreateClicked
         )
 
 
