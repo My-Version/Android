@@ -67,6 +67,7 @@ class CoverViewModel @Inject constructor(
 
                 mediaPlayer?.setOnCompletionListener {
                     it.release()
+                    mediaPlayer = null
                 }
 
         }
