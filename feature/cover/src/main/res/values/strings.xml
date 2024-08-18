@@ -3,6 +3,7 @@
 
     // Cover Main Page
     <string name="cover_main_title">Cover List</string>
+    <string name="cover_created_date">Created: %s</string>
 
     //Cover TopBar title
     <string name = "cover_topbar_main">New Cover</string>
