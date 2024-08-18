@@ -5,6 +5,5 @@ import java.io.InputStream
 
 interface CoverLocalRepository {
     suspend fun getCoverAudioList(): List<CoverAudioFile>
-
     suspend fun writeCoverAudio(fileName: String,inputStream: InputStream)
 }

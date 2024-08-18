@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.my.version.core.common.extension.setNewPlayer
+import com.my.version.core.common.extension.stopPreviousMusic
 import com.my.version.core.common.state.UiState
 import com.my.version.core.domain.repository.CoverLocalRepository
 import com.my.version.feature.cover.main.state.CoverUiState
@@ -29,9 +31,6 @@ class CoverViewModel @Inject constructor(
 
     init {
         getCoverList()
-        /*viewModelScope.launch {
-            coverLocalRepository.writeCoverAudio()
-        }*/
     }
 
     private fun getCoverList() = viewModelScope.launch {
@@ -53,23 +52,12 @@ class CoverViewModel @Inject constructor(
 
     fun playCoverAudio(cover: File?) {
         if(cover != null) {
-                mediaPlayer?.let {
-                    if (it.isPlaying) {
-                        it.stop()
-                    }
-                    it.release()
-                }
-                mediaPlayer = MediaPlayer().apply {
-                    setDataSource(cover.path)
-                    prepare()
-                    start()
-                }
-
+                mediaPlayer?.stopPreviousMusic()
+                mediaPlayer = MediaPlayer().setNewPlayer(cover.path)
                 mediaPlayer?.setOnCompletionListener {
                     it.release()
                     mediaPlayer = null
                 }
-
         }
     }
 }

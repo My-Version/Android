@@ -5,10 +5,9 @@ import android.os.Environment
 import com.my.version.core.common.extension.isAudioFile
 import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import java.io.File
-import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
 import javax.inject.Singleton
@@ -17,50 +16,38 @@ import javax.inject.Singleton
 class LocalFileService(
     @ActivityContext private val context: Context
 ) {
-    fun getCoverAudioFiles(type: String? = null): List<File> {
+    suspend fun getCoverAudioFiles(type: String? = null): List<File> = coroutineScope {
         val externalStorage = context.getExternalFilesDirs(type).firstOrNull()
-        return if (externalStorage != null && isExternalStorageReadable(externalStorage)) {
-
-
+        if (externalStorage != null && isExternalStorageReadable(externalStorage)) {
             val coverList = mutableListOf<File>()
             coverList.apply {
                 externalStorage.listFiles()?.forEach { file ->
                     if (file.isAudioFile()) {
                         add(file)
-                    } else {
-                        Timber.tag("LocalFile").d("${file.path} Not Audio File")
                     }
                 }
-            }
+            }.toList()
         } else {
             emptyList()
         }
     }
 
-    suspend fun writeAudioFile(type: String, file: String, inputStream: InputStream) {
-        if (isExternalStorageWritable()) {
-            val externalStorage = context.getExternalFilesDirs(type)
+    suspend fun writeAudioFile(type: String, file: String, inputStream: InputStream) =
+        coroutineScope {
+            if (isExternalStorageWritable()) {
+                val externalStorage = context.getExternalFilesDirs(type)
+                val writeFile = File(externalStorage[0], file)
 
-            val writeFile = File(externalStorage[0], file)
-
-
-
-            withContext(Dispatchers.IO) {
-                FileOutputStream(writeFile).use { outputStream ->
-                    inputStream.copyTo(outputStream)
+                withContext(Dispatchers.IO) {
+                    FileOutputStream(writeFile).use { outputStream ->
+                        inputStream.copyTo(outputStream)
+                    }
                 }
             }
-
         }
-    }
 
-    fun isExternalStorageWritable(): Boolean {
-        return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
-    }
+    private fun isExternalStorageWritable(): Boolean = Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
 
-    fun isExternalStorageReadable(path: File): Boolean {
-        return Environment.getExternalStorageState(path) in
+    private fun isExternalStorageReadable(path: File): Boolean = Environment.getExternalStorageState(path) in
                 setOf(Environment.MEDIA_MOUNTED, Environment.MEDIA_MOUNTED_READ_ONLY)
-    }
-
 }
