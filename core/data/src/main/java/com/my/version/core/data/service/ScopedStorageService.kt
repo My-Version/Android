@@ -13,7 +13,7 @@ import java.io.InputStream
 import javax.inject.Singleton
 
 @Singleton
-class LocalFileService(
+class ScopedStorageService(
     @ActivityContext private val context: Context
 ) {
     suspend fun getCoverAudioFiles(type: String? = null): List<File> = coroutineScope {

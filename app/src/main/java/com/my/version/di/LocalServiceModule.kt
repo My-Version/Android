@@ -1,8 +1,7 @@
 package com.my.version.di
 
 import android.content.Context
-import com.my.version.core.data.service.LocalFileService
-import dagger.Binds
+import com.my.version.core.data.service.ScopedStorageService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +14,7 @@ import javax.inject.Singleton
 object LocalServiceModule {
     @Provides
     @Singleton
-    fun provideLocalFileService(@ApplicationContext context: Context): LocalFileService {
-        return LocalFileService(context)
+    fun provideLocalFileService(@ApplicationContext context: Context): ScopedStorageService {
+        return ScopedStorageService(context)
     }
 }

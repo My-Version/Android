@@ -1,7 +1,7 @@
 package com.my.version.di
 
-import com.my.version.core.data.datasource.local.CoverLocalDataSource
-import com.my.version.core.data.datasourceimpl.local.CoverLocalDataSourceImpl
+import com.my.version.core.data.datasource.local.ScopedStorageDataSource
+import com.my.version.core.data.datasourceimpl.local.ScopedStorageDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ abstract class DataSourceModule {
     @Binds
     @Singleton
     abstract fun bindCoverLocalDataSource(
-        coverLocalDataSourceImpl: CoverLocalDataSourceImpl
-    ): CoverLocalDataSource
+        scopedStorageDataSourceImpl: ScopedStorageDataSourceImpl
+    ): ScopedStorageDataSource
 
 }

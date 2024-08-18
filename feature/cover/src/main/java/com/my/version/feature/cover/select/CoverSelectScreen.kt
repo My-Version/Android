@@ -37,6 +37,8 @@ import com.my.version.feature.cover.R
 
 @Composable
 fun CoverSelectRoute(
+    navigateUp: () -> Unit,
+    navigateToUpload: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CoverSelectViewModel = CoverSelectViewModel()
 ) {
@@ -47,7 +49,9 @@ fun CoverSelectRoute(
         modifier = modifier,
         musicList = uiState.musicList,
         selectedIndex = uiState.selected,
-        onItemClicked = viewModel::updateSelectedIndex
+        onItemClicked = viewModel::updateSelectedIndex,
+        onNavigateUp = navigateUp,
+        onNextClicked = navigateToUpload
     )
 }
 
@@ -56,13 +60,15 @@ fun CoverSelectScreen(
     modifier: Modifier = Modifier,
     selectedIndex: Int,
     musicList: List<TempItem>,
-    onItemClicked: (Int) -> Unit
+    onItemClicked: (Int) -> Unit,
+    onNavigateUp: () -> Unit,
+    onNextClicked: () -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxSize()
     ) {
         NavigateUpTopAppBar(
-            onNavigateUp = {  },
+            onNavigateUp = onNavigateUp,
             title = stringResource(id = R.string.cover_topbar_selection)
         )
 
@@ -106,7 +112,8 @@ fun CoverSelectScreen(
                 text = "Next",
                 textStyle = MaterialTheme.typography.titleMedium,
                 innerPadding = 20,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                onClick = onNextClicked
             )
         }
     }
@@ -122,7 +129,9 @@ private fun CoverFirstScreenPreview() {
             CoverSelectScreen(
                 musicList = tempList1,
                 selectedIndex = 1,
-                onItemClicked = {}
+                onItemClicked = {},
+                onNavigateUp = {},
+                onNextClicked = {}
             )
         }
     }

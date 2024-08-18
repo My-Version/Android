@@ -27,6 +27,7 @@ import com.my.version.feature.cover.main.navigation.coverScreen
 import com.my.version.feature.cover.select.navigation.coverSelectScreen
 import com.my.version.feature.cover.select.navigation.navigateToCoverSelect
 import com.my.version.feature.cover.upload.navigation.coverUploadScreen
+import com.my.version.feature.cover.upload.navigation.navigateToCoverUpload
 import com.my.version.feature.evaluate.main.navigation.evaluationScreen
 import com.my.version.feature.evaluate.record.navigation.evaluationRecordScreen
 import com.my.version.feature.evaluate.select.navigation.evaluationSelectScreen
@@ -73,7 +74,9 @@ private fun MyVersionNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = startDestination
+        startDestination = startDestination,
+        enterTransition = { fadeIn() },
+        exitTransition = { fadeOut() },
     ) {
         homeScreen(
             modifier = modifier
@@ -83,7 +86,9 @@ private fun MyVersionNavHost(
             navigateToSelect = { navController.navigateToCoverSelect() }
         )
         coverSelectScreen(
-            modifier = noBottomBarModifier
+            modifier = noBottomBarModifier,
+            navigateUp = { navController.navigateUp() },
+            navigateToUpload = { navController.navigateToCoverUpload() }
         )
         coverUploadScreen(
             modifier = noBottomBarModifier
