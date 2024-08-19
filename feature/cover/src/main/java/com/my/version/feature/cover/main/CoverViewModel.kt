@@ -1,6 +1,7 @@
 package com.my.version.feature.cover.main
 
 import android.media.MediaPlayer
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,6 +11,7 @@ import com.my.version.core.common.extension.setNewPlayer
 import com.my.version.core.common.extension.stopPreviousMusic
 import com.my.version.core.common.state.UiState
 import com.my.version.core.domain.repository.CoverLocalRepository
+import com.my.version.core.domain.repository.MusicLocalRepository
 import com.my.version.feature.cover.main.state.CoverUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +24,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CoverViewModel @Inject constructor(
-    private val coverLocalRepository: CoverLocalRepository
+    private val coverLocalRepository: CoverLocalRepository,
+    private val musicLocalRepository: MusicLocalRepository
 ): ViewModel() {
     private val _uiState = MutableStateFlow(CoverUiState())
     val uiState = _uiState.asStateFlow()
@@ -60,4 +63,6 @@ class CoverViewModel @Inject constructor(
                 }
         }
     }
+
+
 }

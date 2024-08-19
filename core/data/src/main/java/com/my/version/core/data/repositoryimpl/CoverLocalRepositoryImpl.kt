@@ -13,9 +13,9 @@ import javax.inject.Inject
  */
 
 class CoverLocalRepositoryImpl @Inject constructor(
-    private val scopedStorageDataSource: ScopedStorageDataSource
+    private val scopedStorageDataSource: ScopedStorageDataSource,
 ) : CoverLocalRepository {
-    private val type = Environment.DIRECTORY_MUSIC
+    private val type = "Cover"
 
     override suspend fun getCoverAudioList(): List<CoverAudioFile> {
         return scopedStorageDataSource.getCoverList(type = type).map { file ->

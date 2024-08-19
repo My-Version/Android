@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.my.version.core.designsystem.component.button.RectangleButton
@@ -30,9 +31,8 @@ import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionMain
 import com.my.version.core.designsystem.theme.MyVersionTheme
-import com.my.version.core.designsystem.type.TempItem
 import com.my.version.core.designsystem.type.VerticalItemType
-import com.my.version.core.designsystem.type.tempList1
+import com.my.version.core.domain.entity.MusicAudioFile
 import com.my.version.feature.cover.R
 
 @Composable
@@ -40,7 +40,7 @@ fun CoverSelectRoute(
     navigateUp: () -> Unit,
     navigateToUpload: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: CoverSelectViewModel = CoverSelectViewModel()
+    viewModel: CoverSelectViewModel = hiltViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle(lifecycleOwner = lifecycleOwner)
@@ -49,9 +49,15 @@ fun CoverSelectRoute(
         modifier = modifier,
         musicList = uiState.musicList,
         selectedIndex = uiState.selected,
-        onItemClicked = viewModel::updateSelectedIndex,
+        onItemClicked = { selectedIndex ->
+            viewModel.updateSelectedIndex(selectedIndex)
+            viewModel.playMusic(selectedIndex)
+        },
         onNavigateUp = navigateUp,
-        onNextClicked = navigateToUpload
+        onNextClicked = {
+            viewModel.releaseMusicPlayer()
+            navigateToUpload()
+        }
     )
 }
 
@@ -59,7 +65,7 @@ fun CoverSelectRoute(
 fun CoverSelectScreen(
     modifier: Modifier = Modifier,
     selectedIndex: Int,
-    musicList: List<TempItem>,
+    musicList: List<MusicAudioFile>,
     onItemClicked: (Int) -> Unit,
     onNavigateUp: () -> Unit,
     onNextClicked: () -> Unit,
@@ -82,7 +88,7 @@ fun CoverSelectScreen(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
                 .weight(1f),
-            contentPadding = PaddingValues(bottom = 10.dp)
+            contentPadding = PaddingValues(vertical = 10.dp)
         ) {
             items(musicList) { cover ->
                 val currentIndex = musicList.indexOf(cover)
@@ -95,7 +101,7 @@ fun CoverSelectScreen(
                         onItemClicked(currentIndex)
                     },
                     title = cover.title,
-                    subTitle = cover.body
+                    subTitle = cover.artist
                 )
                 if (musicList.last() != cover) {
                     Spacer(modifier = Modifier.height(16.dp))
@@ -108,7 +114,7 @@ fun CoverSelectScreen(
             contentAlignment = Alignment.TopCenter
         ) {
             RectangleButton(
-                isEnabled = false,
+                isEnabled = selectedIndex != -1,
                 text = "Next",
                 textStyle = MaterialTheme.typography.titleMedium,
                 innerPadding = 20,
@@ -127,7 +133,7 @@ private fun CoverFirstScreenPreview() {
             modifier = Modifier.background(MyVersionBackground)
         ) {
             CoverSelectScreen(
-                musicList = tempList1,
+                musicList = emptyList(),
                 selectedIndex = 1,
                 onItemClicked = {},
                 onNavigateUp = {},
