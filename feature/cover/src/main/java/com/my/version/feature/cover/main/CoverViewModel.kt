@@ -24,8 +24,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CoverViewModel @Inject constructor(
-    private val coverLocalRepository: CoverLocalRepository,
-    private val musicLocalRepository: MusicLocalRepository
+    private val coverLocalRepository: CoverLocalRepository
 ): ViewModel() {
     private val _uiState = MutableStateFlow(CoverUiState())
     val uiState = _uiState.asStateFlow()
