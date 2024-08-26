@@ -41,6 +41,8 @@ import java.io.File
 
 @Composable
 fun CoverUploadRoute(
+    onNavigateUp: () -> Unit,
+    onUploadComplete: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CoverUploadViewModel = hiltViewModel()
 ) {
@@ -65,6 +67,7 @@ fun CoverUploadRoute(
     CoverUploadScreen(
         modifier = modifier,
         fileList = uiState.uploadedFiles,
+        onNavigateUp = onNavigateUp,
         onRecordButtonClicked = {
             val intent = Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION)
             recordResultLauncher.launch(intent)
@@ -78,12 +81,15 @@ fun CoverUploadRoute(
         },
         onCancelButtonClicked = { index ->
             viewModel.removeAudioFile(index)
-        }
+        },
+        onUploadComplete = onUploadComplete
     )
 }
 
 @Composable
 internal fun CoverUploadScreen(
+    onNavigateUp: () -> Unit,
+    onUploadComplete: () -> Unit,
     onRecordButtonClicked: () -> Unit,
     onFileSystemButtonClicked: () -> Unit,
     onCancelButtonClicked: (Int) -> Unit,
@@ -96,7 +102,7 @@ internal fun CoverUploadScreen(
         modifier = modifier.fillMaxSize()
     ) {
         NavigateUpTopAppBar(
-            onNavigateUp = {},
+            onNavigateUp = onNavigateUp,
             title = stringResource(id = R.string.cover_topbar_upload)
         )
 
@@ -169,7 +175,9 @@ private fun CoverUploadScreenPreview() {
             modifier = Modifier.background(MyVersionBackground),
             onRecordButtonClicked = {},
             onCancelButtonClicked = {},
-            onFileSystemButtonClicked = {}
+            onFileSystemButtonClicked = {},
+            onNavigateUp = {},
+            onUploadComplete = {}
         )
     }
 }

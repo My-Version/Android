@@ -23,6 +23,7 @@ import com.my.version.core.designsystem.theme.MyVersionMain
 import com.my.version.core.designsystem.theme.White
 import com.my.version.feature.auth.signin.navigation.signInScreen
 import com.my.version.feature.auth.signup.navigation.signUpScreen
+import com.my.version.feature.cover.main.navigation.Cover
 import com.my.version.feature.cover.main.navigation.coverScreen
 import com.my.version.feature.cover.select.navigation.coverSelectScreen
 import com.my.version.feature.cover.select.navigation.navigateToCoverSelect
@@ -83,15 +84,17 @@ private fun MyVersionNavHost(
         )
         coverScreen(
             modifier = modifier,
-            navigateToSelect = { navController.navigateToCoverSelect() }
+            navigateToSelect = navController::navigateToCoverSelect
         )
         coverSelectScreen(
             modifier = noBottomBarModifier,
-            navigateUp = { navController.navigateUp() },
-            navigateToUpload = { navController.navigateToCoverUpload() }
+            navigateUp = navController::navigateUp,
+            navigateToUpload = navController::navigateToCoverUpload
         )
         coverUploadScreen(
-            modifier = noBottomBarModifier
+            modifier = noBottomBarModifier,
+            navigateUp = navController::navigateUp,
+            onUploadComplete = { navController.popBackStack(Cover, inclusive = false) }
         )
         evaluationScreen(
             modifier = modifier
@@ -107,7 +110,7 @@ private fun MyVersionNavHost(
         )
         signInScreen(
             modifier = noBottomBarModifier,
-            onButtonClick = { navController.navigateToHome() }
+            onButtonClick = navController::navigateToHome
         )
         signUpScreen(
             modifier = noBottomBarModifier

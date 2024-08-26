@@ -12,11 +12,15 @@ import kotlinx.serialization.Serializable
 fun NavController.navigateToCoverUpload(navOptions: NavOptions? = null) = navigate(CoverUpload, navOptions)
 
 fun NavGraphBuilder.coverUploadScreen(
-    modifier: Modifier
+    modifier: Modifier,
+    navigateUp: () -> Unit,
+    onUploadComplete: () -> Unit
 ) {
     composable<CoverUpload>{
         CoverUploadRoute(
-            modifier = modifier
+            modifier = modifier,
+            onNavigateUp = navigateUp,
+            onUploadComplete = onUploadComplete
         )
     }
 }
