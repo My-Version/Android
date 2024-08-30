@@ -1,7 +1,6 @@
 package com.my.version.feature.cover.upload
 
 import android.content.Intent
-import android.provider.MediaStore
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +34,7 @@ import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.type.VerticalItemType
 import com.my.version.feature.cover.R
 import com.my.version.feature.cover.component.OutlinedTextButton
+import com.my.version.feature.cover.record.RecordDialog
 import com.my.version.feature.cover.upload.component.uploadResultLauncher
 import timber.log.Timber
 import java.io.File
@@ -50,6 +50,7 @@ fun CoverUploadRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle(
         lifecycleOwner = lifecycleOwner
     )
+
     val recordResultLauncher = uploadResultLauncher(
         onResultOk = {dataUri ->
             viewModel.addAudioFile(File(dataUri.toString()))
@@ -62,6 +63,14 @@ fun CoverUploadRoute(
         }
     )
 
+    if(uiState.recordDialogVisibility) {
+        /*RecordDialog(
+            onDismissRequest = {
+                viewModel.updateRecordDialogVisibility(false)
+            }
+        )*/
+    }
+
 
 
     CoverUploadScreen(
@@ -69,8 +78,9 @@ fun CoverUploadRoute(
         fileList = uiState.uploadedFiles,
         onNavigateUp = onNavigateUp,
         onRecordButtonClicked = {
-            val intent = Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION)
-            recordResultLauncher.launch(intent)
+            /*val intent = Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION)
+            recordResultLauncher.launch(intent)*/
+            viewModel.updateRecordDialogVisibility(true)
         },
         onFileSystemButtonClicked = {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
@@ -87,7 +97,7 @@ fun CoverUploadRoute(
 }
 
 @Composable
-internal fun CoverUploadScreen(
+fun CoverUploadScreen(
     onNavigateUp: () -> Unit,
     onUploadComplete: () -> Unit,
     onRecordButtonClicked: () -> Unit,
@@ -169,15 +179,16 @@ internal fun CoverUploadScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun CoverUploadScreenPreview() {
-    MyVersionTheme {
-        CoverUploadScreen(
-            fileList = emptyList(),
-            modifier = Modifier.background(MyVersionBackground),
-            onRecordButtonClicked = {},
-            onCancelButtonClicked = {},
-            onFileSystemButtonClicked = {},
-            onNavigateUp = {},
-            onUploadComplete = {}
-        )
-    }
+        Box {
+            CoverUploadScreen(
+                fileList = emptyList(),
+                modifier = Modifier.background(color = MyVersionBackground),
+                onRecordButtonClicked = {},
+                onCancelButtonClicked = {},
+                onFileSystemButtonClicked = {},
+                onNavigateUp = {},
+                onUploadComplete = {}
+            )
+        }
+
 }

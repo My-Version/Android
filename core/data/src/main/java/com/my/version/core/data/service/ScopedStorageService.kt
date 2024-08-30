@@ -16,7 +16,7 @@ import javax.inject.Singleton
 class ScopedStorageService(
     @ActivityContext private val context: Context
 ) {
-    suspend fun getCoverAudioFiles(type: String? = null): List<File> = coroutineScope {
+    suspend fun getAudioFiles(type: String? = null): List<File> = coroutineScope {
         val externalStorage = context.getExternalFilesDirs(type).firstOrNull()
         if (externalStorage != null && isExternalStorageReadable(externalStorage)) {
             val coverList = mutableListOf<File>()
@@ -37,7 +37,6 @@ class ScopedStorageService(
             if (isExternalStorageWritable()) {
                 val externalStorage = context.getExternalFilesDirs(type)
                 val writeFile = File(externalStorage[0], file)
-
                 withContext(Dispatchers.IO) {
                     FileOutputStream(writeFile).use { outputStream ->
                         inputStream.copyTo(outputStream)
@@ -45,6 +44,17 @@ class ScopedStorageService(
                 }
             }
         }
+
+    suspend fun removeFiles(type: String?) = coroutineScope {
+        if (isExternalStorageWritable()) {
+            val externalStorage = context.getExternalFilesDir(type)
+            externalStorage?.listFiles()?.forEach {
+                it.deleteRecursively()
+            }
+        }
+    }
+
+    fun getExternalFilesDir(type: String? = null): File? = context.getExternalFilesDir(type)
 
     private fun isExternalStorageWritable(): Boolean = Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
 

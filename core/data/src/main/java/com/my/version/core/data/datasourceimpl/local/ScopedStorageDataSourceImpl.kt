@@ -9,8 +9,9 @@ import javax.inject.Inject
 class ScopedStorageDataSourceImpl @Inject constructor(
     private val scopedStorageService: ScopedStorageService
 ): ScopedStorageDataSource {
-    override suspend fun getCoverList(type: String?): List<File> =
-        scopedStorageService.getCoverAudioFiles(type)
+
+    override suspend fun getAudioFileList(type: String?): List<File> =
+        scopedStorageService.getAudioFiles(type)
 
     override suspend fun writeAudioFile(type: String, filename: String, inputStream: InputStream) =
         scopedStorageService.writeAudioFile(type, filename, inputStream)

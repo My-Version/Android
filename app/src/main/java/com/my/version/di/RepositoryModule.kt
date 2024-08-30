@@ -2,8 +2,10 @@ package com.my.version.di
 
 import com.my.version.core.data.repositoryimpl.CoverLocalRepositoryImpl
 import com.my.version.core.data.repositoryimpl.MusicLocalRepositoryImpl
+import com.my.version.core.data.repositoryimpl.RecordLocalRepositoryImpl
 import com.my.version.core.domain.repository.CoverLocalRepository
 import com.my.version.core.domain.repository.MusicLocalRepository
+import com.my.version.core.domain.repository.RecordLocalRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -25,4 +27,10 @@ abstract class RepositoryModule {
     abstract fun bindMusicRepository(
         musicLocalRepositoryImpl: MusicLocalRepositoryImpl
     ): MusicLocalRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindRecordRepository(
+        recordLocalRepositoryImpl: RecordLocalRepositoryImpl
+    ): RecordLocalRepository
 }

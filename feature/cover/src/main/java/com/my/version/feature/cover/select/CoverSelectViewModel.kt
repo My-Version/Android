@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.my.version.core.common.extension.setNewPlayer
 import com.my.version.core.common.extension.stopPreviousMusic
+import com.my.version.core.common.media.MyVersionMediaPlayer
 import com.my.version.core.domain.repository.MusicLocalRepository
 import com.my.version.feature.cover.select.state.CoverSelectUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,7 @@ class CoverSelectViewModel @Inject constructor(
     private val musicLocalRepository: MusicLocalRepository
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(CoverSelectUiState())
-    private var mediaPlayer: MediaPlayer? = null
+    //private var mediaPlayer: MediaPlayer? = null
     val uiState = _uiState.asStateFlow()
 
 
@@ -48,12 +49,10 @@ class CoverSelectViewModel @Inject constructor(
         try {
             val music = uiState.value.musicList[index]
 
-            mediaPlayer?.stopPreviousMusic()
-
-            mediaPlayer = MediaPlayer().setNewPlayer(music.audio?.path ?: "")
-
-            mediaPlayer?.setOnCompletionListener {
-                releaseMusicPlayer()
+            with(MyVersionMediaPlayer) {
+                stopMusic()
+                setMusic(music.audio)
+                playMusic()
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -61,12 +60,6 @@ class CoverSelectViewModel @Inject constructor(
     }
 
     fun releaseMusicPlayer() {
-        mediaPlayer?.release()
-        mediaPlayer = null
-    }
-
-    override fun onCleared() {
-        releaseMusicPlayer()
-        super.onCleared()
+        MyVersionMediaPlayer.stopMusic()
     }
 }

@@ -1,6 +1,5 @@
 package com.my.version.core.data.repositoryimpl
 
-import android.os.Environment
 import com.my.version.core.data.datasource.local.ScopedStorageDataSource
 import com.my.version.core.data.mapper.toCoverAudioFile
 import com.my.version.core.domain.entity.CoverAudioFile
@@ -18,7 +17,7 @@ class CoverLocalRepositoryImpl @Inject constructor(
     private val type = "Cover"
 
     override suspend fun getCoverAudioList(): List<CoverAudioFile> {
-        return scopedStorageDataSource.getCoverList(type = type).map { file ->
+        return scopedStorageDataSource.getAudioFileList(type = type).map { file ->
             file.toCoverAudioFile() ?: CoverAudioFile()
         }
     }

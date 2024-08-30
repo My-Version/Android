@@ -5,11 +5,8 @@ import android.net.Uri
 import android.os.Environment
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
-import com.my.version.core.data.R
 import com.my.version.core.data.datasource.local.ScopedStorageDataSource
-import com.my.version.core.data.mapper.toCoverAudioFile
 import com.my.version.core.data.mapper.toMusicAudioFile
-import com.my.version.core.domain.entity.CoverAudioFile
 import com.my.version.core.domain.entity.MusicAudioFile
 import com.my.version.core.domain.repository.MusicLocalRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -28,7 +25,7 @@ class MusicLocalRepositoryImpl @Inject constructor(
     private val type = Environment.DIRECTORY_MUSIC
 
     override suspend fun getMusicAudioList(): List<MusicAudioFile> {
-        return scopedStorageDataSource.getCoverList(type = type).map { file ->
+        return scopedStorageDataSource.getAudioFileList(type = type).map { file ->
             file.toMusicAudioFile() ?: MusicAudioFile()
         }
     }

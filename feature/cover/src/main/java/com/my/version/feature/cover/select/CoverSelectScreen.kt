@@ -130,7 +130,7 @@ fun CoverSelectScreen(
 private fun CoverFirstScreenPreview() {
     MyVersionTheme {
         Box(
-            modifier = Modifier.background(MyVersionBackground)
+            modifier = Modifier.background(color = MyVersionBackground)
         ) {
             CoverSelectScreen(
                 musicList = emptyList(),

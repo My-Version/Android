@@ -1,5 +1,6 @@
 package com.my.version.feature.cover.upload
 
+import android.media.MediaRecorder
 import androidx.lifecycle.ViewModel
 import com.my.version.feature.cover.upload.state.UploadUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,6 +37,14 @@ class CoverUploadViewModel @Inject constructor(
         _uiState.update { currentState ->
             currentState.copy(
                 uploadedFiles = fileList.toList()
+            )
+        }
+    }
+
+    fun updateRecordDialogVisibility(visibility: Boolean) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                recordDialogVisibility = visibility
             )
         }
     }
