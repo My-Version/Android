@@ -1,24 +1,18 @@
 package com.my.version.feature.cover.main
 
 import android.media.MediaPlayer
-import android.net.Uri
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.my.version.core.common.extension.setNewPlayer
 import com.my.version.core.common.extension.stopPreviousMusic
 import com.my.version.core.common.state.UiState
 import com.my.version.core.domain.repository.CoverLocalRepository
-import com.my.version.core.domain.repository.MusicLocalRepository
 import com.my.version.feature.cover.main.state.CoverUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 
