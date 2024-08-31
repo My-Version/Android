@@ -9,11 +9,7 @@ import javax.inject.Inject
 class MyVersionMediaRecorder @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-    val mediaRecorder: MediaRecorder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        MediaRecorder(context)
-    } else {
-        MediaRecorder()
-    }
+    val mediaRecorder: MediaRecorder = MediaRecorder(context)
 
     init {
         mediaRecorder.apply {
