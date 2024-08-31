@@ -26,9 +26,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.my.version.core.common.state.UiState
 import com.my.version.core.designsystem.component.button.SortingButton
 import com.my.version.core.designsystem.component.item.MyVersionVerticalItem
 import com.my.version.core.designsystem.component.topappbar.NewCreationTopAppBar
@@ -36,21 +38,30 @@ import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.Grey300
 import com.my.version.core.designsystem.theme.Grey400
 import com.my.version.core.designsystem.theme.MyVersionBackground
-import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.theme.White
-import com.my.version.core.designsystem.type.TempItem
 import com.my.version.core.designsystem.type.VerticalItemType
-import com.my.version.core.designsystem.type.tempList1
 import com.my.version.feature.cover.R
+import com.my.version.feature.cover.main.state.CoverUiState
+import java.io.File
 
 @Composable
 fun CoverRoute(
+    navigateToSelect: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CoverViewModel = hiltViewModel()
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle(
+        lifecycleOwner = lifecycleOwner
+    )
+
     CoverScreen(
         modifier = modifier,
-        coverList = tempList1
+        uiState = uiState,
+        onCreateClicked = navigateToSelect,
+        onCoverSelected = {
+            viewModel.playCoverAudio(it)
+        }
     )
 }
 
@@ -58,7 +69,9 @@ fun CoverRoute(
 @Composable
 private fun CoverScreen(
     modifier: Modifier = Modifier,
-    coverList: List<TempItem> = emptyList()
+    uiState: CoverUiState,
+    onCreateClicked: () -> Unit,
+    onCoverSelected: (File?) -> Unit
 ) {
     var isSelected by remember { mutableStateOf(false) }
     Column {
@@ -67,68 +80,76 @@ private fun CoverScreen(
                 id = R.string.cover_main_title
             ),
             textStyle = MaterialTheme.typography.labelLarge,
-            onClick = {}
+            onClick = onCreateClicked
         )
 
 
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 20.dp)
+        LazyColumn(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp)
 
-    ) {
-        stickyHeader {
-            Row(
-                modifier = Modifier
-                    .background(color = MyVersionBackground)
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(top = 30.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(id = R.string.cover_main_title),
-                    style = MaterialTheme.typography.titleSmall,
-                    color = White
-                )
-                SortingButton(
-                    isSelected = isSelected,
-                    text = "최신순",
-                    onClick = { isSelected = !isSelected }
+        ) {
+            stickyHeader {
+                Row(
+                    modifier = Modifier
+                        .background(color = MyVersionBackground)
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(top = 30.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.cover_main_title),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = White
+                    )
+                    SortingButton(
+                        isSelected = isSelected,
+                        text = "최신순",
+                        onClick = { isSelected = !isSelected }
+                    )
+                }
+
+                HorizontalDivider(
+                    thickness = 1.dp,
+                    color = Grey400,
+                    modifier = Modifier
+                        .background(color = MyVersionBackground)
+                        .fillMaxWidth()
+                        .padding(vertical = 6.dp)
                 )
             }
 
-            HorizontalDivider(
-                thickness = 1.dp,
-                color = Grey400,
-                modifier = Modifier
-                    .background(color = MyVersionBackground)
-                    .fillMaxWidth()
-                    .padding(vertical = 6.dp)
-            )
-        }
+            when (uiState.loadState) {
+                UiState.Loading -> {}
+                UiState.Empty -> {
+                    item {
+                        EmptyScreen()
+                    }
+                }
 
-        if (coverList.isEmpty()) {
-            item {
-                EmptyScreen()
-            }
-        } else {
-            items(coverList) { cover ->
-                MyVersionVerticalItem(
-                    itemType = VerticalItemType.COVER,
-                    iconColor = Black,
-                    onClick = { /*TODO*/ },
-                    title = cover.title,
-                    subTitle = cover.body
-                )
-                if (coverList.last() != cover) {
-                    Spacer(modifier = Modifier.height(16.dp))
+                is UiState.Failure -> {}
+                is UiState.Success -> {
+                    val coverList = uiState.loadState.data
+
+                    items(coverList) { cover ->
+                        MyVersionVerticalItem(
+                            itemType = VerticalItemType.COVER,
+                            iconColor = Black,
+                            onClick = { onCoverSelected(cover.audio) },
+                            title = cover.title,
+                            subTitle = stringResource(id = R.string.cover_created_date, cover.createdDate)
+                        )
+                        if (coverList.last() != cover) {
+                            Spacer(modifier = Modifier.height(16.dp))
+                        }
+                    }
                 }
             }
         }
     }
-        }
 }
 
 @Composable
@@ -145,27 +166,6 @@ private fun EmptyScreen(
             color = Grey300,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(top = 70.dp)
-        )
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun SuccessScreenPreview() {
-    MyVersionTheme {
-        CoverScreen(
-            coverList = tempList1,
-            modifier = Modifier.background(MyVersionBackground)
-        )
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun EmptyScreenPreview() {
-    MyVersionTheme {
-        CoverScreen(
-            modifier = Modifier.background(MyVersionBackground)
         )
     }
 }

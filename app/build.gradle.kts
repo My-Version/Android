@@ -33,6 +33,8 @@ android {
 
 dependencies {
     implementation(project(":feature:main"))
+    implementation(project(":core:data"))
+    implementation(project(":core:domain"))
     implementation(libs.timber)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

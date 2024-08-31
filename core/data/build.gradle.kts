@@ -23,7 +23,13 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:domain"))
+    implementation(project(":core:common"))
+
     implementation(libs.timber)
+    implementation(libs.exoplayer)
+    implementation(libs.exoplayer.ui)
+    implementation(libs.exoplayer.dash)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
