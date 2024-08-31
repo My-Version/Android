@@ -1,6 +1,8 @@
 package com.my.version.feature.cover.upload
 
 import android.content.Intent
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,12 +28,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.my.version.core.designsystem.component.button.RectangleButton
 import com.my.version.core.designsystem.component.divider.BasicSpacer
 import com.my.version.core.designsystem.component.divider.TitleWithDivider
-import com.my.version.core.designsystem.component.item.MyVersionVerticalItem
+import com.my.version.core.designsystem.component.item.MyVersionVerticalItemTwoButton
 import com.my.version.core.designsystem.component.topappbar.NavigateUpTopAppBar
-import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.MyVersionBackground
-import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.type.VerticalItemType
+import com.my.version.core.domain.entity.RecordAudioFile
 import com.my.version.feature.cover.R
 import com.my.version.feature.cover.component.OutlinedTextButton
 import com.my.version.feature.cover.record.RecordDialog
@@ -51,37 +52,29 @@ fun CoverUploadRoute(
         lifecycleOwner = lifecycleOwner
     )
 
-    val recordResultLauncher = uploadResultLauncher(
-        onResultOk = {dataUri ->
-            viewModel.addAudioFile(File(dataUri.toString()))
-        }
-    )
     val fileResultLauncher = uploadResultLauncher(
         onResultOk = {dataUri ->
-            viewModel.addAudioFile(File(dataUri.toString()))
-            Timber.tag("Upload").d(dataUri.toString())
+            val file = File(dataUri.toString())
+            viewModel.addRecordFile(file.absolutePath)
+            Timber.tag("Upload").d(file.absolutePath)
         }
     )
 
     if(uiState.recordDialogVisibility) {
-        /*RecordDialog(
-            onDismissRequest = {
+        RecordDialog(
+            onDismissRequest = { filePath ->
                 viewModel.updateRecordDialogVisibility(false)
+                if(filePath.isNotBlank())
+                   viewModel.addRecordFile(filePath)
             }
-        )*/
+        )
     }
-
-
 
     CoverUploadScreen(
         modifier = modifier,
-        fileList = uiState.uploadedFiles,
+        fileList = uiState.uploadFiles,
         onNavigateUp = onNavigateUp,
-        onRecordButtonClicked = {
-            /*val intent = Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION)
-            recordResultLauncher.launch(intent)*/
-            viewModel.updateRecordDialogVisibility(true)
-        },
+        onRecordButtonClicked = { viewModel.updateRecordDialogVisibility(true) },
         onFileSystemButtonClicked = {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
@@ -89,10 +82,12 @@ fun CoverUploadRoute(
             }
             fileResultLauncher.launch(intent)
         },
-        onCancelButtonClicked = { index ->
-            viewModel.removeAudioFile(index)
-        },
-        onUploadComplete = onUploadComplete
+        onCancelButtonClicked = viewModel::removeRecordFile,
+        onPlayButtonClicked = viewModel::playRecordFile,
+        onUploadComplete = {
+            viewModel.clearRecordFiles()
+            onUploadComplete()
+        }
     )
 }
 
@@ -103,8 +98,9 @@ fun CoverUploadScreen(
     onRecordButtonClicked: () -> Unit,
     onFileSystemButtonClicked: () -> Unit,
     onCancelButtonClicked: (Int) -> Unit,
+    onPlayButtonClicked: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    fileList: List<File> = emptyList()
+    fileList: List<RecordAudioFile> = emptyList()
 ) {
     val paddingModifier = modifier.padding(horizontal = 20.dp)
 
@@ -146,14 +142,13 @@ fun CoverUploadScreen(
             contentPadding = PaddingValues(bottom = 20.dp)
         ) {
             itemsIndexed(fileList) { index, file ->
-                MyVersionVerticalItem(
-                    itemType = VerticalItemType.AUDIO,
-                    iconColor = Black,
-                    onClick = {
-                        onCancelButtonClicked(index)
-                    },
-                    title = "",
-                    subTitle = ""
+                MyVersionVerticalItemTwoButton(
+                    firstItemType = VerticalItemType.MUSIC,
+                    secondItemType = VerticalItemType.AUDIO,
+                    onClickFirstItem = { onPlayButtonClicked(index) },
+                    onClickSecondItem  = { onCancelButtonClicked(index) },
+                    title = file.title,
+                    subTitle = file.time
                 )
                 if (fileList.last() != file) {
                     BasicSpacer(height = 16.dp)
@@ -166,11 +161,12 @@ fun CoverUploadScreen(
             contentAlignment = Alignment.TopCenter
         ) {
             RectangleButton(
-                isEnabled = false,
+                isEnabled = fileList.isNotEmpty(),
                 text = "Next",
                 textStyle = MaterialTheme.typography.titleMedium,
                 innerPadding = 20,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                onClick = onUploadComplete
             )
         }
     }
@@ -187,7 +183,8 @@ private fun CoverUploadScreenPreview() {
                 onCancelButtonClicked = {},
                 onFileSystemButtonClicked = {},
                 onNavigateUp = {},
-                onUploadComplete = {}
+                onUploadComplete = {},
+                onPlayButtonClicked = {}
             )
         }
 

@@ -1,10 +1,7 @@
 package com.my.version.feature.cover.select
 
-import android.media.MediaPlayer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.my.version.core.common.extension.setNewPlayer
-import com.my.version.core.common.extension.stopPreviousMusic
 import com.my.version.core.common.media.MyVersionMediaPlayer
 import com.my.version.core.domain.repository.MusicLocalRepository
 import com.my.version.feature.cover.select.state.CoverSelectUiState
@@ -20,9 +17,9 @@ class CoverSelectViewModel @Inject constructor(
     private val musicLocalRepository: MusicLocalRepository
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(CoverSelectUiState())
-    //private var mediaPlayer: MediaPlayer? = null
     val uiState = _uiState.asStateFlow()
 
+    private var mediaPlayer = MyVersionMediaPlayer()
 
     init {
         getMusicList()
@@ -48,18 +45,14 @@ class CoverSelectViewModel @Inject constructor(
     fun playMusic(index: Int) {
         try {
             val music = uiState.value.musicList[index]
-
-            with(MyVersionMediaPlayer) {
-                stopMusic()
-                setMusic(music.audio)
-                playMusic()
-            }
+            mediaPlayer.stopMusic()
+            mediaPlayer.playMusic(music.audio)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    fun releaseMusicPlayer() {
-        MyVersionMediaPlayer.stopMusic()
+    fun stopMusic() {
+        mediaPlayer.stopMusic()
     }
 }

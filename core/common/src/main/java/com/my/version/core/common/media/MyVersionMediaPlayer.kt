@@ -3,14 +3,13 @@ package com.my.version.core.common.media
 import android.media.MediaPlayer
 import java.io.File
 
-object MyVersionMediaPlayer{
-    private val mediaPlayer: MediaPlayer by lazy {
-        MediaPlayer()
-    }
+class MyVersionMediaPlayer {
+    private var mediaPlayer: MediaPlayer? = null
+    private var isPaused = false
 
-    fun setMusic(file: File?) {
+    fun playMusic(file: File?) {
         file?.let {
-            with(mediaPlayer) {
+            mediaPlayer = MediaPlayer().apply {
                 setDataSource(it.absolutePath)
                 prepare()
                 setOnCompletionListener {
@@ -18,25 +17,36 @@ object MyVersionMediaPlayer{
                 }
             }
         }
-    }
-
-    fun playMusic() {
-        mediaPlayer.start()
-
+        try {
+            mediaPlayer?.start()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun pauseMusic() {
-        mediaPlayer.pause()
+        if (!isPaused && mediaPlayer != null) {
+            mediaPlayer?.pause()
+            isPaused = true
+        }
+    }
+
+    fun resumeAudio() {
+        if (isPaused && mediaPlayer != null) {
+            mediaPlayer?.start()
+            isPaused = false
+        }
     }
 
     fun stopMusic() {
-        if(mediaPlayer.isPlaying) {
-            mediaPlayer.stop()
+        if (mediaPlayer != null || isPaused) {
+            mediaPlayer?.run {
+                stop()
+                reset()
+                release()
+            }
+            mediaPlayer = null
+            isPaused = false
         }
-        mediaPlayer.reset()
-    }
-
-    fun releaseMediaPlayer() {
-        mediaPlayer.release()
     }
 }

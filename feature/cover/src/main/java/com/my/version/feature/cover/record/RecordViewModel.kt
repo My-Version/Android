@@ -3,52 +3,50 @@ package com.my.version.feature.cover.record
 import android.os.Build
 import android.os.Environment
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.my.version.core.domain.repository.RecordLocalRepository
-import com.my.version.feature.cover.record.state.RecordUiState
+import com.my.version.core.common.watch.StopWatch
+import com.my.version.core.domain.repository.RecordRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class RecordViewModel @Inject constructor(
-    private val recordLocalRepository: RecordLocalRepository
+    private val recordRepository: RecordRepository
 ) : ViewModel() {
-
-    private var _uiState = MutableStateFlow(RecordUiState())
-    val uiState get() = _uiState.asStateFlow()
+    private var isRecording by mutableStateOf(false)
 
     private var _sideEffect: MutableSharedFlow<RecordSideEffect> = MutableSharedFlow()
     val sideEffect = _sideEffect.asSharedFlow()
 
-    fun updateIsRecording(isRecording: Boolean) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                isRecording = isRecording
-            )
+    fun getFilePath(): String = recordRepository.getFilePath()?:""
+
+    fun startRecording() = viewModelScope.launch {
+        if(!isRecording) {
+            isRecording = true
+            recordRepository.initMediaRecorder(Environment.DIRECTORY_RECORDINGS)
+            recordRepository.startRecording()
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.S)
-    fun startRecording() = viewModelScope.launch {
-        recordLocalRepository.setMediaRecorder(Environment.DIRECTORY_RECORDINGS)
-        recordLocalRepository.startRecording()
-        updateIsRecording(true)
-    }
-
     fun stopRecording() = viewModelScope.launch {
-        if(_uiState.value.isRecording) {
-            recordLocalRepository.stopRecording()
-            updateIsRecording(false)
+        if(isRecording) {
+            isRecording = false
+            recordRepository.stopRecording()
             _sideEffect.emit(RecordSideEffect.NavigateUp)
         }
     }
 
+    fun dismissDialog() = viewModelScope.launch {
+        if(isRecording) stopRecording()
+        else _sideEffect.emit(RecordSideEffect.NavigateUp)
+    }
 }

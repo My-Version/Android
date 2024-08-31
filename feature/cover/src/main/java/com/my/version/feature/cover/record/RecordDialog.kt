@@ -1,62 +1,101 @@
 package com.my.version.feature.cover.record
 
-import android.content.Context
-import android.media.MediaRecorder
-import android.os.Build
-import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
+import com.my.version.core.common.watch.StopWatch
+import com.my.version.core.designsystem.component.divider.BasicSpacer
+import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionTheme
-import java.io.File
+import com.my.version.core.designsystem.theme.MyVersionTypography
+import com.my.version.feature.cover.R
+import com.my.version.feature.cover.component.OutlinedTextButton
 
-@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 internal fun RecordDialog(
-    onDismissRequest: () -> Unit,
+    onDismissRequest: (String) -> Unit,
     viewModel: RecordViewModel = hiltViewModel()
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val stopWatch = remember { StopWatch() }
+
+    LaunchedEffect(key1 = viewModel.sideEffect, key2 = lifecycleOwner) {
+        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collect { sideEffect ->
+                when(sideEffect) {
+                    is RecordSideEffect.NavigateUp -> onDismissRequest(viewModel.getFilePath())
+                }
+            }
+    }
+
 
     Dialog(
-        onDismissRequest = {
-            viewModel.stopRecording()
-            onDismissRequest()
-        }
+        onDismissRequest = viewModel::dismissDialog
     ) {
-        Row {
-            Button(
-                onClick = {
-                    viewModel.startRecording()
-                }
+        Column(
+            modifier = Modifier
+                .wrapContentHeight()
+                .padding(horizontal = 30.dp)
+                .background(
+                    shape = RoundedCornerShape(10.dp),
+                    color = MyVersionBackground
+                )
+                .padding(horizontal = 20.dp, vertical = 40.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = stopWatch.formattedTime,
+                style = MyVersionTypography.displayLarge,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 20.dp)
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp)
+                    .padding(top = 10.dp)
             ) {
-                Text(text = "Record")
-            }
-            Button(
-                onClick = {
-                    viewModel.stopRecording()
-                }
-            ) {
-                Text(text = "Stop")
+                OutlinedTextButton(
+                    onClick = {
+                        viewModel.startRecording()
+                        stopWatch.start()
+                    },
+                    text = stringResource(id = R.string.cover_dialog_button_start)
+                )
+                BasicSpacer(width = 10.dp)
+                OutlinedTextButton(
+                    onClick = {
+                        viewModel.stopRecording()
+                        stopWatch.reset()
+                    },
+                    text = stringResource(id = R.string.cover_dialog_button_stop)
+                )
             }
         }
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.S)
-private fun initMediaRecorder(context: Context, file: File): MediaRecorder {
-    return MediaRecorder(context).apply {
-        setAudioSource(MediaRecorder.AudioSource.MIC)
-        setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-        setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT)
-        setOutputFile(file.absolutePath)
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.S)
 @Preview(showBackground = true)
 @Composable
 private fun RecordDialogPreview() {

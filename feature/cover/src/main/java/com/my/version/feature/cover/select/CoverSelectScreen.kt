@@ -55,7 +55,7 @@ fun CoverSelectRoute(
         },
         onNavigateUp = navigateUp,
         onNextClicked = {
-            viewModel.releaseMusicPlayer()
+            viewModel.stopMusic()
             navigateToUpload()
         }
     )
