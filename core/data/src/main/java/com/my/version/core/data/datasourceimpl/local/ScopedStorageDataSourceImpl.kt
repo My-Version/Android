@@ -10,7 +10,7 @@ class ScopedStorageDataSourceImpl @Inject constructor(
     private val scopedStorageService: ScopedStorageService
 ): ScopedStorageDataSource {
     override suspend fun getFileByPath(filePath: String): File? {
-        TODO("Not yet implemented")
+        return null
     }
 
     override suspend fun getAudioFileList(type: String?): List<File> =
