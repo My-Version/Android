@@ -29,12 +29,19 @@ import com.my.version.core.designsystem.component.button.MyVersionBasicIconButto
 import com.my.version.core.designsystem.component.button.RectangleButton
 import com.my.version.core.designsystem.component.divider.MyVersionHorizontalDivider
 import com.my.version.core.designsystem.component.divider.TitleWithDivider
+import com.my.version.core.designsystem.component.topappbar.NavigateUpTopAppBar
 import com.my.version.core.designsystem.theme.Grey200
 import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.theme.White
 import com.my.version.feature.evaluate.R
 import com.my.version.core.designsystem.R as DesignSystemR
+
+/**
+ * 로직
+ * 1. 녹음 버튼을 누른다
+ * 2. 카운트다운 3과 함께 녹음 및 음악 재생을 실행한다.
+ */
 
 @Composable
 fun EvaluationRecordRoute(
@@ -43,6 +50,14 @@ fun EvaluationRecordRoute(
 ) {
     EvaluationRecordScreen(
         modifier = modifier,
+        onPlayMusic = {
+            viewModel.startRecording()
+            //viewModel.playMusic()
+        },
+        onStopMusic = {
+            viewModel.stopRecording()
+            //viewModel.stopMusic()
+        },
         lyrics = listOf(
             "sdasdasdasd",
             "asdsadasdsad",
@@ -70,8 +85,10 @@ fun EvaluationRecordRoute(
 
 @Composable
 fun EvaluationRecordScreen(
+    onPlayMusic: () -> Unit,
+    onStopMusic: () -> Unit,
+    lyrics: List<String>,
     modifier: Modifier = Modifier,
-    lyrics: List<String>
 ) {
     val commonModifier = Modifier
         .fillMaxWidth()
@@ -80,8 +97,13 @@ fun EvaluationRecordScreen(
     Column(
         modifier = modifier
     ) {
+        NavigateUpTopAppBar(
+            onNavigateUp = { },
+            title = stringResource(id = R.string.evaluation_topbar_record)
+        )
+
         TitleWithDivider(
-            text = stringResource(id = R.string.evaluation_main_title),
+            text = stringResource(id = R.string.evaluation_on_boarding_title2),
             textStyle = MaterialTheme.typography.titleMedium,
             modifier = commonModifier
         )
@@ -130,14 +152,14 @@ fun EvaluationRecordScreen(
             ) {
                 MyVersionBasicIconButton(
                     icon = DesignSystemR.drawable.ic_record_32,
-                    onClick = { /*TODO*/ },
+                    onClick = onPlayMusic,
                     color = Color.Red
                 )
             }
 
             MyVersionBasicIconButton(
                 icon = DesignSystemR.drawable.ic_stop,
-                onClick = { /*TODO*/ },
+                onClick = onStopMusic,
                 color = Grey200
             )
         }
@@ -171,7 +193,9 @@ private fun EvaluationRecordScreenPreview() {
                 "fsdabfahdfadsf",
                 "dafsdfafadf",
                 "safdsfsgfsdg"
-            )
+            ),
+            onPlayMusic = {},
+            onStopMusic = {}
         )
     }
 }
