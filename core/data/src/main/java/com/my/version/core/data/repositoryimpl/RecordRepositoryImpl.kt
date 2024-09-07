@@ -15,16 +15,18 @@ class RecordRepositoryImpl @Inject constructor(
     private var isPaused = false
 
     override fun initMediaRecorder(type: String?) {
-        mediaRecorder = recordDataSource.createNewMediaRecord()
-        filePath = recordDataSource.getNewRecordingFileAbsolutePath(type)
+        if(!isRecording) {
+            mediaRecorder = recordDataSource.createNewMediaRecord()
+            filePath = recordDataSource.getNewRecordingFileAbsolutePath(type)
 
-        mediaRecorder?.let { recorder ->
-            recorder.setAudioSource(MediaRecorder.AudioSource.MIC)
-            recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT)
-            recorder.setOutputFile(filePath)
-            recorder.prepare()
-            Timber.tag("RecordTest").d("Initialized Recording")
+            mediaRecorder?.let { recorder ->
+                recorder.setAudioSource(MediaRecorder.AudioSource.MIC)
+                recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+                recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT)
+                recorder.setOutputFile(filePath)
+                recorder.prepare()
+                Timber.tag("RecordTest").d("Initialized Recording")
+            }
         }
     }
 

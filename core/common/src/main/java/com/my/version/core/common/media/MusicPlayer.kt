@@ -27,6 +27,8 @@ object MusicPlayer {
         }
     }
 
+    fun isPlaying(): Boolean = mediaPlayer?.isPlaying ?: false
+
     fun pauseMusic() {
         if (!isPaused && mediaPlayer != null) {
             mediaPlayer?.pause()
