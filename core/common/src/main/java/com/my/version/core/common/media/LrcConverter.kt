@@ -1,12 +1,6 @@
 package com.my.version.core.common.media
 
-import android.content.Context
-import androidx.annotation.RawRes
-import androidx.core.content.ContextCompat
-import timber.log.Timber
 import java.io.BufferedReader
-import java.io.FileInputStream
-import java.io.FileReader
 import java.io.InputStream
 import java.io.InputStreamReader
 
