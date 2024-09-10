@@ -53,6 +53,8 @@ import com.my.version.feature.evaluate.main.state.EvaluationUiState
 
 @Composable
 fun EvaluationRoute(
+    navigateToSelect: () -> Unit,
+    navigateToResult: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: EvaluationViewModel = hiltViewModel()
 ) {
@@ -61,16 +63,18 @@ fun EvaluationRoute(
 
     EvaluationScreen(
         modifier = modifier,
-        uiState = uiState
+        uiState = uiState,
+        onCreateClicked = navigateToSelect,
+        onEvaluationSelected = navigateToSelect
     )
 }
 
 @Composable
 private fun EvaluationScreen(
     uiState: EvaluationUiState,
+    onCreateClicked: () -> Unit,
+    onEvaluationSelected: () -> Unit,
     modifier: Modifier = Modifier,
-    onCreateClicked: () -> Unit = {},
-    onEvaluationSelected: () -> Unit = {}
 ) {
     val commonModifier = Modifier.padding(horizontal = 20.dp)
     var isSelected by remember { mutableStateOf(false) }
@@ -81,7 +85,7 @@ private fun EvaluationScreen(
         NewCreationTopAppBar(
             title = stringResource(id = R.string.evaluation_topbar_main),
             textStyle = MaterialTheme.typography.labelLarge,
-            onClick = {}
+            onClick = onCreateClicked
         )
 
         BasicSpacer(height = 30.dp)
@@ -175,6 +179,8 @@ fun SuccessScreenPreview() {
     MyVersionTheme {
         EvaluationScreen(
             uiState = EvaluationUiState(),
+            onCreateClicked = {},
+            onEvaluationSelected = {},
             modifier = Modifier.background(MyVersionBackground)
         )
     }
