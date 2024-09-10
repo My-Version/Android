@@ -13,11 +13,15 @@ import kotlinx.serialization.Serializable
 fun NavController.navigateToEvaluationSelect(navOptions: NavOptions? = null) = navigate(EvaluationSelect, navOptions)
 
 fun NavGraphBuilder.evaluationSelectScreen(
-    modifier: Modifier
+    modifier: Modifier,
+    navigateUp: () -> Unit,
+    navigateToRecord: () -> Unit
 ) {
     composable<EvaluationSelect>{
         EvaluationSelectRoute(
-            modifier = modifier
+            modifier = modifier,
+            navigateUp = navigateUp,
+            navigateToRecord = navigateToRecord
         )
     }
 }

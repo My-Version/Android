@@ -35,7 +35,7 @@ class EvaluationRecordViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val musicList = musicLocalRepository.getMusicAudioList()
-            updateMusic(musicList[3])
+            updateMusic(musicList[1])
         }
     }
 
