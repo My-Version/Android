@@ -7,17 +7,18 @@ object MusicPlayer {
     private var mediaPlayer: MediaPlayer? = null
     private var isPaused = false
 
-    fun playMusic(file: File?) {
-        if(mediaPlayer?.isPlaying == true) {
+    fun playMusic(
+        file: File?,
+        setOnCompletion: () -> Unit = { mediaPlayer?.reset() },
+    ) {
+        if (mediaPlayer?.isPlaying == true) {
             stopMusic()
         }
         file?.let {
             mediaPlayer = MediaPlayer().apply {
                 setDataSource(it.absolutePath)
                 prepare()
-                setOnCompletionListener {
-                    reset()
-                }
+                setOnCompletionListener { setOnCompletion() }
             }
         }
         try {

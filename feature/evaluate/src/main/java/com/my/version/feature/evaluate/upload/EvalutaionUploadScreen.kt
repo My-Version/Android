@@ -35,13 +35,17 @@ import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.theme.White
 import com.my.version.feature.evaluate.R
+import timber.log.Timber
 import com.my.version.core.designsystem.R as DesignSystemR
 
 @Composable
 fun EvaluationUploadRoute(
+    filePath: String,
     modifier: Modifier = Modifier,
     viewModel: EvaluationUploadViewModel = hiltViewModel()
 ) {
+    Timber.tag("RecordingTest").d("filePath: $filePath")
+
     EvaluationUploadScreen(
         modifier = modifier
     )

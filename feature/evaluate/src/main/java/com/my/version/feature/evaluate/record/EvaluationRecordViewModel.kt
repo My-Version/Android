@@ -60,11 +60,27 @@ class EvaluationRecordViewModel @Inject constructor(
             }
         }
 
+    private fun updateIsNextEnabled(isEnabled: Boolean) = viewModelScope.launch {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isNextEnabled = isEnabled
+            )
+        }
+    }
+
     fun playMusic() = viewModelScope.launch(Dispatchers.Default) {
         if (isRecording) return@launch
 
         try {
-            MusicPlayer.playMusic(_uiState.value.music?.audio)
+            MusicPlayer.playMusic(
+                file = _uiState.value.music?.audio,
+                setOnCompletion = {
+                    stopRecording()
+                    stopMusic()
+                    updateCurrentTimeStamp(0)
+                    updateIsNextEnabled(true)
+                }
+            )
             var lyricIndex = 0
             if (MusicPlayer.isPlaying())
                 stopWatch.startForLyrics()
@@ -87,12 +103,11 @@ class EvaluationRecordViewModel @Inject constructor(
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
 
 
     fun stopMusic() = viewModelScope.launch(Dispatchers.Default) {
-        if(isRecording) {
+        if (isRecording) {
             MusicPlayer.stopMusic()
             stopWatch.reset()
         }
@@ -114,5 +129,5 @@ class EvaluationRecordViewModel @Inject constructor(
         }
     }
 
-
+    fun getRecordFilePath(): String? = recordRepository.getFilePath()
 }

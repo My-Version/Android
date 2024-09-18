@@ -46,6 +46,8 @@ import com.my.version.core.designsystem.R as DesignSystemR
 
 @Composable
 fun EvaluationRecordRoute(
+    navigateUp: () -> Unit,
+    navigateToEvaluationUpload: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: EvaluationRecordViewModel = hiltViewModel()
 ) {
@@ -60,6 +62,12 @@ fun EvaluationRecordRoute(
     if(uiState.songLyrics.isNotEmpty()) {
         EvaluationRecordScreen(
             modifier = modifier,
+            onPressNextButton = {
+                viewModel.getRecordFilePath()?.let {
+                    navigateToEvaluationUpload(it)
+                }
+            },
+            onPressBackButton = navigateUp,
             onPlayMusic = {
                 viewModel.playMusic()
                 viewModel.startRecording()
@@ -75,6 +83,8 @@ fun EvaluationRecordRoute(
 
 @Composable
 fun EvaluationRecordScreen(
+    onPressNextButton: () -> Unit,
+    onPressBackButton: () -> Unit,
     onPlayMusic: () -> Unit,
     onStopMusic: () -> Unit,
     uiState: EvaluationRecordUiState,
@@ -89,7 +99,7 @@ fun EvaluationRecordScreen(
         modifier = modifier
     ) {
         NavigateUpTopAppBar(
-            onNavigateUp = { },
+            onNavigateUp = onPressBackButton,
             title = stringResource(id = R.string.evaluation_topbar_record)
         )
 
@@ -156,8 +166,7 @@ fun EvaluationRecordScreen(
 
             MyVersionBasicIconButton(
                 icon = DesignSystemR.drawable.ic_stop,
-                onClick = onStopMusic
-                ,
+                onClick = onStopMusic,
                 color = Grey200
             )
         }
@@ -169,10 +178,11 @@ fun EvaluationRecordScreen(
             contentAlignment = Alignment.BottomCenter
         ) {
             RectangleButton(
-                isEnabled = false,
+                isEnabled = uiState.isNextEnabled,
                 text = "Next",
                 textStyle = MaterialTheme.typography.titleMedium,
                 innerPadding = 20,
+                onClick = onPressNextButton,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -185,6 +195,8 @@ private fun EvaluationRecordScreenPreview() {
     MyVersionTheme {
         EvaluationRecordScreen(
             modifier = Modifier.background(MyVersionBackground),
+            onPressNextButton = {},
+            onPressBackButton = {},
             onPlayMusic = {},
             onStopMusic = {},
             uiState = EvaluationRecordUiState()

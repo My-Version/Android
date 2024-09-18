@@ -36,6 +36,7 @@ import com.my.version.feature.evaluate.record.navigation.navigateToEvaluationRec
 import com.my.version.feature.evaluate.select.navigation.evaluationSelectScreen
 import com.my.version.feature.evaluate.select.navigation.navigateToEvaluationSelect
 import com.my.version.feature.evaluate.upload.navigation.evaluationUploadScreen
+import com.my.version.feature.evaluate.upload.navigation.navigateToEvaluationUpload
 import com.my.version.feature.home.navigation.homeScreen
 import com.my.version.feature.home.navigation.navigateToHome
 import com.terning.core.util.NoRippleInteractionSource
@@ -110,6 +111,10 @@ private fun MyVersionNavHost(
             navigateToRecord = navController::navigateToEvaluationRecord
         )
         evaluationRecordScreen(
+            navigateUp = navController::navigateUp,
+            navigateToEvaluationUpload = { filePath ->
+                navController.navigateToEvaluationUpload(filePath = filePath)
+            },
             modifier = noBottomBarModifier
         )
         evaluationUploadScreen(
