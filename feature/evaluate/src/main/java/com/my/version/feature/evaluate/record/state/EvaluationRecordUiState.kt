@@ -1,4 +1,4 @@
-package com.my.version.feature.evaluate.record.model
+package com.my.version.feature.evaluate.record.state
 
 import com.my.version.core.domain.entity.MusicAudioFile
 

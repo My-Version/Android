@@ -11,7 +11,7 @@ import com.my.version.core.common.watch.StopWatch
 import com.my.version.core.domain.entity.MusicAudioFile
 import com.my.version.core.domain.repository.MusicLocalRepository
 import com.my.version.core.domain.repository.RecordRepository
-import com.my.version.feature.evaluate.record.model.EvaluationRecordUiState
+import com.my.version.feature.evaluate.record.state.EvaluationRecordUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

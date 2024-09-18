@@ -41,7 +41,7 @@ import com.my.version.core.designsystem.theme.MyVersionMain
 import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.theme.White
 import com.my.version.feature.evaluate.R
-import com.my.version.feature.evaluate.record.model.EvaluationRecordUiState
+import com.my.version.feature.evaluate.record.state.EvaluationRecordUiState
 import com.my.version.core.designsystem.R as DesignSystemR
 
 @Composable
