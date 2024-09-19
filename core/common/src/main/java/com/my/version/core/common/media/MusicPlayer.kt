@@ -1,11 +1,15 @@
 package com.my.version.core.common.media
 
 import android.media.MediaPlayer
+import androidx.compose.runtime.mutableIntStateOf
 import java.io.File
 
 object MusicPlayer {
     private var mediaPlayer: MediaPlayer? = null
     private var isPaused = false
+
+    private var _audioLength = 0
+    val audioLength get() = _audioLength
 
     fun playMusic(
         file: File?,
@@ -18,6 +22,9 @@ object MusicPlayer {
             mediaPlayer = MediaPlayer().apply {
                 setDataSource(it.absolutePath)
                 prepare()
+                setOnPreparedListener {
+                    _audioLength = it.duration
+                }
                 setOnCompletionListener { setOnCompletion() }
             }
         }

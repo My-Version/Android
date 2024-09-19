@@ -63,9 +63,10 @@ fun EvaluationRecordRoute(
         EvaluationRecordScreen(
             modifier = modifier,
             onPressNextButton = {
-                viewModel.getRecordFilePath()?.let {
+                navigateToEvaluationUpload("")
+                /*viewModel.getRecordFilePath()?.let {
                     navigateToEvaluationUpload(it)
-                }
+                }*/
             },
             onPressBackButton = navigateUp,
             onPlayMusic = {
