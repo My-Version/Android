@@ -3,7 +3,9 @@ package com.my.version.feature.main
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -15,12 +17,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.my.version.core.common.navigation.Route
-import com.my.version.core.designsystem.theme.Grey400
-import com.my.version.core.designsystem.theme.MyVersionBackground
-import com.my.version.core.designsystem.theme.MyVersionMain
+import com.my.version.core.designsystem.theme.Black
+import com.my.version.core.designsystem.theme.Grey300
 import com.my.version.core.designsystem.theme.White
 import com.my.version.feature.auth.signin.navigation.signInScreen
 import com.my.version.feature.auth.signup.navigation.signUpScreen
@@ -143,7 +145,8 @@ private fun MainBottomBar(
         exit = fadeOut()
     ) {
         NavigationBar(
-            containerColor = MyVersionBackground
+            containerColor = White,
+            modifier = Modifier.height(120.dp)
         ) {
             tabs.forEach { itemType ->
                 NavigationBarItem(
@@ -155,7 +158,8 @@ private fun MainBottomBar(
                     icon = {
                         Icon(
                             painter = painterResource(id = (itemType.iconId)),
-                            contentDescription = stringResource(id = itemType.contentDescriptionId)
+                            contentDescription = stringResource(id = itemType.contentDescriptionId),
+                            modifier = Modifier.size(20.dp)
                         )
                     },
                     label = {
@@ -166,12 +170,12 @@ private fun MainBottomBar(
                     },
                     colors = androidx.compose.material3.NavigationBarItemDefaults
                         .colors(
-                            selectedIconColor = White,
-                            selectedTextColor = White,
-                            unselectedIconColor = Grey400,
-                            unselectedTextColor = Grey400,
-                            indicatorColor = MyVersionBackground
-                        )
+                            selectedIconColor = Black,
+                            selectedTextColor = Black,
+                            unselectedIconColor = Grey300,
+                            unselectedTextColor = Grey300,
+                            indicatorColor = White
+                        ),
                 )
             }
         }

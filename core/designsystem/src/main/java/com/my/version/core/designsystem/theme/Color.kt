@@ -8,6 +8,7 @@ val MyVersionSub1 = Color(0xFFBF6FFC)
 val MyVersionSub2 = Color(0xFFB553FF)
 val MyVersionSub3 = Color(0xFFAB3DFF)
 val MyVersionSub4 = Color(0xFF8D00F8)
+val MyVersionSub5 = Color(0xD67600CF)
 
 // BackGround
 val MyVersionBackground = Color(0xFF575757)

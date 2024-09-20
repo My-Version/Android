@@ -9,6 +9,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.White
 
@@ -29,9 +30,9 @@ internal fun MyVersionBasicTopAppBar(
         },
         navigationIcon = navigationIcon,
         colors = TopAppBarDefaults.topAppBarColors(
-            navigationIconContentColor = White,
-            titleContentColor = White,
-            containerColor = MyVersionBackground
+            navigationIconContentColor = Black,
+            titleContentColor = Black,
+            containerColor = White
         ),
         actions = { actions.forEach { it() } },
         modifier = modifier.padding(horizontal = 12.dp)
