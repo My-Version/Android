@@ -24,7 +24,7 @@ fun LogoTopAppBar(
                 modifier = Modifier
                 .fillMaxHeight()
                 .width(100.dp)
-                    .background(Grey200),
+                    .background(White),
             )
         },
         actions = actions

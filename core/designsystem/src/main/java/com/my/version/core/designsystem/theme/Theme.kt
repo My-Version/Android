@@ -24,7 +24,7 @@ fun MyVersionTheme(
         SideEffect{
             val window = (view.context as Activity).window
             val controller = WindowCompat.getInsetsController(window, view)
-            controller.isAppearanceLightStatusBars = false
+            //controller.isAppearanceLightStatusBars = false
         }
     }
 
