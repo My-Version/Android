@@ -1,6 +1,6 @@
 package com.my.version.core.designsystem.type
 
-import androidx.annotation.StringRes;
+import androidx.annotation.StringRes
 import com.my.version.core.designsystem.R
 
 enum class SortBy(

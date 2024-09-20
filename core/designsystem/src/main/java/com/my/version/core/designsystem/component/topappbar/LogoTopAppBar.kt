@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.my.version.core.designsystem.theme.Grey200
 import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.White
 

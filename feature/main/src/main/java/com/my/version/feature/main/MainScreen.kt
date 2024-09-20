@@ -20,9 +20,6 @@ import androidx.navigation.compose.NavHost
 import com.my.version.core.common.navigation.Route
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.Grey300
-import com.my.version.core.designsystem.theme.Grey400
-import com.my.version.core.designsystem.theme.MyVersionBackground
-import com.my.version.core.designsystem.theme.MyVersionMain
 import com.my.version.core.designsystem.theme.White
 import com.my.version.feature.auth.signin.navigation.signInScreen
 import com.my.version.feature.auth.signup.navigation.signUpScreen
