@@ -3,12 +3,10 @@ package com.my.version.feature.cover.select
 import android.media.MediaPlayer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.my.version.core.common.media.MyVersionMediaPlayer
 import com.my.version.core.common.state.UiState
 import com.my.version.core.domain.repository.MusicLocalRepository
 import com.my.version.feature.cover.select.state.CoverSelectUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
