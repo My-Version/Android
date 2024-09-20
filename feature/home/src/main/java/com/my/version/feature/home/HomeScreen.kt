@@ -30,6 +30,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.my.version.core.common.state.UiState
 import com.my.version.core.designsystem.component.bottomsheet.SortingBottomSheet
+import com.my.version.core.designsystem.component.box.AudioPlayBox
 import com.my.version.core.designsystem.component.button.SortingButton
 import com.my.version.core.designsystem.component.divider.BasicSpacer
 import com.my.version.core.designsystem.component.item.MyVersionVerticalItem
@@ -145,9 +146,9 @@ private fun HomeScreen(
             }
         }
 
-        HomePlayBox(
-            title = uiState.currentMusic?.title ?: "Audio Not Selected",
-            subTitle = uiState.currentMusic?.artist ?: "None",
+        AudioPlayBox(
+            title = uiState.currentMusic?.title,
+            subTitle = uiState.currentMusic?.artist,
             onClickPlayButton = {}
         )
     }

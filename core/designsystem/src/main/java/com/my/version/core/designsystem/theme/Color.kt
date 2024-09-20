@@ -16,7 +16,7 @@ val CoverGradient2 = Color(0xFF0065FF)
 val CoverGradient3 = Color(0xFF0020C2)
 
 // BackGround
-val MyVersionBackground = Color(0xFF575757)
+val MyVersionBackground = Color(0xFFFFFFFF)
 
 // Grey Scale
 val White = Color(0xFFFFFFFF)

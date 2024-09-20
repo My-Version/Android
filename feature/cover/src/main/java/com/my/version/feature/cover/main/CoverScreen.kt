@@ -61,7 +61,7 @@ fun CoverRoute(
     )
 
     CoverScreen(
-        modifier = modifier.background(White),
+        modifier = modifier,
         uiState = uiState,
         onCreateClicked = navigateToSelect,
         onChangeSortBy = viewModel::updateSortByIndex,
