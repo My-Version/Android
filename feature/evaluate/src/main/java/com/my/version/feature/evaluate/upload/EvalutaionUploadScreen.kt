@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
-import androidx.compose.material3.SliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -40,7 +38,6 @@ import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.feature.evaluate.R
 import com.my.version.feature.evaluate.component.LyricView
 import com.my.version.feature.evaluate.upload.state.EvaluationUploadUiState
-import timber.log.Timber
 import com.my.version.core.designsystem.R as DesignSystemR
 
 @Composable

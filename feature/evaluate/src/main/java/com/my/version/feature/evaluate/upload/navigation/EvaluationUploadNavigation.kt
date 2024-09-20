@@ -1,7 +1,6 @@
 package com.my.version.feature.evaluate.upload.navigation
 
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Path
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions

@@ -1,6 +1,5 @@
 package com.my.version.feature.evaluate.main
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +33,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.my.version.core.common.state.UiState
 import com.my.version.core.designsystem.component.button.SortingButton
 import com.my.version.core.designsystem.component.divider.BasicSpacer
-import com.my.version.core.designsystem.component.divider.TitleWithDivider
 import com.my.version.core.designsystem.component.item.MyVersionVerticalItem
 import com.my.version.core.designsystem.component.topappbar.NewCreationTopAppBar
 import com.my.version.core.designsystem.theme.Black
@@ -44,9 +41,7 @@ import com.my.version.core.designsystem.theme.Grey400
 import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.theme.White
-import com.my.version.core.designsystem.type.TempItem
 import com.my.version.core.designsystem.type.VerticalItemType
-import com.my.version.core.designsystem.type.tempList1
 import com.my.version.core.domain.entity.EvaluationResult
 import com.my.version.feature.evaluate.R
 import com.my.version.feature.evaluate.main.state.EvaluationUiState
