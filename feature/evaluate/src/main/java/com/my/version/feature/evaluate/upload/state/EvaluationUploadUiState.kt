@@ -7,5 +7,7 @@ data class EvaluationUploadUiState(
     val fileLength: Int = 0,
     val music: MusicAudioFile? = null,
     val songLyrics: Map<Long, String> = mapOf(),
-    val currentTimeStamp: Long = 0L
+    val currentTimeStamp: Long = 0L,
+    val isPlaying: Boolean = false,
+    val progress: Float = 0f
 )

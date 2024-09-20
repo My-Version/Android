@@ -3,13 +3,18 @@ package com.my.version.feature.evaluate.upload
 import android.media.MediaPlayer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.my.version.core.common.watch.StopWatch
 import com.my.version.feature.evaluate.upload.state.EvaluationUploadUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,7 +24,11 @@ class EvaluationUploadViewModel @Inject constructor(
     private var _uiState = MutableStateFlow(EvaluationUploadUiState())
     val uiState = _uiState.asStateFlow()
 
+    private var _sideEffect = MutableSharedFlow<EvaluationUploadSideEffect>()
+    val sideEffect = _sideEffect.asSharedFlow()
+
     private var mediaPlayer: MediaPlayer? = null
+    private var stopWatch = StopWatch()
 
     fun initUiState(
         filePath: String,
@@ -34,7 +43,7 @@ class EvaluationUploadViewModel @Inject constructor(
         prepareAudio()
     }
 
-    private fun prepareAudio() = viewModelScope.launch(Dispatchers.Main){
+    private fun prepareAudio() = viewModelScope.launch(Dispatchers.Main) {
         try {
             mediaPlayer = MediaPlayer().apply {
                 setDataSource(uiState.value.filePath)
@@ -55,9 +64,9 @@ class EvaluationUploadViewModel @Inject constructor(
         }
     }
 
-    fun playAudio() = viewModelScope.launch(Dispatchers.Main){
+    fun playAudio() = viewModelScope.launch(Dispatchers.Main) {
         mediaPlayer?.run {
-            if(this.isPlaying) {
+            if (this.isPlaying) {
                 this.pause()
             } else {
                 this.start()
@@ -65,11 +74,47 @@ class EvaluationUploadViewModel @Inject constructor(
         }
     }
 
-    fun stopAudio() = viewModelScope.launch(Dispatchers.Main){
+    fun stopAudio() = viewModelScope.launch(Dispatchers.Main) {
         mediaPlayer?.run {
             this.stop()
             this.release()
         }
         mediaPlayer = null
+    }
+
+    fun changeSlider(position: Float) {
+        mediaPlayer?.run {
+            if (this.isPlaying) {
+                val newPosition = position * this.duration
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        progress = position
+                    )
+                }
+                this.seekTo(newPosition.toInt())
+            }
+        }
+    }
+
+    private fun updateIsPlaying() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isPlaying = mediaPlayer?.isPlaying ?: false
+            )
+        }
+    }
+
+    suspend fun updateProgress() = withContext(Dispatchers.Default) {
+        try {
+            while (mediaPlayer?.isPlaying == true) {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        progress = mediaPlayer?.run { currentPosition.toFloat() / duration.toFloat() } ?: 0f
+                    )
+                }
+            }
+        } catch (_: Exception) {
+            stopAudio()
+        }
     }
 }

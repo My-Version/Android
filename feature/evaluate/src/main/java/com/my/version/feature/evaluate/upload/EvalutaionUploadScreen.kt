@@ -1,6 +1,7 @@
 package com.my.version.feature.evaluate.upload
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,9 +13,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.SliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -36,6 +40,7 @@ import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.feature.evaluate.R
 import com.my.version.feature.evaluate.component.LyricView
 import com.my.version.feature.evaluate.upload.state.EvaluationUploadUiState
+import timber.log.Timber
 import com.my.version.core.designsystem.R as DesignSystemR
 
 @Composable
@@ -51,20 +56,23 @@ fun EvaluationUploadRoute(
     LaunchedEffect(true) {
         //viewModel.updateFilePath(filePath)
         viewModel.initUiState(
-            filePath = "/storage/emulated/0/Android/data/com.my.version/files/Recordings/240919161545.mp4",
-            //filePath = "/storage/emulated/0/Android/data/com.my.version/files/Recordings/240918190412.mp4",
+            filePath = "/storage/emulated/0/Android/data/com.my.version/files/Music/Ditto_NewJeans.mp3",
             songLyrics = LrcConverter.convertToLyricMap(context.resources.openRawResource(R.raw.ditto))
         )
+    }
+
+    LaunchedEffect(uiState.isPlaying) {
+        if(uiState.isPlaying) {
+            viewModel.updateProgress()
+        }
     }
 
     EvaluationUploadScreen(
         onClickClose = viewModel::stopAudio,
         onClickBack = {},
         onClickUpload = {},
-        onClickPlay = {
-            viewModel.playAudio()
-        },
-        onChangeSlider = {},
+        onClickPlay = viewModel::playAudio,
+        onChangeSlider = viewModel::changeSlider,
         uiState = uiState,
         modifier = modifier
     )
@@ -83,6 +91,7 @@ private fun EvaluationUploadScreen(
     val commonModifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 20.dp)
+    val interactionSource = remember { MutableInteractionSource() }
 
     Column(
         modifier = modifier.fillMaxSize()
@@ -109,9 +118,10 @@ private fun EvaluationUploadScreen(
         )
 
         Slider(
-            value = 0f,
+            value = uiState.progress,
             valueRange = 0f .. 1f,
             onValueChange = onChangeSlider,
+            interactionSource = interactionSource,
             modifier = commonModifier
                 .padding(vertical = 30.dp)
                 .height(7.dp),
