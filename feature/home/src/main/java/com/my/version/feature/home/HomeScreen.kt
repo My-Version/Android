@@ -70,8 +70,6 @@ private fun HomeScreen(
     onChangeSortSheetVisibility: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-
     if (uiState.isSortSheetVisible) {
         SortingBottomSheet(
             onDismiss = { index ->
@@ -169,9 +167,7 @@ private fun SuccessScreen(
             MyVersionVerticalItem(
                 itemType = VerticalItemType.COVER,
                 iconColor = Black,
-                onClick = {
-                    onMusicSelected(music)
-                },
+                onClick = { onMusicSelected(music) },
                 title = music.title,
                 subTitle = music.artist
             )
