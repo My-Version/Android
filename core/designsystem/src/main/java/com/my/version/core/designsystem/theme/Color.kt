@@ -10,6 +10,11 @@ val MyVersionSub3 = Color(0xFFAB3DFF)
 val MyVersionSub4 = Color(0xFF8D00F8)
 val MyVersionSub5 = Color(0xD67600CF)
 
+// PlayBox Gradient
+val CoverGradient1 = Color(0xFF3686FF)
+val CoverGradient2 = Color(0xFF0065FF)
+val CoverGradient3 = Color(0xFF0020C2)
+
 // BackGround
 val MyVersionBackground = Color(0xFF575757)
 

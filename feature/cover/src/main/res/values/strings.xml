@@ -4,9 +4,10 @@
     // Cover Main Page
     <string name="cover_main_title">Cover List</string>
     <string name="cover_created_date">Created: %s</string>
+    <string name="cover_empty_screen">You have not created any AI cover</string>
 
     //Cover TopBar title
-    <string name = "cover_topbar_main">New Cover</string>
+    <string name = "cover_topbar_main">Create Cover</string>
     <string name = "cover_topbar_selection">Create New Cover</string>
     <string name = "cover_topbar_upload">Create New Cover</string>
 

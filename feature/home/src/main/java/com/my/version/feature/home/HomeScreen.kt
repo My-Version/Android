@@ -146,7 +146,7 @@ private fun HomeScreen(
         }
 
         HomePlayBox(
-            title = uiState.currentMusic?.title ?: "Music Not Selected",
+            title = uiState.currentMusic?.title ?: "Audio Not Selected",
             subTitle = uiState.currentMusic?.artist ?: "None",
             onClickPlayButton = {}
         )
