@@ -3,7 +3,6 @@ package com.my.version.core.data.repositoryimpl
 import android.media.MediaRecorder
 import com.my.version.core.data.datasource.local.RecordDataSource
 import com.my.version.core.domain.repository.RecordRepository
-import timber.log.Timber
 import javax.inject.Inject
 
 class RecordRepositoryImpl @Inject constructor(
@@ -15,16 +14,19 @@ class RecordRepositoryImpl @Inject constructor(
     private var isPaused = false
 
     override fun initMediaRecorder(type: String?) {
-        mediaRecorder = recordDataSource.createNewMediaRecord()
-        filePath = recordDataSource.getNewRecordingFileAbsolutePath(type)
+        if(!isRecording) {
+            mediaRecorder = recordDataSource.createNewMediaRecord()
+            filePath = recordDataSource.getNewRecordingFileAbsolutePath(type)
 
-        mediaRecorder?.let { recorder ->
-            recorder.setAudioSource(MediaRecorder.AudioSource.MIC)
-            recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT)
-            recorder.setOutputFile(filePath)
-            recorder.prepare()
-            Timber.tag("RecordTest").d("Initialized Recording")
+            mediaRecorder?.let { recorder ->
+                with(recorder) {
+                    setAudioSource(MediaRecorder.AudioSource.MIC)
+                    setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+                    setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT)
+                    setOutputFile(filePath)
+                    prepare()
+                }
+            }
         }
     }
 
@@ -33,7 +35,6 @@ class RecordRepositoryImpl @Inject constructor(
 
     override fun startRecording() {
         if(!isRecording && mediaRecorder != null) {
-            Timber.tag("RecordTest").d("Started Recording")
             mediaRecorder?.start()
             isRecording = true
         }
@@ -58,7 +59,6 @@ class RecordRepositoryImpl @Inject constructor(
     override fun stopRecording() {
         if(isRecording && mediaRecorder != null) {
             try {
-                Timber.tag("RecordTest").d("Stopped Recording")
                 mediaRecorder?.stop()
             } catch (e: RuntimeException) {
                 e.printStackTrace()
@@ -69,10 +69,6 @@ class RecordRepositoryImpl @Inject constructor(
 
                 isRecording = false
                 isPaused = false
-
-                if(mediaRecorder == null) {
-                    Timber.tag("RecordTest").d("Released Recording")
-                }
             }
         }
     }

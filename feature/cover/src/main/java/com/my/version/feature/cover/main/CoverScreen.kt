@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -32,6 +33,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.my.version.core.common.state.UiState
 import com.my.version.core.designsystem.component.button.SortingButton
+import com.my.version.core.designsystem.component.divider.BasicSpacer
 import com.my.version.core.designsystem.component.item.MyVersionVerticalItem
 import com.my.version.core.designsystem.component.topappbar.NewCreationTopAppBar
 import com.my.version.core.designsystem.theme.Black
@@ -40,6 +42,7 @@ import com.my.version.core.designsystem.theme.Grey400
 import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.White
 import com.my.version.core.designsystem.type.VerticalItemType
+import com.my.version.core.domain.entity.CoverAudioFile
 import com.my.version.feature.cover.R
 import com.my.version.feature.cover.main.state.CoverUiState
 import java.io.File
@@ -65,7 +68,6 @@ fun CoverRoute(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun CoverScreen(
     modifier: Modifier = Modifier,
@@ -73,88 +75,73 @@ private fun CoverScreen(
     onCreateClicked: () -> Unit,
     onCoverSelected: (File?) -> Unit
 ) {
+    val commonModifier = Modifier.padding(horizontal = 20.dp)
+
     var isSelected by remember { mutableStateOf(false) }
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         NewCreationTopAppBar(
-            title = stringResource(
-                id = R.string.cover_main_title
-            ),
+            title = stringResource(id = R.string.cover_main_title),
             textStyle = MaterialTheme.typography.labelLarge,
-            onClick = onCreateClicked
+            onClick = onCreateClicked,
+        )
+
+        BasicSpacer(height = 30.dp)
+
+        Row(
+            modifier = commonModifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(horizontal = 10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(id = R.string.cover_main_title),
+                style = MaterialTheme.typography.titleSmall,
+                color = White
+            )
+            SortingButton(
+                isSelected = isSelected,
+                text = "최신순",
+                onClick = { isSelected = !isSelected }
+            )
+        }
+
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = Grey400,
+            modifier = commonModifier
+                .background(color = MyVersionBackground)
+                .padding(vertical = 6.dp)
         )
 
 
-        LazyColumn(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(horizontal = 20.dp)
-
-        ) {
-            stickyHeader {
-                Row(
-                    modifier = Modifier
-                        .background(color = MyVersionBackground)
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .padding(top = 30.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.cover_main_title),
-                        style = MaterialTheme.typography.titleSmall,
-                        color = White
-                    )
-                    SortingButton(
-                        isSelected = isSelected,
-                        text = "최신순",
-                        onClick = { isSelected = !isSelected }
-                    )
-                }
-
-                HorizontalDivider(
-                    thickness = 1.dp,
-                    color = Grey400,
-                    modifier = Modifier
-                        .background(color = MyVersionBackground)
-                        .fillMaxWidth()
-                        .padding(vertical = 6.dp)
+        when (uiState.loadState) {
+            UiState.Loading -> {}
+            UiState.Empty -> {
+                EmptyScreen(
+                    modifier = commonModifier
                 )
             }
 
-            when (uiState.loadState) {
-                UiState.Loading -> {}
-                UiState.Empty -> {
-                    item {
-                        EmptyScreen()
-                    }
-                }
-
-                is UiState.Failure -> {}
-                is UiState.Success -> {
-                    val coverList = uiState.loadState.data
-
-                    items(coverList) { cover ->
-                        MyVersionVerticalItem(
-                            itemType = VerticalItemType.COVER,
-                            iconColor = Black,
-                            onClick = { onCoverSelected(cover.audio) },
-                            title = cover.title,
-                            subTitle = stringResource(id = R.string.cover_created_date, cover.createdDate)
-                        )
-                        if (coverList.last() != cover) {
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
-                    }
-                }
+            is UiState.Failure -> {}
+            is UiState.Success -> {
+                SuccessScreen(
+                    coverList = uiState.loadState.data,
+                    onCoverSelected = onCoverSelected,
+                    modifier = commonModifier
+                )
             }
+
         }
     }
 }
 
 @Composable
 private fun EmptyScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -167,5 +154,30 @@ private fun EmptyScreen(
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(top = 70.dp)
         )
+    }
+}
+
+@Composable
+private fun SuccessScreen(
+    coverList: List<CoverAudioFile>,
+    onCoverSelected: (File?) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+    ) {
+        itemsIndexed(coverList) { index, cover ->
+            MyVersionVerticalItem(
+                itemType = VerticalItemType.COVER,
+                iconColor = Black,
+                onClick = { onCoverSelected(cover.audio) },
+                title = cover.title,
+                subTitle = stringResource(id = R.string.cover_created_date, cover.createdDate)
+            )
+            if (index < coverList.size - 1) {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
     }
 }

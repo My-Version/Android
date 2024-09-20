@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -15,10 +16,10 @@ import java.util.Locale
 
 class StopWatch {
     var formattedTime by mutableStateOf("00:00")
+    var timeMillis = 0L
 
-    private var isActive = false
+    var isActive = false
 
-    private var timeMillis = 0L
     private var lastTimestamp = 0L
 
 
@@ -48,6 +49,22 @@ class StopWatch {
         lastTimestamp = 0L
         formattedTime = "00:00"
     }
+
+    fun startForLyrics() {
+        if(isActive) return
+
+        Timber.tag("lyrics").d("starting stopwatch for lyrics")
+
+        CoroutineScope(Dispatchers.Default).launch {
+            lastTimestamp = System.currentTimeMillis()
+            this@StopWatch.isActive = true
+
+            while(this@StopWatch.isActive) {
+                timeMillis = System.currentTimeMillis() - lastTimestamp
+            }
+        }
+    }
+
 
     private fun formatTime(timeMillis: Long): String {
         val localDateTime = LocalDateTime.ofInstant(

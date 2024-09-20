@@ -19,6 +19,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.my.version.core.common.navigation.Route
 import com.my.version.core.designsystem.theme.Grey400
+import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionMain
 import com.my.version.core.designsystem.theme.White
 import com.my.version.feature.auth.signin.navigation.signInScreen
@@ -31,8 +32,11 @@ import com.my.version.feature.cover.upload.navigation.coverUploadScreen
 import com.my.version.feature.cover.upload.navigation.navigateToCoverUpload
 import com.my.version.feature.evaluate.main.navigation.evaluationScreen
 import com.my.version.feature.evaluate.record.navigation.evaluationRecordScreen
+import com.my.version.feature.evaluate.record.navigation.navigateToEvaluationRecord
 import com.my.version.feature.evaluate.select.navigation.evaluationSelectScreen
+import com.my.version.feature.evaluate.select.navigation.navigateToEvaluationSelect
 import com.my.version.feature.evaluate.upload.navigation.evaluationUploadScreen
+import com.my.version.feature.evaluate.upload.navigation.navigateToEvaluationUpload
 import com.my.version.feature.home.navigation.homeScreen
 import com.my.version.feature.home.navigation.navigateToHome
 import com.terning.core.util.NoRippleInteractionSource
@@ -97,12 +101,20 @@ private fun MyVersionNavHost(
             onUploadComplete = { navController.popBackStack(Cover, inclusive = false) }
         )
         evaluationScreen(
-            modifier = modifier
+            modifier = modifier,
+            navigateToSelect = navController::navigateToEvaluationSelect,
+            navigateToResult = {}
         )
         evaluationSelectScreen(
-            modifier = noBottomBarModifier
+            modifier = noBottomBarModifier,
+            navigateUp = navController::navigateUp,
+            navigateToRecord = navController::navigateToEvaluationRecord
         )
         evaluationRecordScreen(
+            navigateUp = navController::navigateUp,
+            navigateToEvaluationUpload = { filePath ->
+                navController.navigateToEvaluationUpload(filePath = filePath)
+            },
             modifier = noBottomBarModifier
         )
         evaluationUploadScreen(
@@ -131,7 +143,7 @@ private fun MainBottomBar(
         exit = fadeOut()
     ) {
         NavigationBar(
-            containerColor = MyVersionMain
+            containerColor = MyVersionBackground
         ) {
             tabs.forEach { itemType ->
                 NavigationBarItem(
@@ -158,7 +170,7 @@ private fun MainBottomBar(
                             selectedTextColor = White,
                             unselectedIconColor = Grey400,
                             unselectedTextColor = Grey400,
-                            indicatorColor = MyVersionMain
+                            indicatorColor = MyVersionBackground
                         )
                 )
             }

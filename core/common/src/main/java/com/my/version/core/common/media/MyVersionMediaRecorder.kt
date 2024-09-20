@@ -14,7 +14,7 @@ class MyVersionMediaRecorder @Inject constructor(
     init {
         mediaRecorder.apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
-            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+            setOutputFormat(MediaRecorder.OutputFormat.AMR_WB)
             setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT)
         }
     }
