@@ -3,7 +3,9 @@ package com.my.version.feature.main
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -15,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.my.version.core.common.navigation.Route
@@ -142,7 +145,8 @@ private fun MainBottomBar(
         exit = fadeOut()
     ) {
         NavigationBar(
-            containerColor = White
+            containerColor = White,
+            modifier = Modifier.height(120.dp)
         ) {
             tabs.forEach { itemType ->
                 NavigationBarItem(
@@ -154,7 +158,8 @@ private fun MainBottomBar(
                     icon = {
                         Icon(
                             painter = painterResource(id = (itemType.iconId)),
-                            contentDescription = stringResource(id = itemType.contentDescriptionId)
+                            contentDescription = stringResource(id = itemType.contentDescriptionId),
+                            modifier = Modifier.size(20.dp)
                         )
                     },
                     label = {
@@ -170,7 +175,7 @@ private fun MainBottomBar(
                             unselectedIconColor = Grey300,
                             unselectedTextColor = Grey300,
                             indicatorColor = White
-                        )
+                        ),
                 )
             }
         }
