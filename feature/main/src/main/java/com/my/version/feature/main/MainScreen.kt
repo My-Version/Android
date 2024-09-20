@@ -18,6 +18,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.my.version.core.common.navigation.Route
+import com.my.version.core.designsystem.theme.Black
+import com.my.version.core.designsystem.theme.Grey300
 import com.my.version.core.designsystem.theme.Grey400
 import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionMain
@@ -143,7 +145,7 @@ private fun MainBottomBar(
         exit = fadeOut()
     ) {
         NavigationBar(
-            containerColor = MyVersionBackground
+            containerColor = White
         ) {
             tabs.forEach { itemType ->
                 NavigationBarItem(
@@ -166,11 +168,11 @@ private fun MainBottomBar(
                     },
                     colors = androidx.compose.material3.NavigationBarItemDefaults
                         .colors(
-                            selectedIconColor = White,
-                            selectedTextColor = White,
-                            unselectedIconColor = Grey400,
-                            unselectedTextColor = Grey400,
-                            indicatorColor = MyVersionBackground
+                            selectedIconColor = Black,
+                            selectedTextColor = Black,
+                            unselectedIconColor = Grey300,
+                            unselectedTextColor = Grey300,
+                            indicatorColor = White
                         )
                 )
             }
