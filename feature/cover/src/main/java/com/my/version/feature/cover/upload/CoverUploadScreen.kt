@@ -1,42 +1,49 @@
 package com.my.version.feature.cover.upload
 
 import android.content.Intent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.my.version.core.designsystem.component.button.RectangleButton
 import com.my.version.core.designsystem.component.divider.BasicSpacer
-import com.my.version.core.designsystem.component.divider.TitleWithDivider
 import com.my.version.core.designsystem.component.item.MyVersionVerticalItemTwoButton
+import com.my.version.core.designsystem.component.text.SingleLineText
 import com.my.version.core.designsystem.component.topappbar.NavigateUpTopAppBar
-import com.my.version.core.designsystem.theme.MyVersionBackground
+import com.my.version.core.designsystem.theme.Black
+import com.my.version.core.designsystem.theme.Grey200
+import com.my.version.core.designsystem.theme.Grey350
+import com.my.version.core.designsystem.theme.MyVersionSub5
+import com.my.version.core.designsystem.theme.MyVersionTypography
 import com.my.version.core.designsystem.type.VerticalItemType
 import com.my.version.core.domain.entity.RecordAudioFile
 import com.my.version.feature.cover.R
-import com.my.version.feature.cover.component.OutlinedTextButton
 import com.my.version.feature.cover.record.RecordDialog
+import com.my.version.feature.cover.upload.component.CoverUploadIconButton
 import com.my.version.feature.cover.upload.component.uploadResultLauncher
 import timber.log.Timber
 import java.io.File
+import com.my.version.core.designsystem.R as DesignSystemR
 
 @Composable
 fun CoverUploadRoute(
@@ -51,19 +58,19 @@ fun CoverUploadRoute(
     )
 
     val fileResultLauncher = uploadResultLauncher(
-        onResultOk = {dataUri ->
+        onResultOk = { dataUri ->
             val file = File(dataUri.toString())
             viewModel.addRecordFile(file.absolutePath)
             Timber.tag("Upload").d(file.absolutePath)
         }
     )
 
-    if(uiState.recordDialogVisibility) {
+    if (uiState.recordDialogVisibility) {
         RecordDialog(
             onDismissRequest = { filePath ->
                 viewModel.updateRecordDialogVisibility(false)
-                if(filePath.isNotBlank())
-                   viewModel.addRecordFile(filePath)
+                if (filePath.isNotBlank())
+                    viewModel.addRecordFile(filePath)
             }
         )
     }
@@ -100,8 +107,6 @@ fun CoverUploadScreen(
     modifier: Modifier = Modifier,
     fileList: List<RecordAudioFile> = emptyList()
 ) {
-    val paddingModifier = modifier.padding(horizontal = 20.dp)
-
     Column(
         modifier = modifier.fillMaxSize()
     ) {
@@ -110,47 +115,61 @@ fun CoverUploadScreen(
             title = stringResource(id = R.string.cover_topbar_upload)
         )
 
-        TitleWithDivider(
-            text = stringResource(id = R.string.cover_on_boarding_title2),
-            textStyle = MaterialTheme.typography.titleMedium,
-            modifier = paddingModifier
-        )
-
         Row(
-            modifier = paddingModifier
+            modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp)
-                .padding(top = 10.dp)
+                .padding(horizontal = 30.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            OutlinedTextButton(
-                onClick = onRecordButtonClicked,
-                text = stringResource(id = R.string.cover_button_audio_record)
+            SingleLineText(
+                text = stringResource(id = R.string.cover_on_boarding_title2),
+                style = MaterialTheme.typography.titleSmall,
+                color = Black,
+                modifier = Modifier.padding(start = 10.dp)
             )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            CoverUploadIconButton(
+                color = MyVersionSub5,
+                contentDescription = stringResource(id = R.string.cover_button_audio_record),
+                icon = painterResource(id = DesignSystemR.drawable.ic_mic),
+                onClick = onRecordButtonClicked
+            )
+
             BasicSpacer(width = 10.dp)
-            OutlinedTextButton(
-                onClick = onFileSystemButtonClicked,
-                text = stringResource(id = R.string.cover_button_file_system)
+
+            CoverUploadIconButton(
+                color = MyVersionSub5,
+                contentDescription = stringResource(id = R.string.cover_button_file_system),
+                icon = painterResource(id = DesignSystemR.drawable.ic_folder),
+                onClick = onFileSystemButtonClicked
             )
         }
-        BasicSpacer(height = 6.dp)
 
-        LazyColumn(
-            modifier = paddingModifier
+        BasicSpacer(height = 12.dp)
+
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = Grey200,
+            modifier = Modifier.padding(horizontal = 20.dp)
+        )
+
+        BasicSpacer(height = 12.dp)
+
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
                 .weight(1f),
-            contentPadding = PaddingValues(bottom = 20.dp)
         ) {
-            itemsIndexed(fileList) { index, file ->
-                MyVersionVerticalItemTwoButton(
-                    firstItemType = VerticalItemType.MUSIC,
-                    secondItemType = VerticalItemType.AUDIO,
-                    onClickFirstItem = { onPlayButtonClicked(index) },
-                    onClickSecondItem  = { onCancelButtonClicked(index) },
-                    title = file.title,
-                    subTitle = file.time
+            if (fileList.isEmpty()) {
+                EmptyListScreen()
+            } else {
+                AudioFileListScreen(
+                    onCancelButtonClicked = onCancelButtonClicked,
+                    onPlayButtonClicked = onPlayButtonClicked,
+                    fileList = fileList
                 )
-                if (fileList.last() != file) {
-                    BasicSpacer(height = 16.dp)
-                }
             }
         }
 
@@ -160,7 +179,7 @@ fun CoverUploadScreen(
         ) {
             RectangleButton(
                 isEnabled = fileList.isNotEmpty(),
-                text = "Next",
+                text = stringResource(id = R.string.cover_button_upload),
                 textStyle = MaterialTheme.typography.titleMedium,
                 innerPadding = 20,
                 modifier = Modifier.fillMaxWidth(),
@@ -170,20 +189,63 @@ fun CoverUploadScreen(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun CoverUploadScreenPreview() {
-        Box {
-            CoverUploadScreen(
-                fileList = emptyList(),
-                modifier = Modifier.background(color = MyVersionBackground),
-                onRecordButtonClicked = {},
-                onCancelButtonClicked = {},
-                onFileSystemButtonClicked = {},
-                onNavigateUp = {},
-                onUploadComplete = {},
-                onPlayButtonClicked = {}
+private fun AudioFileListScreen(
+    modifier: Modifier = Modifier,
+    fileList: List<RecordAudioFile>,
+    onCancelButtonClicked: (Int) -> Unit,
+    onPlayButtonClicked: (Int) -> Unit
+) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(bottom = 20.dp)
+    ) {
+        itemsIndexed(fileList) { index, file ->
+            MyVersionVerticalItemTwoButton(
+                firstItemType = VerticalItemType.MUSIC,
+                secondItemType = VerticalItemType.AUDIO,
+                onClickFirstItem = { onPlayButtonClicked(index) },
+                onClickSecondItem = { onCancelButtonClicked(index) },
+                title = file.title,
+                subTitle = file.time
             )
+            if (fileList.last() != file) {
+                BasicSpacer(height = 16.dp)
+            }
         }
+    }
+}
 
+@Composable
+private fun EmptyListScreen(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+
+        BasicSpacer(height = 100.dp)
+        Text(
+            text = stringResource(id = R.string.cover_empty_guide1),
+            style = MyVersionTypography.bodyLarge,
+            color = Grey350
+        )
+
+        BasicSpacer(height = 40.dp)
+
+        Text(
+            text = stringResource(id = R.string.cover_empty_guide2),
+            style = MyVersionTypography.bodyMedium,
+            color = Grey350
+        )
+        BasicSpacer(height = 20.dp)
+
+        Text(
+            text = stringResource(id = R.string.cover_empty_guide3),
+            style = MyVersionTypography.bodyMedium,
+            color = Grey350
+        )
+
+    }
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.my.version.core.common.extension.setNewPlayer
 import com.my.version.core.common.extension.stopPreviousMusic
 import com.my.version.core.common.state.UiState
+import com.my.version.core.domain.entity.CoverAudioFile
 import com.my.version.core.domain.repository.CoverLocalRepository
 import com.my.version.feature.cover.main.state.CoverUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -55,6 +56,24 @@ class CoverViewModel @Inject constructor(
                     mediaPlayer = null
                 }
         }
+    }
+
+    fun onCoverSelected(selectedCover: CoverAudioFile) = _uiState.update { currentState ->
+        currentState.copy(
+            currentAudio = selectedCover
+        )
+    }
+
+    fun updateSortByIndex(index: Int) = _uiState.update { currentState ->
+        currentState.copy(
+            sortByIndex = index
+        )
+    }
+
+    fun updateSheetVisibility(isVisible: Boolean) = _uiState.update { currentState ->
+        currentState.copy(
+            isSortSheetVisible = isVisible
+        )
     }
 
 

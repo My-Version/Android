@@ -28,7 +28,7 @@ fun OutlinedButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     containerColor: Color = Color.Transparent,
-    borderColor: Color = Color.White,
+    borderColor: Color = Color.Black,
     borderWidth: Dp = 1.dp,
     cornerRadius: Dp = 5.dp,
     content: @Composable () -> Unit = {}

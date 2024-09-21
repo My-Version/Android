@@ -4,9 +4,10 @@
     // Cover Main Page
     <string name="cover_main_title">Cover List</string>
     <string name="cover_created_date">Created: %s</string>
+    <string name="cover_empty_screen">You have not created any AI cover</string>
 
     //Cover TopBar title
-    <string name = "cover_topbar_main">New Cover</string>
+    <string name = "cover_topbar_main">Create Cover</string>
     <string name = "cover_topbar_selection">Create New Cover</string>
     <string name = "cover_topbar_upload">Create New Cover</string>
 
@@ -18,6 +19,10 @@
     <string name="cover_button_audio_record">Record</string>
     <string name="cover_button_file_system">File System</string>
     <string name="cover_time_check"> %s / 15:00 </string>
+    <string name="cover_button_upload">Upload</string>
+    <string name="cover_empty_guide1">File Not Available</string>
+    <string name="cover_empty_guide2">press MIC button to record your voice</string>
+    <string name="cover_empty_guide3">press FILE button to get file from Device</string>
 
     // Cover Recording Dialog
     <string name="cover_dialog_button_start">Start</string>

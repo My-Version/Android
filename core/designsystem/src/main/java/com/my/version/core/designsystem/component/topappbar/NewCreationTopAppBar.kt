@@ -2,7 +2,6 @@ package com.my.version.core.designsystem.component.topappbar
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.my.version.core.designsystem.R
 import com.my.version.core.designsystem.component.button.MyVersionBasicButton
 import com.my.version.core.designsystem.component.divider.BasicSpacer
+import com.my.version.core.designsystem.theme.Grey400
 
 @Composable
 fun NewCreationTopAppBar(
@@ -30,12 +30,14 @@ fun NewCreationTopAppBar(
                 ) {
                     Text(
                         text = title,
-                        style = textStyle
+                        style = textStyle,
+                        color = Grey400
                     )
                     BasicSpacer(width = 3.dp)
                     Icon(
                         painter = painterResource(id = R.drawable.ic_add),
-                        contentDescription = stringResource(id = R.string.btn_add)
+                        contentDescription = stringResource(id = R.string.btn_add),
+                        tint = Grey400
                     )
                 }
             }
