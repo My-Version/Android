@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
@@ -41,14 +42,18 @@ internal fun RecordDialog(
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
             .collect { sideEffect ->
                 when(sideEffect) {
-                    is RecordSideEffect.NavigateUp -> onDismissRequest(viewModel.getFilePath())
+                    is RecordSideEffect.NavigateUp -> onDismissRequest("")
+                    is RecordSideEffect.StopRecord -> onDismissRequest(viewModel.getFilePath())
                 }
             }
     }
 
-
     Dialog(
-        onDismissRequest = viewModel::dismissDialog
+        onDismissRequest = viewModel::dismissDialog,
+        properties = DialogProperties(
+            dismissOnBackPress = !viewModel.isRecording,
+            dismissOnClickOutside = !viewModel.isRecording
+        )
     ) {
         Column(
             modifier = Modifier

@@ -13,16 +13,30 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel of RecordDialog Screen
+ *
+ * [startRecording] is called when start button is clicked and starts recording
+ * [stopRecording] is called when recording is in progress and stop button is clicked.
+ *                  It stops recording and returns file path to previous screen.
+ * [dismissDialog] is called when dialog is closed by clicking outside or back button.
+ *                  It is manipulated to return empty string and will not show any new content on previous screen.
+ */
+
 @HiltViewModel
 class RecordViewModel @Inject constructor(
     private val recordRepository: RecordRepository
 ) : ViewModel() {
-    private var isRecording by mutableStateOf(false)
+    var isRecording by mutableStateOf(false)
+    private var _filePath by mutableStateOf("")
 
     private var _sideEffect: MutableSharedFlow<RecordSideEffect> = MutableSharedFlow()
     val sideEffect = _sideEffect.asSharedFlow()
 
-    fun getFilePath(): String = recordRepository.getFilePath()?:""
+    fun getFilePath(): String {
+        _filePath = recordRepository.getFilePath()?:""
+        return _filePath
+    }
 
     fun startRecording() = viewModelScope.launch {
         if(!isRecording) {
@@ -36,12 +50,12 @@ class RecordViewModel @Inject constructor(
         if(isRecording) {
             isRecording = false
             recordRepository.stopRecording()
-            _sideEffect.emit(RecordSideEffect.NavigateUp)
+            _sideEffect.emit(RecordSideEffect.StopRecord)
         }
     }
 
     fun dismissDialog() = viewModelScope.launch {
-        if(isRecording) stopRecording()
-        else _sideEffect.emit(RecordSideEffect.NavigateUp)
+        if(!isRecording)
+            _sideEffect.emit(RecordSideEffect.NavigateUp)
     }
 }
