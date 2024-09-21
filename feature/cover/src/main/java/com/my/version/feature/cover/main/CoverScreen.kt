@@ -1,6 +1,5 @@
 package com.my.version.feature.cover.main
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,7 +40,6 @@ import com.my.version.core.designsystem.theme.CoverGradient2
 import com.my.version.core.designsystem.theme.CoverGradient3
 import com.my.version.core.designsystem.theme.Grey200
 import com.my.version.core.designsystem.theme.Grey300
-import com.my.version.core.designsystem.theme.White
 import com.my.version.core.designsystem.type.SortBy
 import com.my.version.core.designsystem.type.VerticalItemType
 import com.my.version.core.domain.entity.CoverAudioFile

@@ -10,7 +10,6 @@ import androidx.compose.ui.unit.dp
 import com.my.version.core.designsystem.component.button.OutlinedButton
 import com.my.version.core.designsystem.component.text.SingleLineText
 import com.my.version.core.designsystem.theme.Black
-import com.my.version.core.designsystem.theme.White
 
 @Composable
 internal fun RowScope.OutlinedTextButton(
