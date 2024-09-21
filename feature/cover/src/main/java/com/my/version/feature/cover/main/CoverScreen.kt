@@ -39,7 +39,7 @@ import com.my.version.core.designsystem.theme.CoverGradient1
 import com.my.version.core.designsystem.theme.CoverGradient2
 import com.my.version.core.designsystem.theme.CoverGradient3
 import com.my.version.core.designsystem.theme.Grey200
-import com.my.version.core.designsystem.theme.Grey300
+import com.my.version.core.designsystem.theme.Grey350
 import com.my.version.core.designsystem.type.SortBy
 import com.my.version.core.designsystem.type.VerticalItemType
 import com.my.version.core.domain.entity.CoverAudioFile
@@ -189,8 +189,8 @@ private fun EmptyScreen(
         Text(
             text = stringResource(id = R.string.cover_empty_screen),
             textAlign = TextAlign.Center,
-            color = Grey300,
-            style = MaterialTheme.typography.titleMedium,
+            color = Grey350,
+            style = MaterialTheme.typography.titleSmall,
             modifier = Modifier.padding(top = 70.dp)
         )
     }
