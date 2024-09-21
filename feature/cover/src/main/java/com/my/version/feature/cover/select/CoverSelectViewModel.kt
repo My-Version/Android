@@ -43,15 +43,17 @@ class CoverSelectViewModel @Inject constructor(
         )
     }
 
+    fun updateSelectedIndex(index: Int) = _uiState.update { currentState ->
+        currentState.copy(
+            selected = index
+        )
+    }
+
     fun onClickMusic(selected: Int) {
         if (_uiState.value.selected != selected) {
             stopMusic()
             mediaPlayer = null
-            _uiState.update { currentState ->
-                currentState.copy(
-                    selected = selected
-                )
-            }
+            updateSelectedIndex(selected)
             prepareMediaPlayer(selected)
         }
         playMusic()
@@ -93,7 +95,7 @@ class CoverSelectViewModel @Inject constructor(
         }
     }
 
-    private fun stopMusic() = mediaPlayer?.run {
+    fun stopMusic() = mediaPlayer?.run {
         if (this.isPlaying) {
             this.reset()
             this.stop()
@@ -104,12 +106,10 @@ class CoverSelectViewModel @Inject constructor(
 
 
     fun navigateUp() = viewModelScope.launch {
-        stopMusic()
         _sideEffect.emit(CoverSelectSideEffect.NavigateUp)
     }
 
     fun navigateToUpload() = viewModelScope.launch {
-        stopMusic()
         _sideEffect.emit(CoverSelectSideEffect.NavigateNext)
     }
 }

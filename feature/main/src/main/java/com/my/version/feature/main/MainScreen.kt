@@ -85,10 +85,10 @@ private fun MyVersionNavHost(
         navController = navController,
         startDestination = startDestination,
         enterTransition = {
-            EnterTransition.None
+            fadeIn()
         },
         exitTransition = {
-            ExitTransition.None
+            fadeOut()
         },
         popEnterTransition = {
             EnterTransition.None

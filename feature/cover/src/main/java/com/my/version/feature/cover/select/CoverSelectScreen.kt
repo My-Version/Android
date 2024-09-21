@@ -16,6 +16,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -61,6 +62,13 @@ fun CoverSelectRoute(
 
                 }
             }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.stopMusic()
+            viewModel.updateSelectedIndex(-1)
+        }
     }
 
     CoverSelectScreen(
@@ -126,6 +134,8 @@ fun CoverSelectScreen(
             )
         }
 
+        BasicSpacer(height = 12.dp)
+
         HorizontalDivider(
             thickness = 1.dp,
             color = Grey200,
@@ -175,7 +185,7 @@ private fun SuccessScreen(
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(vertical = 10.dp)
+        contentPadding = PaddingValues(vertical = 12.dp)
     ) {
         itemsIndexed(musicList) { index, cover ->
             val selected = selectIndex == index
