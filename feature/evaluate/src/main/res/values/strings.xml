@@ -15,5 +15,8 @@
     <!--Evaluation Main Screen-->
     <string name="evaluation_main_empty">Evaluation Not Available</string>
 
+    <!--Evaluation Select Screen-->
+    <string name="evaluation_select_empty">Cover Not Available</string>
+    <string name="evaluation_select_empty_guide1">create cover to continue</string>
 
 </resources>

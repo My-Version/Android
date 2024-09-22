@@ -44,6 +44,11 @@ import com.my.version.feature.evaluate.R
 import com.my.version.feature.evaluate.record.state.EvaluationRecordUiState
 import com.my.version.core.designsystem.R as DesignSystemR
 
+/**
+ * 수정사항
+ * 1. 비율 수정
+ */
+
 @Composable
 fun EvaluationRecordRoute(
     navigateUp: () -> Unit,

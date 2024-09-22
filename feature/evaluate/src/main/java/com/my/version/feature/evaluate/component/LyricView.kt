@@ -1,19 +1,28 @@
 package com.my.version.feature.evaluate.component
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.my.version.core.designsystem.theme.Black
+import com.my.version.core.designsystem.theme.Grey350
 import com.my.version.core.designsystem.theme.MyVersionMain
 import com.my.version.core.designsystem.theme.White
+import kotlinx.coroutines.launch
 
 @Composable
 fun LyricView(
@@ -21,24 +30,30 @@ fun LyricView(
     modifier: Modifier = Modifier,
     lyrics: Map<Long, String> = emptyMap()
 ) {
-    val scrollState = rememberScrollState()
-    Column(
+    val listState = rememberLazyListState()
+
+    LazyColumn(
         modifier = modifier
-            .fillMaxWidth()
-            .verticalScroll(
-                state = scrollState
-            ),
+            .fillMaxWidth(),
+        state = listState,
+        contentPadding = PaddingValues(vertical = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        for ((time, lyric) in lyrics.entries.toList()) {
-            val color = if(time == timeStamp) MyVersionMain else White
+        itemsIndexed(lyrics.entries.toList()) { index, item ->
+            val color = if(item.key == timeStamp) {
+                MyVersionMain
+            }
+            else Grey350
+
             Text(
-                text = lyric,
+                text = item.value,
                 color = color,
                 style = MaterialTheme.typography.titleMedium
             )
 
-            Spacer(modifier = Modifier.height(6.dp))
+            if(index < lyrics.size-1) {
+                Spacer(modifier = Modifier.height(6.dp))
+            }
         }
     }
 }
