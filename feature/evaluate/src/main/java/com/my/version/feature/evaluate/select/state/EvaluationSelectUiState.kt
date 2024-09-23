@@ -33,3 +33,21 @@ val tempCoverList = listOf<CoverAudioFile>(
         audio = File("/storage/emulated/0/Android/data/com.my.version/files/Music/Ditto_NewJeans.mp3")
     )
 )
+
+val tempCoverList2 = listOf<CoverAudioFile>(
+    CoverAudioFile(
+        title = "Fool",
+        createdDate = "2024/09/20",
+        audio = File("/storage/emulated/0/Android/data/com.my.version/files/Music/fool_231022.mp3")
+    ),
+    CoverAudioFile(
+        title = "Wonderful",
+        createdDate = "2024/08/30",
+        audio = File("/storage/emulated/0/Android/data/com.my.version/files/Music/wonderful_240628.mp3")
+    ),
+    CoverAudioFile(
+        title = "Tonight",
+        createdDate = "2024/09/10",
+        audio = File("/storage/emulated/0/Android/data/com.my.version/files/Music/tonight_240128.mp3")
+    )
+)

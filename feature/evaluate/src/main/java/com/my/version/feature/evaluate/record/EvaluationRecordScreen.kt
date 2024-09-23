@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,10 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -37,10 +35,9 @@ import com.my.version.core.designsystem.component.divider.TitleWithDivider
 import com.my.version.core.designsystem.component.topappbar.NavigateUpTopAppBar
 import com.my.version.core.designsystem.theme.Grey200
 import com.my.version.core.designsystem.theme.MyVersionBackground
-import com.my.version.core.designsystem.theme.MyVersionMain
 import com.my.version.core.designsystem.theme.MyVersionTheme
-import com.my.version.core.designsystem.theme.White
 import com.my.version.feature.evaluate.R
+import com.my.version.feature.evaluate.component.LyricView
 import com.my.version.feature.evaluate.record.state.EvaluationRecordUiState
 import com.my.version.core.designsystem.R as DesignSystemR
 
@@ -61,17 +58,26 @@ fun EvaluationRecordRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle(lifecycleOwner)
 
     LaunchedEffect(true) {
-        viewModel.updateSongLyrics(LrcConverter.convertToLyricMap(context.resources.openRawResource(R.raw.ditto)))
+        viewModel.updateSongLyrics(
+            LrcConverter.convertToLyricMap(
+                context.resources.openRawResource(
+                    R.raw.ditto
+                )
+            )
+        )
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.stopMusic()
+            viewModel.stopRecording()
+        }
     }
 
-    if(uiState.songLyrics.isNotEmpty()) {
+    if (uiState.songLyrics.isNotEmpty()) {
         EvaluationRecordScreen(
             modifier = modifier,
             onPressNextButton = {
                 navigateToEvaluationUpload("")
-                /*viewModel.getRecordFilePath()?.let {
-                    navigateToEvaluationUpload(it)
-                }*/
             },
             onPressBackButton = navigateUp,
             onPlayMusic = {
@@ -96,7 +102,6 @@ fun EvaluationRecordScreen(
     uiState: EvaluationRecordUiState,
     modifier: Modifier = Modifier,
 ) {
-    val scrollState = rememberScrollState()
     val commonModifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 20.dp)
@@ -115,28 +120,11 @@ fun EvaluationRecordScreen(
             modifier = commonModifier
         )
 
-
-        Column(
-            modifier = Modifier
-                .height(450.dp)
-                .fillMaxWidth()
-                .verticalScroll(
-                    state = scrollState
-                ),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            for ((time, lyric) in uiState.songLyrics.entries.toList()) {
-                val color = if(time == uiState.currentTimeStamp) MyVersionMain else White
-                Text(
-                    text = lyric,
-                    color = color,
-                    style = MaterialTheme.typography.titleMedium
-                )
-
-                Spacer(modifier = Modifier.height(6.dp))
-            }
-        }
-
+        LyricView(
+            lyrics = uiState.songLyrics,
+            timeStamp = uiState.currentTimeStamp,
+            modifier = commonModifier.height(450.dp)
+        )
 
         MyVersionHorizontalDivider(
             modifier = commonModifier

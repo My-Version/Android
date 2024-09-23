@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.my.version.core.common.state.UiState
 import com.my.version.feature.evaluate.select.state.EvaluationSelectUiState
 import com.my.version.feature.evaluate.select.state.tempCoverList
+import com.my.version.feature.evaluate.select.state.tempCoverList2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,7 +52,7 @@ class EvaluationSelectViewModel @Inject constructor(
         _uiState.update {
             _uiState.value.copy(
                 loadState = UiState.Success(
-                    data = tempCoverList
+                    data = tempCoverList2
                 )
                 //loadState = UiState.Empty
             )
