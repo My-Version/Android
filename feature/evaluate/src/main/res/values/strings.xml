@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    // Evaluation TopBar Titles
+    <!--Evaluation TopBar Titles-->
     <string name = "evaluation_topbar_main">New Evaluation</string>
     <string name = "evaluation_topbar_selection">Create New Evaluation</string>
     <string name = "evaluation_topbar_record">Create New Evaluation</string>
     <string name = "evaluation_topbar_upload">Create New Evaluation</string>
 
-    // Evaluation Sub-Titles
+    <!--Evaluation Sub-Titles-->
     <string name="evaluation_main_title">Evaluation List</string>
     <string name="evaluation_on_boarding_title1">Select Cover</string>
     <string name="evaluation_on_boarding_title2">Lyric</string>"
+
+    <!--Evaluation Main Screen-->
+    <string name="evaluation_main_empty">Evaluation Not Available</string>
+
+    <!--Evaluation Select Screen-->
+    <string name="evaluation_select_empty">Cover Not Available</string>
+    <string name="evaluation_select_empty_guide1">create cover to continue</string>
+
+    <!--Evaluation Result Screen-->
+    <string name="evaluation_result_similarity">Similarity</string>
+    <string name="evaluation_result_similarity_1">Very Similar to AI cover</string>
+    <string name="evaluation_result_similarity_2">Quite Similar to AI cover</string>
+    <string name="evaluation_result_similarity_3">Needs Improvement</string>
+    <string name="evaluation_result_similarity_4">Not Similar to AI cover</string>
+    <string name="evaluation_result_subtitle1">Compared Audio Files</string>
+    <string name="evaluation_result_subtitle2">Graph</string>
+    <string name="evaluation_result_cover_title">Cover: %s</string>
+    <string name="evaluation_result_record_title">Record: %s</string>
 </resources>

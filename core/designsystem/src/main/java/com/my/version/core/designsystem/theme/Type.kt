@@ -18,8 +18,8 @@ val MyVersionTypography = Typography(
     headlineLarge = TextStyle(
         fontFamily = PretendardSemiBold,
         fontWeight = FontWeight.SemiBold,
-        fontSize = 36.sp,
-        lineHeight = 36.sp,
+        fontSize = 50.sp,
+        lineHeight = 60.sp,
         letterSpacing = (-0.005).em,
     ),
     headlineMedium = TextStyle(

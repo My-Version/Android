@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,6 +29,7 @@ class EvaluationUploadViewModel @Inject constructor(
 
     private var mediaPlayer: MediaPlayer? = null
     private var stopWatch = StopWatch()
+    var lyricIndex = 0
 
     fun initUiState(
         filePath: String,
@@ -69,6 +71,7 @@ class EvaluationUploadViewModel @Inject constructor(
                 this.pause()
             } else {
                 this.start()
+                updateProgress()
             }
         }
     }
@@ -87,7 +90,8 @@ class EvaluationUploadViewModel @Inject constructor(
                 val newPosition = position * this.duration
                 _uiState.update { currentState ->
                     currentState.copy(
-                        progress = position
+                        progress = position,
+                        currentTimeStamp = this.currentPosition.toLong()
                     )
                 }
                 this.seekTo(newPosition.toInt())
@@ -106,14 +110,33 @@ class EvaluationUploadViewModel @Inject constructor(
     suspend fun updateProgress() = withContext(Dispatchers.Default) {
         try {
             while (mediaPlayer?.isPlaying == true) {
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        progress = mediaPlayer?.run { currentPosition.toFloat() / duration.toFloat() } ?: 0f
-                    )
+                mediaPlayer?.run {
+                    with(this.currentPosition) {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                progress = this.toFloat() / (this@run.duration.toFloat()),
+                            )
+                        }
+
+                        if(_uiState.value.songLyrics.keys.contains(this.toLong())) {
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    currentTimeStamp = this.toLong(),
+                                    lyricIndex = _uiState.value.songLyrics.keys.indexOf(this.toLong())
+                                )
+                            }
+                        }
+                    }
                 }
+
+                Timber.tag("Progress").d("${_uiState.value.progress} <-> ${_uiState.value.currentTimeStamp}")
             }
         } catch (_: Exception) {
             stopAudio()
         }
+    }
+
+    private fun seekCurrentLyricIndex() {
+
     }
 }

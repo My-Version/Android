@@ -14,7 +14,7 @@ fun NavController.navigateToEvaluation(navOptions: NavOptions? = null) = navigat
 fun NavGraphBuilder.evaluationScreen(
     modifier: Modifier,
     navigateToSelect: () -> Unit,
-    navigateToResult: () -> Unit,
+    navigateToResult: (String) -> Unit,
 ) {
     composable<Evaluation>{
         EvaluationRoute(

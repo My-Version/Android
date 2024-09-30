@@ -37,6 +37,8 @@ import com.my.version.feature.cover.upload.navigation.navigateToCoverUpload
 import com.my.version.feature.evaluate.main.navigation.evaluationScreen
 import com.my.version.feature.evaluate.record.navigation.evaluationRecordScreen
 import com.my.version.feature.evaluate.record.navigation.navigateToEvaluationRecord
+import com.my.version.feature.evaluate.result.navigation.evaluationResultScreen
+import com.my.version.feature.evaluate.result.navigation.navigateToEvaluationResult
 import com.my.version.feature.evaluate.select.navigation.evaluationSelectScreen
 import com.my.version.feature.evaluate.select.navigation.navigateToEvaluationSelect
 import com.my.version.feature.evaluate.upload.navigation.evaluationUploadScreen
@@ -117,7 +119,11 @@ private fun MyVersionNavHost(
         evaluationScreen(
             modifier = modifier,
             navigateToSelect = navController::navigateToEvaluationSelect,
-            navigateToResult = {}
+            navigateToResult = navController::navigateToEvaluationResult
+        )
+        evaluationResultScreen(
+            modifier = noBottomBarModifier,
+            navigateUp = navController::navigateUp
         )
         evaluationSelectScreen(
             modifier = noBottomBarModifier,

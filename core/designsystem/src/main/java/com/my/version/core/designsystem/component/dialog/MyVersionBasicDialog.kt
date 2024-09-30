@@ -27,7 +27,6 @@ import com.my.version.core.designsystem.theme.White
 @Composable
 fun MyVersionBasicDialog(
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
@@ -50,17 +49,6 @@ fun MyVersionBasicDialog(
             }
 
             content()
-
-            RectangleButton(
-                isEnabled = true,
-                text = stringResource(id = R.string.btn_next),
-                textStyle = MaterialTheme.typography.titleLarge, 
-                innerPadding = 8,
-                cornerRadius = 5.dp,
-                onClick = onConfirm,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
         }
     }
 }
@@ -74,7 +62,6 @@ private fun MyVersionBasicDialogPreview() {
         ) {
             MyVersionBasicDialog(
                 onDismiss = {  },
-                onConfirm = {  },
                 content = {  })
         }
     }

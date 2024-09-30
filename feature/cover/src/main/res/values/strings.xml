@@ -4,7 +4,7 @@
     // Cover Main Page
     <string name="cover_main_title">Cover List</string>
     <string name="cover_created_date">Created: %s</string>
-    <string name="cover_empty_screen">You have not created any AI cover</string>
+    <string name="cover_empty_screen">AI Cover Not Available</string>
 
     //Cover TopBar title
     <string name = "cover_topbar_main">Create Cover</string>
