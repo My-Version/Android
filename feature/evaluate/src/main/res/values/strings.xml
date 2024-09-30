@@ -19,4 +19,14 @@
     <string name="evaluation_select_empty">Cover Not Available</string>
     <string name="evaluation_select_empty_guide1">create cover to continue</string>
 
+    <!--Evaluation Result Screen-->
+    <string name="evaluation_result_similarity">Similarity</string>
+    <string name="evaluation_result_similarity_1">Very Similar to AI cover</string>
+    <string name="evaluation_result_similarity_2">Quite Similar to AI cover</string>
+    <string name="evaluation_result_similarity_3">Needs Improvement</string>
+    <string name="evaluation_result_similarity_4">Not Similar to AI cover</string>
+    <string name="evaluation_result_subtitle1">Compared Audio Files</string>
+    <string name="evaluation_result_subtitle2">Graph</string>
+    <string name="evaluation_result_cover_title">Cover: %s</string>
+    <string name="evaluation_result_record_title">Record: %s</string>
 </resources>
