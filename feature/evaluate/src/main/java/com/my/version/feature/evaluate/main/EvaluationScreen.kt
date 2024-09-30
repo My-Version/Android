@@ -46,7 +46,7 @@ import com.my.version.feature.evaluate.main.state.EvaluationUiState
 @Composable
 fun EvaluationRoute(
     navigateToSelect: () -> Unit,
-    navigateToResult: () -> Unit,
+    navigateToResult: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: EvaluationViewModel = hiltViewModel()
 ) {
@@ -57,8 +57,8 @@ fun EvaluationRoute(
         modifier = modifier,
         uiState = uiState,
         onCreateClicked = navigateToSelect,
-        onEvaluationSelected = { index ->
-
+        onEvaluationSelected = { index ->       //Temporary Logic
+            navigateToResult(index.toString())
         },
         onChangeSortBy = viewModel::updateSortByIndex,
         onChangeSortSheetVisibility = viewModel::updateSheetVisibility

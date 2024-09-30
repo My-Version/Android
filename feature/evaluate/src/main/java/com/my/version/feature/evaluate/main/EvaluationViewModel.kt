@@ -2,6 +2,7 @@ package com.my.version.feature.evaluate.main
 
 import androidx.lifecycle.ViewModel
 import com.my.version.core.common.state.UiState
+import com.my.version.core.domain.entity.EvaluationResult
 import com.my.version.feature.evaluate.main.state.EvaluationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +24,14 @@ class EvaluationViewModel @Inject constructor(
     fun getEvaluationList() {
         _uiState.update { currentState ->
             currentState.copy(
-                loadState = UiState.Empty
+                loadState = UiState.Success(
+                    listOf(
+                        EvaluationResult(
+                            title = "title",
+                            date = "date"
+                        )
+                    )
+                )
             )
         }
     }
