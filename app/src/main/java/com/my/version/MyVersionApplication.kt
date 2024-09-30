@@ -8,7 +8,6 @@ import timber.log.Timber
 class MyVersionApplication: Application() {
     override fun onCreate() {
         super.onCreate()
-
         initTimber()
     }
 

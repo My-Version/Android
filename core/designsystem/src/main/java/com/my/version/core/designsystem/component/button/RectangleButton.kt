@@ -31,13 +31,12 @@ fun RectangleButton(
     textColor: Color = White,
     cornerRadius: Dp = 0.dp,
     onClick: () -> Unit = {},
-) {
-    val backgroundColor = if (isEnabled) {
+    backgroundColor: Color = if (isEnabled) {
         MyVersionMain
     } else {
         Grey300
     }
-
+) {
     Box(
         modifier = modifier
             .background(

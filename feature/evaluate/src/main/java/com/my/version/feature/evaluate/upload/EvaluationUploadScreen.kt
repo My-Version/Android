@@ -36,9 +36,14 @@ import com.my.version.core.designsystem.theme.Grey200
 import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.feature.evaluate.R
+import com.my.version.feature.evaluate.component.ClickableLyricView
 import com.my.version.feature.evaluate.component.LyricView
 import com.my.version.feature.evaluate.upload.state.EvaluationUploadUiState
 import com.my.version.core.designsystem.R as DesignSystemR
+
+/**
+ * 초 표시
+ */
 
 @Composable
 fun EvaluationUploadRoute(
@@ -54,12 +59,14 @@ fun EvaluationUploadRoute(
         //viewModel.updateFilePath(filePath)
         viewModel.initUiState(
             filePath = "/storage/emulated/0/Android/data/com.my.version/files/Music/Ditto_NewJeans.mp3",
+            //filePath = "/storage/emulated/0/Android/data/com.my.version/files/Music/wonderful_240628.mp3",
             songLyrics = LrcConverter.convertToLyricMap(context.resources.openRawResource(R.raw.ditto))
         )
     }
 
     LaunchedEffect(uiState.isPlaying) {
         if(uiState.isPlaying) {
+            //Timber.tag("Progress").d("${uiState.progress}")
             viewModel.updateProgress()
         }
     }
@@ -104,9 +111,13 @@ private fun EvaluationUploadScreen(
             modifier = commonModifier
         )
 
-        LyricView(
+        ClickableLyricView(
             lyrics = uiState.songLyrics,
             timeStamp = uiState.currentTimeStamp,
+            lyricIndex = uiState.lyricIndex,
+            onClickLyric = { index, timeStamp ->
+                onChangeSlider(timeStamp.toFloat() / uiState.fileLength)
+            },
             modifier = commonModifier.height(450.dp)
         )
 

@@ -52,7 +52,7 @@ class EvaluationSelectViewModel @Inject constructor(
         _uiState.update {
             _uiState.value.copy(
                 loadState = UiState.Success(
-                    data = tempCoverList2
+                    data = tempCoverList
                 )
                 //loadState = UiState.Empty
             )

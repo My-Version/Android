@@ -86,7 +86,6 @@ class EvaluationRecordViewModel @Inject constructor(
                 stopWatch.startForLyrics()
 
             while (MusicPlayer.isPlaying()) {
-                try {
                     if ((_uiState.value.songLyrics.keys.elementAt(lyricIndex)) < stopWatch.timeMillis) {
                         updateCurrentTimeStamp(
                             _uiState.value.songLyrics.keys.elementAt(
@@ -95,11 +94,11 @@ class EvaluationRecordViewModel @Inject constructor(
                         )
                         lyricIndex += 1
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    break
                 }
-            }
+
+        }catch (e: IndexOutOfBoundsException) {
+            stopWatch.reset()
+            e.printStackTrace()
         } catch (e: Exception) {
             e.printStackTrace()
         }
