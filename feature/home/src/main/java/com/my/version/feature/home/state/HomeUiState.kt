@@ -7,6 +7,7 @@ import com.my.version.core.domain.entity.MusicAudioFile
 data class HomeUiState(
     val loadState: UiState<List<MusicAudioFile>> = UiState.Loading,
     val currentMusic: MusicAudioFile? = null,
+    val isMusicPlaying: Boolean = false,
     val sortByIndex: Int = 0,
     val isSortSheetVisible: Boolean = false
 )

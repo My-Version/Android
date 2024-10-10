@@ -32,6 +32,7 @@ fun AudioPlayBox(
     subTitle: String?,
     modifier: Modifier = Modifier,
     onClickPlayButton: () -> Unit = {},
+    onClickPauseButton: () -> Unit = {},
     isPlaying: Boolean = false,
     colorList: List<Color> = listOf(
         MyVersionSub1, // 시작 색상
@@ -74,7 +75,13 @@ fun AudioPlayBox(
                 DesignSystemR.drawable.ic_play
             },
             contentDescription = stringResource(id = VerticalItemType.MUSIC.contentDescription),
-            onClick = onClickPlayButton,
+            onClick = {
+                if (isPlaying) {
+                    onClickPauseButton()
+                } else {
+                    onClickPlayButton()
+                }
+            },
             color = White
         )
     }
