@@ -19,15 +19,20 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
+import com.my.version.core.common.musicplayer.StreamMediaPlayer
 import com.my.version.core.common.state.UiState
 import com.my.version.core.designsystem.component.bottomsheet.SortingBottomSheet
 import com.my.version.core.designsystem.component.box.AudioPlayBox
@@ -42,7 +47,6 @@ import com.my.version.core.designsystem.theme.White
 import com.my.version.core.designsystem.type.SortBy
 import com.my.version.core.designsystem.type.VerticalItemType
 import com.my.version.core.domain.entity.MusicAudioFile
-import com.my.version.feature.home.component.HomePlayBox
 import com.my.version.feature.home.state.HomeUiState
 import com.my.version.core.designsystem.R as DesignSystemR
 
@@ -52,21 +56,59 @@ fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle(lifecycleOwner)
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val mediaPlayer = StreamMediaPlayer(context)
+
+    LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
+        viewModel.sideEffect.flowWithLifecycle(lifecycle = lifecycleOwner.lifecycle)
+            .collect { sideEffect ->
+                when (sideEffect) {
+                    is HomeSideEffect.StartMusic -> {
+                        with(mediaPlayer) {
+                            endMediaPlayer()
+                            prepareMediaPlayer(sideEffect.uri)
+                        }
+                    }
+
+                    is HomeSideEffect.PlayMusic -> {
+                        mediaPlayer.playMediaPlayer()
+                    }
+
+                    is HomeSideEffect.PauseMusic -> {
+                        mediaPlayer.pauseMediaPlayer()
+                    }
+
+                    is HomeSideEffect.StopMusic -> {
+                        mediaPlayer.endMediaPlayer()
+                    }
+                }
+            }
+    }
 
     HomeScreen(
         uiState = uiState,
-        onMusicSelected = viewModel::onMusicSelected,
+        onSelectMusic = viewModel::onMusicSelected,
+        onPressPlay = viewModel::playPlayer,
+        onPressPause = viewModel::pausePlayer,
         onChangeSortBy = viewModel::updateSortByIndex,
         onChangeSortSheetVisibility = viewModel::updateSheetVisibility,
         modifier = modifier.background(White)
     )
+
+    DisposableEffect(Unit) {
+        onDispose {
+            mediaPlayer.endMediaPlayer()
+        }
+    }
 }
 
 @Composable
 private fun HomeScreen(
     uiState: HomeUiState,
-    onMusicSelected: (MusicAudioFile) -> Unit,
+    onSelectMusic: (MusicAudioFile) -> Unit,
+    onPressPlay: () -> Unit,
+    onPressPause: () -> Unit,
     onChangeSortBy: (Int) -> Unit,
     onChangeSortSheetVisibility: (Boolean) -> Unit,
     modifier: Modifier = Modifier
@@ -140,7 +182,7 @@ private fun HomeScreen(
                 is UiState.Success -> {
                     SuccessScreen(
                         musicList = uiState.loadState.data,
-                        onMusicSelected = onMusicSelected
+                        onMusicSelected = onSelectMusic
                     )
                 }
             }
@@ -149,7 +191,9 @@ private fun HomeScreen(
         AudioPlayBox(
             title = uiState.currentMusic?.title,
             subTitle = uiState.currentMusic?.artist,
-            onClickPlayButton = {}
+            isPlaying = uiState.isMusicPlaying,
+            onClickPlayButton = onPressPlay,
+            onClickPauseButton = onPressPause
         )
     }
 }
@@ -178,3 +222,4 @@ private fun SuccessScreen(
         }
     }
 }
+

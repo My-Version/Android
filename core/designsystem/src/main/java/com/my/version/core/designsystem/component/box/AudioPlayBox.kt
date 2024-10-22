@@ -14,17 +14,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.my.version.core.designsystem.component.button.MyVersionBasicIconButton
+import com.my.version.core.designsystem.component.icon.MusicPlayIcon
 import com.my.version.core.designsystem.component.text.SingleLineText
 import com.my.version.core.designsystem.theme.MyVersionSub1
 import com.my.version.core.designsystem.theme.MyVersionSub5
 import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.theme.White
-import com.my.version.core.designsystem.type.VerticalItemType
-import com.my.version.core.designsystem.R as DesignSystemR
 
 @Composable
 fun AudioPlayBox(
@@ -32,6 +29,7 @@ fun AudioPlayBox(
     subTitle: String?,
     modifier: Modifier = Modifier,
     onClickPlayButton: () -> Unit = {},
+    onClickPauseButton: () -> Unit = {},
     isPlaying: Boolean = false,
     colorList: List<Color> = listOf(
         MyVersionSub1, // 시작 색상
@@ -66,16 +64,11 @@ fun AudioPlayBox(
                 style = MaterialTheme.typography.labelMedium,
             )
         }
-
-        MyVersionBasicIconButton(
-            icon = if(isPlaying) {
-                DesignSystemR.drawable.ic_pause
-            } else {
-                DesignSystemR.drawable.ic_play
-            },
-            contentDescription = stringResource(id = VerticalItemType.MUSIC.contentDescription),
-            onClick = onClickPlayButton,
-            color = White
+        MusicPlayIcon(
+            isPlaying = isPlaying,
+            onClickPauseButton = onClickPauseButton,
+            onClickPlayButton = onClickPlayButton,
+            iconColor = White
         )
     }
 }
