@@ -9,7 +9,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import com.my.version.core.common.extension.noRippleClickable
 import com.my.version.core.designsystem.R
-import com.my.version.core.designsystem.component.button.MyVersionBasicIconButton
 import com.my.version.core.designsystem.theme.White
 import com.my.version.core.designsystem.type.VerticalItemType
 
@@ -22,7 +21,7 @@ fun MusicPlayIcon(
     iconColor: Color = White
 ) {
     Icon(
-        imageVector = if(isPlaying) {
+        imageVector = if (isPlaying) {
             ImageVector.vectorResource(R.drawable.ic_pause)
         } else {
             ImageVector.vectorResource(R.drawable.ic_play)
