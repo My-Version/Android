@@ -48,7 +48,6 @@ import com.my.version.core.designsystem.type.SortBy
 import com.my.version.core.designsystem.type.VerticalItemType
 import com.my.version.core.domain.entity.MusicAudioFile
 import com.my.version.feature.home.state.HomeUiState
-import timber.log.Timber
 import com.my.version.core.designsystem.R as DesignSystemR
 
 @Composable
@@ -67,7 +66,6 @@ fun HomeRoute(
             .collect { sideEffect ->
                 when (sideEffect) {
                     is HomeSideEffect.StartMusic -> {
-                        Timber.tag("StreamMusic").d(sideEffect.uri.toString())
                         with(mediaPlayer) {
                             endMediaPlayer()
                             prepareMediaPlayer(sideEffect.uri)
@@ -83,7 +81,6 @@ fun HomeRoute(
                     }
 
                     is HomeSideEffect.StopMusic -> {
-                        Timber.tag("StreamMusic").d("Dispose Called2")
                         mediaPlayer.endMediaPlayer()
                     }
                 }

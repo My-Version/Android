@@ -48,7 +48,7 @@ class HomeViewModel @Inject constructor(
         }
 
         val uri =
-            Uri.parse("https://ku-myversion-bucket.s3.ap-northeast-2.amazonaws.com/NewJeans+(%EB%89%B4%EC%A7%84%EC%8A%A4)+Ditto+Performance+Video.mp3")
+            Uri.parse("https://ku-myversion-bucket.s3.ap-northeast-2.amazonaws.com/Ditto.mp3")
 
         uri?.run {
             startPlayer(this)

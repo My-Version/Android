@@ -38,6 +38,12 @@ class StreamMediaPlayer(
         }
     }
 
+    fun seekInMediaPlayer(target: Int) {
+        mediaPlayer?.run {
+            seekTo(target)
+        }
+    }
+
     fun endMediaPlayer() {
         Timber.tag("StreamMusic").d(mediaPlayer.toString())
         mediaPlayer?.run {

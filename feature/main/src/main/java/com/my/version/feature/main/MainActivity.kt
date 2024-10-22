@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.my.version.core.common.media.MyVersionMediaPlayer
 import com.my.version.core.designsystem.theme.MyVersionTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -14,7 +13,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MyVersionTheme {  }
             MyVersionTheme {
                 MainScreen()
             }

@@ -17,9 +17,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -27,6 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
+import com.my.version.core.common.musicplayer.StreamMediaPlayer
 import com.my.version.core.common.state.UiState
 import com.my.version.core.designsystem.component.bottomsheet.SortingBottomSheet
 import com.my.version.core.designsystem.component.box.AudioPlayBox
@@ -53,10 +59,32 @@ fun CoverRoute(
     modifier: Modifier = Modifier,
     viewModel: CoverViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle(
-        lifecycleOwner = lifecycleOwner
-    )
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val mediaPlayer = remember { StreamMediaPlayer(context) }
+
+    LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
+        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collect { sideEffect ->
+                when (sideEffect) {
+                    CoverSideEffect.PauseCoverAudio -> {
+                        mediaPlayer.pauseMediaPlayer()
+                    }
+
+                    CoverSideEffect.PlayCoverAudio -> {
+                        mediaPlayer.playMediaPlayer()
+                    }
+
+                    is CoverSideEffect.StartCoverAudio -> {
+                        with(mediaPlayer) {
+                            endMediaPlayer()
+                            prepareMediaPlayer(sideEffect.uri)
+                        }
+                    }
+                }
+            }
+    }
 
     CoverScreen(
         modifier = modifier,
@@ -68,6 +96,12 @@ fun CoverRoute(
             viewModel.playCoverAudio(it)
         }
     )
+
+    DisposableEffect(true) {
+        onDispose {
+            mediaPlayer.endMediaPlayer()
+        }
+    }
 }
 
 @Composable
