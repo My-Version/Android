@@ -3,7 +3,6 @@ package com.my.version.core.common.musicplayer
 import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
-import timber.log.Timber
 
 class StreamMediaPlayer(
     private val context: Context
@@ -45,7 +44,6 @@ class StreamMediaPlayer(
     }
 
     fun endMediaPlayer() {
-        Timber.tag("StreamMusic").d(mediaPlayer.toString())
         mediaPlayer?.run {
             try {
                 stop()
@@ -54,7 +52,6 @@ class StreamMediaPlayer(
                 e.printStackTrace()
             } finally {
                 mediaPlayer = null
-                Timber.tag("StreamMusic").d(mediaPlayer.toString())
             }
         }
     }

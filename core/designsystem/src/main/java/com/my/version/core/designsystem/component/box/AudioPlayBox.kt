@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.my.version.core.designsystem.component.button.MyVersionBasicIconButton
+import com.my.version.core.designsystem.component.icon.MusicPlayIcon
 import com.my.version.core.designsystem.component.text.SingleLineText
 import com.my.version.core.designsystem.theme.MyVersionSub1
 import com.my.version.core.designsystem.theme.MyVersionSub5
@@ -67,22 +68,11 @@ fun AudioPlayBox(
                 style = MaterialTheme.typography.labelMedium,
             )
         }
-
-        MyVersionBasicIconButton(
-            icon = if(isPlaying) {
-                DesignSystemR.drawable.ic_pause
-            } else {
-                DesignSystemR.drawable.ic_play
-            },
-            contentDescription = stringResource(id = VerticalItemType.MUSIC.contentDescription),
-            onClick = {
-                if (isPlaying) {
-                    onClickPauseButton()
-                } else {
-                    onClickPlayButton()
-                }
-            },
-            color = White
+        MusicPlayIcon(
+            isPlaying = isPlaying,
+            onClickPauseButton = onClickPauseButton,
+            onClickPlayButton =  onClickPlayButton,
+            iconColor = White
         )
     }
 }
