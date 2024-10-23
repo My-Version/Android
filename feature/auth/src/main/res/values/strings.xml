@@ -4,4 +4,16 @@
     <string name="signin_hint_password">Enter Password</string>
     <string name="signin_button_login">Login</string>
     <string name="signin_text_no_account">No Account? Sign Up!</string>
+
+    <string name="signup_topbar_signup">Create New Account</string>
+    <string name="signup_button_signup">Sign Up</string>
+    <string name="signup_text_email">Email</string>
+    <string name="signup_text_password">Password</string>
+    <string name="signup_text_password_confirm">Confirm Password</string>
+    <string name="signup_hint_email">enter valid email</string>
+    <string name="signup_hint_password">enter password </string>
+    <string name="signup_hint_password_confirm">Confirm Password</string>
+    <string name="signup_guid_password">password must contain: \n - at least 8 charaters\n - both lower and uppercase letter\n - at least one number</string>
+
+
 </resources>
