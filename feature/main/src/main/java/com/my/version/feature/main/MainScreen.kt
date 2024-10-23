@@ -154,7 +154,8 @@ private fun MyVersionNavHost(
             navigateToHome = navController::navigateToHome,
         )
         signUpScreen(
-            modifier = noBottomBarModifier
+            modifier = noBottomBarModifier,
+            navigateUp = navController::navigateUp
         )
     }
 }
