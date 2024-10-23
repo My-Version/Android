@@ -26,9 +26,11 @@ import com.my.version.core.common.navigation.Route
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.Grey300
 import com.my.version.core.designsystem.theme.White
+import com.my.version.feature.auth.signin.navigation.navigateToSignIn
 import com.my.version.feature.auth.signin.navigation.signInScreen
 import com.my.version.feature.auth.signup.navigation.navigateToSignUp
 import com.my.version.feature.auth.signup.navigation.signUpScreen
+import com.my.version.feature.auth.splash.navigation.splashScreen
 import com.my.version.feature.cover.main.navigation.Cover
 import com.my.version.feature.cover.main.navigation.coverScreen
 import com.my.version.feature.cover.select.navigation.coverSelectScreen
@@ -100,6 +102,11 @@ private fun MyVersionNavHost(
             ExitTransition.None
         },
     ) {
+        splashScreen(
+            modifier = noBottomBarModifier,
+            navigateToSignIn = navController::navigateToSignIn,
+            navigateToHome = navController::navigateToHome
+        )
         homeScreen(
             modifier = modifier
         )
