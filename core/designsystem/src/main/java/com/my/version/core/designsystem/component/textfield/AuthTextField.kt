@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.Grey350
 import com.my.version.core.designsystem.theme.Grey500
-import com.my.version.core.designsystem.theme.MyVersionSub5
 
 @Composable
 fun AuthTextField(
@@ -30,7 +29,7 @@ fun AuthTextField(
     hintColor: Color = Grey350,
     valueColor: Color = Grey500,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    ) {
+) {
     CustomBasicTextField(
         value = value,
         hint = hint,
@@ -39,7 +38,8 @@ fun AuthTextField(
         hintColor = hintColor,
         valueColor = valueColor,
         visualTransformation = visualTransformation,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
             .height(50.dp)
             .background(
                 color = backgroundColor,
