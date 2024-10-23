@@ -10,18 +10,21 @@ import com.my.version.feature.auth.signin.SignInRoute
 import kotlinx.serialization.Serializable
 
 
-fun NavController.navigateToSignIn(navOptions: NavOptions) = navigate(SignIn, navOptions)
+fun NavController.navigateToSignIn(navOptions: NavOptions? = null) = navigate(SignIn, navOptions)
 
 fun NavGraphBuilder.signInScreen(
     modifier: Modifier,
-    onButtonClick: () -> Unit
+    navigateToSignUp: () -> Unit = {},
+    navigateToHome: () -> Unit = {}
 ) {
-    composable<SignIn>{
+    composable<SignIn> {
         SignInRoute(
             modifier = modifier,
-            onButtonClick = onButtonClick)
+            navigateToSignUp = navigateToSignUp,
+            navigateToHome = navigateToHome
+        )
     }
 }
 
 @Serializable
-data object SignIn: Route
+data object SignIn : Route
