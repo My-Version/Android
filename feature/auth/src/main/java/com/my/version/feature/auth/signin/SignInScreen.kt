@@ -2,14 +2,12 @@ package com.my.version.feature.auth.signin
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -47,7 +45,7 @@ fun SignInRoute(
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
-            .collect {sideEffect ->
+            .collect { sideEffect ->
                 when (sideEffect) {
                     is SignInSideEffect.ShowToast -> {}
                     is SignInSideEffect.NavigateToHome -> navigateToHome()
@@ -82,14 +80,14 @@ private fun SignInScreen(
             .fillMaxSize()
             .background(color = MyVersionBackground)
     ) {
-        Spacer(modifier = Modifier.weight(0.5f))
+        Spacer(modifier = Modifier.weight(0.7f))
 
         Image(
             painter = painterResource(com.my.version.core.designsystem.R.drawable.logo_top_bar),
             contentDescription = "",
             modifier = Modifier
                 .fillMaxWidth()
-                .height(100.dp)
+                .height(80.dp)
         )
 
         Spacer(modifier = Modifier.weight(0.3f))
