@@ -82,14 +82,14 @@ private fun SignInScreen(
             .fillMaxSize()
             .background(color = MyVersionBackground)
     ) {
-        Spacer(modifier = Modifier.weight(0.5f))
+        Spacer(modifier = Modifier.weight(0.7f))
 
         Image(
             painter = painterResource(com.my.version.core.designsystem.R.drawable.logo_top_bar),
             contentDescription = "",
             modifier = Modifier
                 .fillMaxWidth()
-                .height(100.dp)
+                .height(80.dp)
         )
 
         Spacer(modifier = Modifier.weight(0.3f))

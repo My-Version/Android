@@ -14,6 +14,10 @@
     <string name="signup_hint_password">enter password </string>
     <string name="signup_hint_password_confirm">Confirm Password</string>
     <string name="signup_guid_password">password must contain: \n - at least 8 charaters\n - both lower and uppercase letter\n - at least one number</string>
+    <string name="signup_toast_password_mismatch">passwords do not match</string>
+    <string name="signup_toast_invalid_email">check email format</string>
+    <string name="signup_toast_invalid_password">check password format</string>
+    <string name="signup_toast_success">Created New Account</string>
 
 
 </resources>
