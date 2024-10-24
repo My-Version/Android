@@ -13,6 +13,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
+import com.my.version.core.common.extension.showToast
 import com.my.version.core.designsystem.component.button.RectangleButton
 import com.my.version.core.designsystem.component.topappbar.NavigateUpTopAppBar
 import com.my.version.core.designsystem.theme.Grey500
@@ -39,12 +41,13 @@ fun SignUpRoute(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
             .collect { sideEffect ->
                 when (sideEffect) {
-                    is SignUpSideEffect.ShowToast -> {}
+                    is SignUpSideEffect.ShowToast -> context.showToast(context.getString(sideEffect.message))
                     is SignUpSideEffect.NavigateUp -> navigateUp()
                 }
             }
@@ -121,7 +124,7 @@ private fun SignUpScreen(
         Spacer(modifier = Modifier.weight(1f))
 
         RectangleButton(
-            isEnabled = true,
+            isEnabled = uiState.isSignUpPossible,
             text = stringResource(R.string.signup_button_signup),
             textStyle = MyVersionTypography.titleMedium,
             innerPadding = 20,
