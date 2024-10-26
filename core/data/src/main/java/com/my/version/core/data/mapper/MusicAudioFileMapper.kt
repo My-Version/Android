@@ -1,11 +1,7 @@
 package com.my.version.core.data.mapper
 
-import com.my.version.core.domain.entity.CoverAudioFile
 import com.my.version.core.domain.entity.MusicAudioFile
-import timber.log.Timber
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 fun File.toMusicAudioFile(): MusicAudioFile? {
     try {

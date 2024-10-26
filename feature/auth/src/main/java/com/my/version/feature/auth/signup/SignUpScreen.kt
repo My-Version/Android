@@ -46,7 +46,7 @@ fun SignUpRoute(
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
             .collect { sideEffect ->
                 when (sideEffect) {
-                    is SignUpSideEffect.ShowToast -> context.showToast(context.getString(sideEffect.message))
+                    is SignUpSideEffect.ShowToast -> context.showToast(sideEffect.message)
                     is SignUpSideEffect.NavigateUp -> navigateUp()
                 }
             }
