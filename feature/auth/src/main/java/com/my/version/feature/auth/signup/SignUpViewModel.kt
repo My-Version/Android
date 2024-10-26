@@ -2,6 +2,7 @@ package com.my.version.feature.auth.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.my.version.core.domain.repository.AuthRepository
 import com.my.version.feature.auth.signup.state.SignUpUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import feature.auth.R
@@ -14,7 +15,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor() : ViewModel() {
+class SignUpViewModel @Inject constructor(
+    private val authRepository: AuthRepository
+) : ViewModel() {
     private var _uiState = MutableStateFlow(SignUpUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -52,19 +55,29 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
             val isValidPassword = isValidPassword(_uiState.value.passwordText)
 
             when {
-                isValidEmail && isValidPassword && isPasswordMatch -> {
+                isValidEmail && isValidPassword && isPasswordMatch -> postSignUp()
+                !isValidEmail -> _sideEffect.emit(SignUpSideEffect.ShowToast(R.string.signup_toast_invalid_email))
+                !isValidPassword -> _sideEffect.emit(SignUpSideEffect.ShowToast(R.string.signup_toast_invalid_password))
+                !isPasswordMatch -> _sideEffect.emit(SignUpSideEffect.ShowToast(R.string.signup_toast_password_mismatch))
+            }
+        }
+    }
+
+    private suspend fun postSignUp() {
+        authRepository.postSignUp(_uiState.value.emailText, _uiState.value.passwordText)
+            .onSuccess { isSignUpSuccess ->
+                if (isSignUpSuccess) {
                     with(_sideEffect) {
                         emit(SignUpSideEffect.ShowToast(R.string.signup_toast_success))
                         emit(SignUpSideEffect.NavigateUp)
                     }
+                } else {
+                    _sideEffect.emit(SignUpSideEffect.ShowToast(R.string.signup_toast_fail))
                 }
-
-                !isValidEmail -> _sideEffect.emit(SignUpSideEffect.ShowToast(R.string.signup_toast_invalid_email))
-                !isValidPassword -> _sideEffect.emit(SignUpSideEffect.ShowToast(R.string.signup_toast_invalid_password))
-                !isPasswordMatch -> _sideEffect.emit(SignUpSideEffect.ShowToast(R.string.signup_toast_password_mismatch))
-
             }
-        }
+            .onFailure {
+                _sideEffect.emit(SignUpSideEffect.ShowToast(R.string.signup_toast_fail))
+            }
     }
 
     private fun isPasswordMatch(): Boolean = with(_uiState.value) {
@@ -79,7 +92,6 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
         if (password.contains(UPPER_CASE_REGEX.toRegex())) count++
         if (password.contains(LOWER_CASE_REGEX.toRegex())) count++
         if (password.contains(DIGIT_REGEX.toRegex())) count++
-        if (password.contains(SPECIAL_CHAR_REGEX.toRegex())) count++
 
         return password.length in PWD_LENGTH_MIN..PWD_LENGTH_MAX && count >= PWD_TYPE_MIX
     }
@@ -93,7 +105,6 @@ class SignUpViewModel @Inject constructor() : ViewModel() {
         const val UPPER_CASE_REGEX = "[A-Z]"
         const val LOWER_CASE_REGEX = "[a-z]"
         const val DIGIT_REGEX = "[0-9]"
-        const val SPECIAL_CHAR_REGEX = "[!@#\$%^&*(),.?\":{}|<>]"
 
     }
 }

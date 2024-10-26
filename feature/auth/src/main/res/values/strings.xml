@@ -20,6 +20,7 @@
     <string name="signup_toast_invalid_email">check email format</string>
     <string name="signup_toast_invalid_password">check password format</string>
     <string name="signup_toast_success">Created New Account</string>
+    <string name="signup_toast_fail">Can not Create Account</string>
 
 
 </resources>

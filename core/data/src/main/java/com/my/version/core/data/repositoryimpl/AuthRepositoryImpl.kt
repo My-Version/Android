@@ -16,10 +16,11 @@ class AuthRepositoryImpl @Inject constructor(
             authDataSource.postSignIn(request) == SUCCESS_STRING
         }
 
-    override suspend fun postSignUp(email: String, password: String): Result<String> = runCatching {
-        val request = SignUpRequest(email, password)
-        authDataSource.postSignUp(request)
-    }
+    override suspend fun postSignUp(email: String, password: String): Result<Boolean> =
+        runCatching {
+            val request = SignUpRequest(email, password)
+            authDataSource.postSignUp(request) == SUCCESS_STRING
+        }
 
     companion object {
         private const val SUCCESS_STRING = "true"
