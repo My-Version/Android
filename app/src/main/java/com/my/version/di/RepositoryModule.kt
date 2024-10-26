@@ -1,9 +1,11 @@
 package com.my.version.di
 
+import com.my.version.core.data.repositoryimpl.AuthRepositoryImpl
 import com.my.version.core.data.repositoryimpl.CoverLocalRepositoryImpl
 import com.my.version.core.data.repositoryimpl.MusicLocalRepositoryImpl
 import com.my.version.core.data.repositoryimpl.RecordLocalRepositoryImpl
 import com.my.version.core.data.repositoryimpl.RecordRepositoryImpl
+import com.my.version.core.domain.repository.AuthRepository
 import com.my.version.core.domain.repository.CoverLocalRepository
 import com.my.version.core.domain.repository.MusicLocalRepository
 import com.my.version.core.domain.repository.RecordLocalRepository
@@ -41,5 +43,11 @@ abstract class RepositoryModule {
     abstract fun bindRecordRepository(
         recordRepositoryImpl: RecordRepositoryImpl
     ): RecordRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAuthRepository(
+        authRepositoryImpl: AuthRepositoryImpl
+    ): AuthRepository
 
 }

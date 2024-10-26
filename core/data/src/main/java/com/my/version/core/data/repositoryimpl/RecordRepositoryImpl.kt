@@ -7,14 +7,14 @@ import javax.inject.Inject
 
 class RecordRepositoryImpl @Inject constructor(
     private val recordDataSource: RecordDataSource
-): RecordRepository {
+) : RecordRepository {
     private var mediaRecorder: MediaRecorder? = null
     private var filePath: String? = null
     private var isRecording = false
     private var isPaused = false
 
     override fun initMediaRecorder(type: String?) {
-        if(!isRecording) {
+        if (!isRecording) {
             mediaRecorder = recordDataSource.createNewMediaRecord()
             filePath = recordDataSource.getNewRecordingFileAbsolutePath(type)
 
@@ -22,7 +22,7 @@ class RecordRepositoryImpl @Inject constructor(
                 with(recorder) {
                     setAudioSource(MediaRecorder.AudioSource.MIC)
                     setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-                    setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT)
+                    setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
                     setOutputFile(filePath)
                     prepare()
                 }
@@ -34,14 +34,14 @@ class RecordRepositoryImpl @Inject constructor(
 
 
     override fun startRecording() {
-        if(!isRecording && mediaRecorder != null) {
+        if (!isRecording && mediaRecorder != null) {
             mediaRecorder?.start()
             isRecording = true
         }
     }
 
     override fun resumeRecording() {
-        if(isPaused && mediaRecorder != null) {
+        if (isPaused && mediaRecorder != null) {
             mediaRecorder?.resume()
             isPaused = false
             isRecording = true
@@ -50,14 +50,14 @@ class RecordRepositoryImpl @Inject constructor(
 
 
     override fun pauseRecording() {
-        if(isRecording && !isPaused && mediaRecorder != null) {
+        if (isRecording && !isPaused && mediaRecorder != null) {
             mediaRecorder?.pause()
             isPaused = true
         }
     }
 
     override fun stopRecording() {
-        if(isRecording && mediaRecorder != null) {
+        if (isRecording && mediaRecorder != null) {
             try {
                 mediaRecorder?.stop()
             } catch (e: RuntimeException) {
