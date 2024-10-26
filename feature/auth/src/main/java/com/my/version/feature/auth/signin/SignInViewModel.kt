@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,9 +38,8 @@ class SignInViewModel @Inject constructor(
 
     fun onSignInButtonClick() = viewModelScope.launch {
         authRepository.postSignIn(_uiState.value.emailText, _uiState.value.passwordText)
-            .onSuccess { message ->
-                Timber.tag("SignIn").d("in viewmodel => $message")
-                if (message == "true") {
+            .onSuccess { isSignInSuccess ->
+                if (isSignInSuccess) {
                     with(_sideEffect) {
                         emit(SignInSideEffect.NavigateToHome)
                         emit(SignInSideEffect.ShowToast(R.string.signin_toast_success))
@@ -57,4 +55,6 @@ class SignInViewModel @Inject constructor(
     fun onSignUpButtonClick() = viewModelScope.launch {
         _sideEffect.emit(SignInSideEffect.NavigateToSignUp)
     }
+
+
 }

@@ -9,14 +9,19 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(
     private val authDataSource: AuthDataSource
 ) : AuthRepository {
-    override suspend fun postSignIn(email: String, password: String): Result<String> = runCatching {
-        val request = SignInRequest(email, password)
-        authDataSource.postSignIn(request)
-    }
 
+    override suspend fun postSignIn(email: String, password: String): Result<Boolean> =
+        runCatching {
+            val request = SignInRequest(email, password)
+            authDataSource.postSignIn(request) == SUCCESS_STRING
+        }
 
     override suspend fun postSignUp(email: String, password: String): Result<String> = runCatching {
         val request = SignUpRequest(email, password)
         authDataSource.postSignUp(request)
+    }
+
+    companion object {
+        private const val SUCCESS_STRING = "true"
     }
 }
