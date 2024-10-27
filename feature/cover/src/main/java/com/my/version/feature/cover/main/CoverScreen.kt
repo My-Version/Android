@@ -2,6 +2,7 @@ package com.my.version.feature.cover.main
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -201,7 +202,6 @@ private fun CoverScreen(
                     SuccessScreen(
                         coverList = uiState.loadState.data,
                         onCoverSelected = onCoverSelected,
-                        modifier = commonModifier
                     )
                 }
 
@@ -246,7 +246,8 @@ private fun SuccessScreen(
 ) {
     LazyColumn(
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxSize(),
+        contentPadding = PaddingValues(vertical = 12.dp)
     ) {
         itemsIndexed(coverList) { index, cover ->
             MyVersionVerticalItem(

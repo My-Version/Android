@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.my.version.core.common.state.UiState
 import com.my.version.core.domain.entity.CoverAudio
 import com.my.version.core.domain.repository.CoverRepository
-import com.my.version.feature.cover.BuildConfig.STREAM_URL
+import com.my.version.feature.cover.BuildConfig.COVER_STREAM_URL
 import com.my.version.feature.cover.main.state.CoverUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -78,7 +78,7 @@ class CoverViewModel @Inject constructor(
     }
 
     fun startCoverAudio(audio: String) = viewModelScope.launch {
-        _sideEffect.emit(CoverSideEffect.StartCoverAudio(Uri.parse(STREAM_URL + audio)))
+        _sideEffect.emit(CoverSideEffect.StartCoverAudio(Uri.parse(COVER_STREAM_URL + audio)))
     }
 
     fun playPlayer() = viewModelScope.launch {

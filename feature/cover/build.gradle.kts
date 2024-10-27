@@ -25,6 +25,12 @@ android {
                 "STREAM_URL",
                 properties.getProperty("s3.url")
             )
+
+            buildConfigField(
+                "String",
+                "COVER_STREAM_URL",
+                properties.getProperty("cover.stream.url")
+            )
         }
         release {
             isMinifyEnabled = false

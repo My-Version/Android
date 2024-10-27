@@ -13,12 +13,12 @@ class CoverRepositoryImpl @Inject constructor(
             CoverAudio(
                 title = it.music,
                 createdDate = it.artist,
-                audio = AUDIO_FORMAT.format(it.artist)
+                audio = AUDIO_FORMAT.format(it.music, it.artist)
             )
         }
     }
 
     companion object {
-        private const val AUDIO_FORMAT = "%s.wav"
+        private const val AUDIO_FORMAT = "%s-%s.wav"
     }
 }
