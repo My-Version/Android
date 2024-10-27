@@ -2,12 +2,14 @@ package com.my.version.di
 
 import com.my.version.core.data.repositoryimpl.AuthRepositoryImpl
 import com.my.version.core.data.repositoryimpl.CoverLocalRepositoryImpl
+import com.my.version.core.data.repositoryimpl.CoverRepositoryImpl
 import com.my.version.core.data.repositoryimpl.MusicLocalRepositoryImpl
 import com.my.version.core.data.repositoryimpl.MusicRepositoryImpl
 import com.my.version.core.data.repositoryimpl.RecordLocalRepositoryImpl
 import com.my.version.core.data.repositoryimpl.RecordRepositoryImpl
 import com.my.version.core.domain.repository.AuthRepository
 import com.my.version.core.domain.repository.CoverLocalRepository
+import com.my.version.core.domain.repository.CoverRepository
 import com.my.version.core.domain.repository.MusicLocalRepository
 import com.my.version.core.domain.repository.MusicRepository
 import com.my.version.core.domain.repository.RecordLocalRepository
@@ -58,5 +60,10 @@ abstract class RepositoryModule {
         musicRepositoryImpl: MusicRepositoryImpl
     ): MusicRepository
 
+    @Binds
+    @Singleton
+    abstract fun bindCoverRepository(
+        coverRepositoryImpl: CoverRepositoryImpl
+    ): CoverRepository
 
 }
