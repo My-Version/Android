@@ -3,11 +3,13 @@ package com.my.version.di
 import com.my.version.core.data.repositoryimpl.AuthRepositoryImpl
 import com.my.version.core.data.repositoryimpl.CoverLocalRepositoryImpl
 import com.my.version.core.data.repositoryimpl.MusicLocalRepositoryImpl
+import com.my.version.core.data.repositoryimpl.MusicRepositoryImpl
 import com.my.version.core.data.repositoryimpl.RecordLocalRepositoryImpl
 import com.my.version.core.data.repositoryimpl.RecordRepositoryImpl
 import com.my.version.core.domain.repository.AuthRepository
 import com.my.version.core.domain.repository.CoverLocalRepository
 import com.my.version.core.domain.repository.MusicLocalRepository
+import com.my.version.core.domain.repository.MusicRepository
 import com.my.version.core.domain.repository.RecordLocalRepository
 import com.my.version.core.domain.repository.RecordRepository
 import dagger.Binds
@@ -49,5 +51,12 @@ abstract class RepositoryModule {
     abstract fun bindAuthRepository(
         authRepositoryImpl: AuthRepositoryImpl
     ): AuthRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindMusicRepository(
+        musicRepositoryImpl: MusicRepositoryImpl
+    ): MusicRepository
+
 
 }
