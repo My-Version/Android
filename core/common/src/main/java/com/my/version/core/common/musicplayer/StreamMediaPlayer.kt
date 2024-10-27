@@ -3,9 +3,11 @@ package com.my.version.core.common.musicplayer
 import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-class StreamMediaPlayer(
-    private val context: Context
+class StreamMediaPlayer @Inject constructor(
+    @ApplicationContext private val context: Context
 ) {
     private var mediaPlayer: MediaPlayer? = null
 
