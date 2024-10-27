@@ -1,11 +1,8 @@
 package com.my.version.feature.cover.main
 
-import android.media.MediaPlayer
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.my.version.core.common.extension.setNewPlayer
-import com.my.version.core.common.extension.stopPreviousMusic
 import com.my.version.core.common.state.UiState
 import com.my.version.core.domain.entity.CoverAudio
 import com.my.version.core.domain.repository.CoverRepository
@@ -29,8 +26,6 @@ class CoverViewModel @Inject constructor(
 
     private val _sideEffect = MutableSharedFlow<CoverSideEffect>()
     val sideEffect = _sideEffect.asSharedFlow()
-
-    private var mediaPlayer: MediaPlayer? = null
 
     init {
         getCoverList()
@@ -60,17 +55,6 @@ class CoverViewModel @Inject constructor(
                     )
                 }
             }
-    }
-
-    fun playCoverAudio(cover: CoverAudio?) {
-        if (cover != null) {
-            mediaPlayer?.stopPreviousMusic()
-            mediaPlayer = MediaPlayer().setNewPlayer(STREAM_URL + cover.audio)
-            mediaPlayer?.setOnCompletionListener {
-                it.release()
-                mediaPlayer = null
-            }
-        }
     }
 
     fun onCoverSelected(selectedCover: CoverAudio) {
