@@ -32,7 +32,7 @@ class SplashViewModel @Inject constructor() : ViewModel() {
             if (isLoginPossible.value) {
                 _sideEffect.emit(SplashSideEffect.NavigateToHome)
             } else {
-                _sideEffect.emit(SplashSideEffect.NavigateToSignIn)
+                _sideEffect.emit(SplashSideEffect.NavigateToHome)
             }
         }
     }

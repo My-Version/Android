@@ -1,6 +1,7 @@
 package com.my.version.core.data.service.di
 
 import com.my.version.core.data.service.AuthService
+import com.my.version.core.data.service.MusicService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,5 +17,10 @@ object ServiceModule {
     @Singleton
     fun provideAuthService(retrofit: Retrofit): AuthService =
         retrofit.create(AuthService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideHomeService(retrofit: Retrofit): MusicService =
+        retrofit.create(MusicService::class.java)
 
 }

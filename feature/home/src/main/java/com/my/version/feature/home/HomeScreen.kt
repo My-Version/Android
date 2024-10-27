@@ -32,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
+import com.my.version.core.common.extension.showToast
 import com.my.version.core.common.musicplayer.StreamMediaPlayer
 import com.my.version.core.common.state.UiState
 import com.my.version.core.designsystem.component.bottomsheet.SortingBottomSheet
@@ -46,7 +47,7 @@ import com.my.version.core.designsystem.theme.MyVersionSub1
 import com.my.version.core.designsystem.theme.White
 import com.my.version.core.designsystem.type.SortBy
 import com.my.version.core.designsystem.type.VerticalItemType
-import com.my.version.core.domain.entity.MusicAudioFile
+import com.my.version.core.domain.entity.MusicAudio
 import com.my.version.feature.home.state.HomeUiState
 import com.my.version.core.designsystem.R as DesignSystemR
 
@@ -64,6 +65,10 @@ fun HomeRoute(
         viewModel.sideEffect.flowWithLifecycle(lifecycle = lifecycleOwner.lifecycle)
             .collect { sideEffect ->
                 when (sideEffect) {
+                    is HomeSideEffect.ShowToast -> {
+                        context.showToast(sideEffect.message)
+                    }
+
                     is HomeSideEffect.StartMusic -> {
                         with(mediaPlayer) {
                             endMediaPlayer()
@@ -106,7 +111,7 @@ fun HomeRoute(
 @Composable
 private fun HomeScreen(
     uiState: HomeUiState,
-    onSelectMusic: (MusicAudioFile) -> Unit,
+    onSelectMusic: (MusicAudio) -> Unit,
     onPressPlay: () -> Unit,
     onPressPause: () -> Unit,
     onChangeSortBy: (Int) -> Unit,
@@ -200,8 +205,8 @@ private fun HomeScreen(
 
 @Composable
 private fun SuccessScreen(
-    musicList: List<MusicAudioFile>,
-    onMusicSelected: (MusicAudioFile) -> Unit,
+    musicList: List<MusicAudio>,
+    onMusicSelected: (MusicAudio) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
