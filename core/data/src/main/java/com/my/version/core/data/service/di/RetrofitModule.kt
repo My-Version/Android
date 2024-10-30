@@ -1,6 +1,7 @@
 package com.my.version.core.data.service.di
 
 import com.my.version.core.data.BuildConfig.BASE_URL
+import com.my.version.core.data.service.di.qualifier.JWT
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,18 +24,20 @@ object RetrofitModule {
 
     @Provides
     @Singleton
+    @JWT
     fun provideJsonConverter(): Converter.Factory =
         Json.asConverterFactory(APPLICATION_JSON.toMediaType())
 
+
     @Provides
     @Singleton
+    @JWT
     fun provideRetrofit(
-        factory: Converter.Factory,
+        @JWT factory: Converter.Factory,
     ): Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .client(OkHttpClient.Builder().addInterceptor(HttpLoggingInterceptor { message ->
             Timber.tag("okhttp").d("CONNECTION INFO -> $message")
-
         }.apply {
             level = HttpLoggingInterceptor.Level.BODY
         }).build())

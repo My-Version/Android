@@ -2,6 +2,7 @@ package com.my.version.feature.cover.main
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,7 +39,7 @@ import com.my.version.core.designsystem.component.bottomsheet.SortingBottomSheet
 import com.my.version.core.designsystem.component.box.AudioPlayBox
 import com.my.version.core.designsystem.component.button.SortingButton
 import com.my.version.core.designsystem.component.divider.BasicSpacer
-import com.my.version.core.designsystem.component.item.MyVersionVerticalItem
+import com.my.version.core.designsystem.component.item.MyVersionVerticalItemTwoButton
 import com.my.version.core.designsystem.component.topappbar.NewCreationTopAppBar
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.CoverGradient1
@@ -48,10 +49,9 @@ import com.my.version.core.designsystem.theme.Grey200
 import com.my.version.core.designsystem.theme.Grey350
 import com.my.version.core.designsystem.type.SortBy
 import com.my.version.core.designsystem.type.VerticalItemType
-import com.my.version.core.domain.entity.CoverAudioFile
+import com.my.version.core.domain.entity.CoverAudio
 import com.my.version.feature.cover.R
 import com.my.version.feature.cover.main.state.CoverUiState
-import java.io.File
 
 @Composable
 fun CoverRoute(
@@ -89,11 +89,17 @@ fun CoverRoute(
     CoverScreen(
         modifier = modifier,
         uiState = uiState,
+        onPressPlay = viewModel::playPlayer,
+        onPressPause = viewModel::pausePlayer,
         onCreateClicked = navigateToSelect,
         onChangeSortBy = viewModel::updateSortByIndex,
         onChangeSortSheetVisibility = viewModel::updateSheetVisibility,
-        onCoverSelected = {
-            viewModel.playCoverAudio(it)
+        onCoverDownloadClicked = { },
+        onCoverSelected = { selectedCover ->
+            with(viewModel) {
+                onCoverSelected(selectedCover)
+                startCoverAudio(selectedCover.audio)
+            }
         }
     )
 
@@ -109,9 +115,12 @@ private fun CoverScreen(
     modifier: Modifier = Modifier,
     uiState: CoverUiState,
     onCreateClicked: () -> Unit,
-    onCoverSelected: (File?) -> Unit,
-    onChangeSortBy: (Int) -> Unit = {},
+    onCoverSelected: (CoverAudio) -> Unit,
+    onCoverDownloadClicked: (CoverAudio) -> Unit,
     onChangeSortSheetVisibility: (Boolean) -> Unit,
+    onPressPlay: () -> Unit,
+    onPressPause: () -> Unit,
+    onChangeSortBy: (Int) -> Unit
 ) {
     val commonModifier = Modifier.padding(horizontal = 20.dp)
     if (uiState.isSortSheetVisible) {
@@ -195,7 +204,7 @@ private fun CoverScreen(
                     SuccessScreen(
                         coverList = uiState.loadState.data,
                         onCoverSelected = onCoverSelected,
-                        modifier = commonModifier
+                        onCoverDownloadClicked = onCoverDownloadClicked
                     )
                 }
 
@@ -207,7 +216,9 @@ private fun CoverScreen(
             subTitle = uiState.currentAudio?.createdDate,
             colorList = listOf(
                 CoverGradient1, CoverGradient2, CoverGradient3
-            )
+            ),
+            onClickPlayButton = onPressPlay,
+            onClickPauseButton = onPressPause
         )
     }
 }
@@ -232,19 +243,22 @@ private fun EmptyScreen(
 
 @Composable
 private fun SuccessScreen(
-    coverList: List<CoverAudioFile>,
-    onCoverSelected: (File?) -> Unit,
+    coverList: List<CoverAudio>,
+    onCoverSelected: (CoverAudio) -> Unit,
+    onCoverDownloadClicked: (CoverAudio) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxSize(),
+        contentPadding = PaddingValues(vertical = 12.dp)
     ) {
         itemsIndexed(coverList) { index, cover ->
-            MyVersionVerticalItem(
-                itemType = VerticalItemType.COVER,
-                iconColor = Black,
-                onClick = { onCoverSelected(cover.audio) },
+            MyVersionVerticalItemTwoButton(
+                firstItemType = VerticalItemType.COVER,
+                secondItemType = VerticalItemType.DOWNLOAD,
+                onClickFirstItem = { onCoverSelected(cover) },
+                onClickSecondItem = { onCoverDownloadClicked(cover) },
                 title = cover.title,
                 subTitle = stringResource(id = R.string.cover_created_date, cover.createdDate)
             )

@@ -4,21 +4,23 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.my.version.core.common.state.UiState
-import com.my.version.core.domain.entity.MusicAudioFile
+import com.my.version.core.domain.entity.MusicAudio
+import com.my.version.core.domain.repository.MusicRepository
+import com.my.version.feature.home.BuildConfig.STREAM_URL
 import com.my.version.feature.home.state.HomeUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-
+    private val musicRepository: MusicRepository
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
@@ -30,25 +32,30 @@ class HomeViewModel @Inject constructor(
         getMusicList()
     }
 
-    fun getMusicList() = viewModelScope.launch(Dispatchers.IO) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                loadState = UiState.Success(
-                    com.my.version.feature.home.state.tempList1
-                )
-            )
-        }
+    fun getMusicList() = viewModelScope.launch {
+        musicRepository.getMusicList()
+            .onSuccess { musicList ->
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        loadState = UiState.Success(musicList)
+                    )
+                }
+            }
+            .onFailure {
+                _sideEffect.emit(HomeSideEffect.ShowToast(R.string.home_toast_music_error))
+            }
     }
 
-    fun onMusicSelected(selectedMusic: MusicAudioFile) = viewModelScope.launch {
+    fun onMusicSelected(selectedMusic: MusicAudio) = viewModelScope.launch {
         _uiState.update { currentState ->
             currentState.copy(
                 currentMusic = selectedMusic
             )
         }
 
+        Timber.tag("STREAMING").d("play => $STREAM_URL${selectedMusic.audio} ")
         val uri =
-            Uri.parse("https://ku-myversion-bucket.s3.ap-northeast-2.amazonaws.com/Ditto.mp3")
+            Uri.parse(STREAM_URL + selectedMusic.audio)
 
         uri?.run {
             startPlayer(this)

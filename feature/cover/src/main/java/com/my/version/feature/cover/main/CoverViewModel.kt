@@ -1,14 +1,12 @@
 package com.my.version.feature.cover.main
 
-import android.media.MediaPlayer
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.my.version.core.common.extension.setNewPlayer
-import com.my.version.core.common.extension.stopPreviousMusic
 import com.my.version.core.common.state.UiState
-import com.my.version.core.domain.entity.CoverAudioFile
-import com.my.version.core.domain.repository.CoverLocalRepository
+import com.my.version.core.domain.entity.CoverAudio
+import com.my.version.core.domain.repository.CoverRepository
+import com.my.version.feature.cover.BuildConfig.COVER_STREAM_URL
 import com.my.version.feature.cover.main.state.CoverUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -17,12 +15,11 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class CoverViewModel @Inject constructor(
-    private val coverLocalRepository: CoverLocalRepository
+    private val coverRepository: CoverRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CoverUiState())
     val uiState = _uiState.asStateFlow()
@@ -30,41 +27,37 @@ class CoverViewModel @Inject constructor(
     private val _sideEffect = MutableSharedFlow<CoverSideEffect>()
     val sideEffect = _sideEffect.asSharedFlow()
 
-    private var mediaPlayer: MediaPlayer? = null
-
     init {
         getCoverList()
     }
 
     private fun getCoverList() = viewModelScope.launch {
-        val coverList = coverLocalRepository.getCoverAudioList()
-        if (coverList.isEmpty()) {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    loadState = UiState.Empty
-                )
+        coverRepository.getCoverList()
+            .onSuccess { coverList ->
+                if (coverList.isEmpty()) {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            loadState = UiState.Empty
+                        )
+                    }
+                } else {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            loadState = UiState.Success(coverList)
+                        )
+                    }
+                }
             }
-        } else {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    loadState = UiState.Success(coverList)
-                )
+            .onFailure {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        loadState = UiState.Failure("Error")
+                    )
+                }
             }
-        }
     }
 
-    fun playCoverAudio(cover: File?) {
-        if (cover != null) {
-            mediaPlayer?.stopPreviousMusic()
-            mediaPlayer = MediaPlayer().setNewPlayer(cover.path)
-            mediaPlayer?.setOnCompletionListener {
-                it.release()
-                mediaPlayer = null
-            }
-        }
-    }
-
-    fun onCoverSelected(selectedCover: CoverAudioFile) {
+    fun onCoverSelected(selectedCover: CoverAudio) {
         _uiState.update { currentState ->
             currentState.copy(
                 currentAudio = selectedCover
@@ -84,17 +77,15 @@ class CoverViewModel @Inject constructor(
         )
     }
 
-    fun startCoverAudio(uri: Uri) = viewModelScope.launch {
-        _sideEffect.emit(CoverSideEffect.StartCoverAudio(uri))
+    fun startCoverAudio(audio: String) = viewModelScope.launch {
+        _sideEffect.emit(CoverSideEffect.StartCoverAudio(Uri.parse(COVER_STREAM_URL + audio)))
     }
 
-    fun playCoverAudio() = viewModelScope.launch {
+    fun playPlayer() = viewModelScope.launch {
         _sideEffect.emit(CoverSideEffect.PlayCoverAudio)
     }
 
-    fun pauseCoverAudio() = viewModelScope.launch {
+    fun pausePlayer() = viewModelScope.launch {
         _sideEffect.emit(CoverSideEffect.PauseCoverAudio)
     }
-
-
 }

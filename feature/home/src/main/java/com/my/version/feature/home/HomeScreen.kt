@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -32,6 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
+import com.my.version.core.common.extension.showToast
 import com.my.version.core.common.musicplayer.StreamMediaPlayer
 import com.my.version.core.common.state.UiState
 import com.my.version.core.designsystem.component.bottomsheet.SortingBottomSheet
@@ -46,7 +48,7 @@ import com.my.version.core.designsystem.theme.MyVersionSub1
 import com.my.version.core.designsystem.theme.White
 import com.my.version.core.designsystem.type.SortBy
 import com.my.version.core.designsystem.type.VerticalItemType
-import com.my.version.core.domain.entity.MusicAudioFile
+import com.my.version.core.domain.entity.MusicAudio
 import com.my.version.feature.home.state.HomeUiState
 import com.my.version.core.designsystem.R as DesignSystemR
 
@@ -58,12 +60,16 @@ fun HomeRoute(
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    val mediaPlayer = StreamMediaPlayer(context)
+    val mediaPlayer = remember { StreamMediaPlayer(context) }
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect.flowWithLifecycle(lifecycle = lifecycleOwner.lifecycle)
             .collect { sideEffect ->
                 when (sideEffect) {
+                    is HomeSideEffect.ShowToast -> {
+                        context.showToast(sideEffect.message)
+                    }
+
                     is HomeSideEffect.StartMusic -> {
                         with(mediaPlayer) {
                             endMediaPlayer()
@@ -106,7 +112,7 @@ fun HomeRoute(
 @Composable
 private fun HomeScreen(
     uiState: HomeUiState,
-    onSelectMusic: (MusicAudioFile) -> Unit,
+    onSelectMusic: (MusicAudio) -> Unit,
     onPressPlay: () -> Unit,
     onPressPause: () -> Unit,
     onChangeSortBy: (Int) -> Unit,
@@ -200,8 +206,8 @@ private fun HomeScreen(
 
 @Composable
 private fun SuccessScreen(
-    musicList: List<MusicAudioFile>,
-    onMusicSelected: (MusicAudioFile) -> Unit,
+    musicList: List<MusicAudio>,
+    onMusicSelected: (MusicAudio) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
