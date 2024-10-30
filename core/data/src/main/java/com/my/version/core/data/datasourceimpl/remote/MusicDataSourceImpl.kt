@@ -12,6 +12,6 @@ class MusicDataSourceImpl @Inject constructor(
         musicService.getMusicList(bucket = BUCKET)
 
     companion object {
-        private const val BUCKET = "my-version-song-list"
+        private const val BUCKET = "song"
     }
 }

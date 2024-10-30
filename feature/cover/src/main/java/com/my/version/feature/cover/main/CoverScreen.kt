@@ -39,7 +39,7 @@ import com.my.version.core.designsystem.component.bottomsheet.SortingBottomSheet
 import com.my.version.core.designsystem.component.box.AudioPlayBox
 import com.my.version.core.designsystem.component.button.SortingButton
 import com.my.version.core.designsystem.component.divider.BasicSpacer
-import com.my.version.core.designsystem.component.item.MyVersionVerticalItem
+import com.my.version.core.designsystem.component.item.MyVersionVerticalItemTwoButton
 import com.my.version.core.designsystem.component.topappbar.NewCreationTopAppBar
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.CoverGradient1
@@ -94,6 +94,7 @@ fun CoverRoute(
         onCreateClicked = navigateToSelect,
         onChangeSortBy = viewModel::updateSortByIndex,
         onChangeSortSheetVisibility = viewModel::updateSheetVisibility,
+        onCoverDownloadClicked = { },
         onCoverSelected = { selectedCover ->
             with(viewModel) {
                 onCoverSelected(selectedCover)
@@ -115,6 +116,7 @@ private fun CoverScreen(
     uiState: CoverUiState,
     onCreateClicked: () -> Unit,
     onCoverSelected: (CoverAudio) -> Unit,
+    onCoverDownloadClicked: (CoverAudio) -> Unit,
     onChangeSortSheetVisibility: (Boolean) -> Unit,
     onPressPlay: () -> Unit,
     onPressPause: () -> Unit,
@@ -202,6 +204,7 @@ private fun CoverScreen(
                     SuccessScreen(
                         coverList = uiState.loadState.data,
                         onCoverSelected = onCoverSelected,
+                        onCoverDownloadClicked = onCoverDownloadClicked
                     )
                 }
 
@@ -242,6 +245,7 @@ private fun EmptyScreen(
 private fun SuccessScreen(
     coverList: List<CoverAudio>,
     onCoverSelected: (CoverAudio) -> Unit,
+    onCoverDownloadClicked: (CoverAudio) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -250,10 +254,11 @@ private fun SuccessScreen(
         contentPadding = PaddingValues(vertical = 12.dp)
     ) {
         itemsIndexed(coverList) { index, cover ->
-            MyVersionVerticalItem(
-                itemType = VerticalItemType.COVER,
-                iconColor = Black,
-                onClick = { onCoverSelected(cover) },
+            MyVersionVerticalItemTwoButton(
+                firstItemType = VerticalItemType.COVER,
+                secondItemType = VerticalItemType.DOWNLOAD,
+                onClickFirstItem = { onCoverSelected(cover) },
+                onClickSecondItem = { onCoverDownloadClicked(cover) },
                 title = cover.title,
                 subTitle = stringResource(id = R.string.cover_created_date, cover.createdDate)
             )

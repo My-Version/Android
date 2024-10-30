@@ -24,4 +24,8 @@ enum class VerticalItemType(
         icon = R.drawable.ic_forward,
         contentDescription = R.string.btn_next
     ),
+    DOWNLOAD(
+        icon = R.drawable.ic_forward,
+        contentDescription = R.string.btn_next
+    ),
 }

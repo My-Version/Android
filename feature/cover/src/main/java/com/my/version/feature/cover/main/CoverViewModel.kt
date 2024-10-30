@@ -88,6 +88,4 @@ class CoverViewModel @Inject constructor(
     fun pausePlayer() = viewModelScope.launch {
         _sideEffect.emit(CoverSideEffect.PauseCoverAudio)
     }
-
-
 }

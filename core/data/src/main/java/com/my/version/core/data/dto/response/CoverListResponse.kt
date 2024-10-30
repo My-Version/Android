@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CoverListResponse(
-    @SerialName("Music")
+    @SerialName("music")
     val music: String,
-    @SerialName("Singer")
+    @SerialName("singer")
     val artist: String
 )

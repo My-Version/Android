@@ -6,5 +6,5 @@ import retrofit2.http.Query
 
 interface MusicService {
     @GET("listDownload")
-    suspend fun getMusicList(@Query("Bucket") bucket: String): List<MusicListResponse>
+    suspend fun getMusicList(@Query("bucketName") bucket: String): List<MusicListResponse>
 }

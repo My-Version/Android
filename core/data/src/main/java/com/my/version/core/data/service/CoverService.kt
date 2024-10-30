@@ -6,5 +6,6 @@ import retrofit2.http.Query
 
 interface CoverService {
     @GET("listDownload")
-    suspend fun getCoverList(@Query("Bucket") bucket: String): List<CoverListResponse>
+    suspend fun getCoverList(@Query("bucketName") bucket: String): List<CoverListResponse>
+
 }
