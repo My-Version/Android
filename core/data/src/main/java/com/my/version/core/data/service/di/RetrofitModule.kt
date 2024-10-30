@@ -21,7 +21,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
     private const val APPLICATION_JSON = "application/json"
-    private const val AUDIO_WAV = "audio/wav"
 
     @Provides
     @Singleton
