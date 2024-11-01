@@ -33,6 +33,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
+import com.my.version.core.common.extension.download
+import com.my.version.core.common.extension.localDownloadManager
 import com.my.version.core.common.musicplayer.StreamMediaPlayer
 import com.my.version.core.common.state.UiState
 import com.my.version.core.designsystem.component.bottomsheet.SortingBottomSheet
@@ -63,27 +65,30 @@ fun CoverRoute(
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val mediaPlayer = remember { StreamMediaPlayer(context) }
+    val downloadManager = localDownloadManager.current
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
             .collect { sideEffect ->
                 when (sideEffect) {
-                    CoverSideEffect.PauseCoverAudio -> {
-                        mediaPlayer.pauseMediaPlayer()
+                    is CoverSideEffect.PauseCoverAudio -> mediaPlayer.pauseMediaPlayer()
+
+                    is CoverSideEffect.PlayCoverAudio -> mediaPlayer.playMediaPlayer()
+
+                    is CoverSideEffect.StartCoverAudio -> with(mediaPlayer) {
+                        endMediaPlayer()
+                        prepareMediaPlayer(sideEffect.uri)
                     }
 
-                    CoverSideEffect.PlayCoverAudio -> {
-                        mediaPlayer.playMediaPlayer()
-                    }
-
-                    is CoverSideEffect.StartCoverAudio -> {
-                        with(mediaPlayer) {
-                            endMediaPlayer()
-                            prepareMediaPlayer(sideEffect.uri)
-                        }
+                    is CoverSideEffect.DownloadAudio -> with(sideEffect) {
+                        downloadManager.download(uri, outputPath, notificationTitle)
                     }
                 }
             }
+    }
+
+    LaunchedEffect(true) {
+        viewModel.getCoverList()
     }
 
     CoverScreen(
@@ -94,7 +99,7 @@ fun CoverRoute(
         onCreateClicked = navigateToSelect,
         onChangeSortBy = viewModel::updateSortByIndex,
         onChangeSortSheetVisibility = viewModel::updateSheetVisibility,
-        onCoverDownloadClicked = { },
+        onCoverDownloadClicked = viewModel::downloadAudio,
         onCoverSelected = { selectedCover ->
             with(viewModel) {
                 onCoverSelected(selectedCover)

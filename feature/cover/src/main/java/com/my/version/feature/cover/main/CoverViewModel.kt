@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.my.version.core.common.state.UiState
 import com.my.version.core.domain.entity.CoverAudio
 import com.my.version.core.domain.repository.CoverRepository
+import com.my.version.feature.cover.BuildConfig.BASE_URL
 import com.my.version.feature.cover.BuildConfig.COVER_STREAM_URL
 import com.my.version.feature.cover.main.state.CoverUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,11 +28,7 @@ class CoverViewModel @Inject constructor(
     private val _sideEffect = MutableSharedFlow<CoverSideEffect>()
     val sideEffect = _sideEffect.asSharedFlow()
 
-    init {
-        getCoverList()
-    }
-
-    private fun getCoverList() = viewModelScope.launch {
+    fun getCoverList() = viewModelScope.launch {
         coverRepository.getCoverList()
             .onSuccess { coverList ->
                 if (coverList.isEmpty()) {
@@ -87,5 +84,32 @@ class CoverViewModel @Inject constructor(
 
     fun pausePlayer() = viewModelScope.launch {
         _sideEffect.emit(CoverSideEffect.PauseCoverAudio)
+    }
+
+    fun downloadAudio(cover: CoverAudio) = viewModelScope.launch {
+        val downloadUri = Uri.Builder()
+            .scheme(DOWNLOAD_SCHEME)
+            .authority(BASE_URL)
+            .path(DOWNLOAD_PATH)
+            .appendQueryParameter(DOWNLOAD_QUERY_FILE_NAME, cover.audio)
+            .appendQueryParameter(DOWNLOAD_QUERY_BUCKET, DOWNLOAD_QUERY_BUCKET_VALUE)
+            .build()
+
+        _sideEffect.emit(
+            CoverSideEffect.DownloadAudio(
+                uri = downloadUri,
+                outputPath = cover.title,
+                notificationTitle = cover.title
+            )
+        )
+    }
+
+    companion object {
+        private const val DOWNLOAD_SCHEME = "http"
+        private const val DOWNLOAD_PATH = "download"
+        private const val DOWNLOAD_QUERY_FILE_NAME = "fileName"
+        private const val DOWNLOAD_QUERY_BUCKET = "bucketName"
+        private const val DOWNLOAD_QUERY_BUCKET_VALUE = "cover"
+
     }
 }

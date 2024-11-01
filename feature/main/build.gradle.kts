@@ -1,8 +1,14 @@
+import java.util.Properties
+
 plugins {
     id("my.version.plugin.library")
     id("my.version.plugin.compose")
     id("my.version.plugin.hilt")
     id("my.version.plugin.feature")
+}
+
+val properties = Properties().apply {
+    load(rootProject.file("local.properties").inputStream())
 }
 
 android {
@@ -13,6 +19,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                properties.getProperty("base.url")
+            )
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -20,6 +33,10 @@ android {
                 "proguard-rules.pro"
             )
         }
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 }
 

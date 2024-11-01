@@ -1,4 +1,4 @@
-package com.my.version.di
+package com.my.version.core.data.datasource.di
 
 import com.my.version.core.data.datasource.local.RecordDataSource
 import com.my.version.core.data.datasource.local.ScopedStorageDataSource
