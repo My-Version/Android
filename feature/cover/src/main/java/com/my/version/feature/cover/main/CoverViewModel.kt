@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.my.version.core.common.state.UiState
 import com.my.version.core.domain.entity.CoverAudio
 import com.my.version.core.domain.repository.CoverRepository
-import com.my.version.feature.cover.BuildConfig.BASE_URL
 import com.my.version.feature.cover.BuildConfig.COVER_STREAM_URL
+import com.my.version.feature.cover.BuildConfig.DOWNLOAD_HOST
 import com.my.version.feature.cover.main.state.CoverUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -87,19 +87,16 @@ class CoverViewModel @Inject constructor(
     }
 
     fun downloadAudio(cover: CoverAudio) = viewModelScope.launch {
-        val downloadUri = Uri.Builder()
-            .scheme(DOWNLOAD_SCHEME)
-            .authority(BASE_URL)
-            .path(DOWNLOAD_PATH)
-            .appendQueryParameter(DOWNLOAD_QUERY_FILE_NAME, cover.audio)
-            .appendQueryParameter(DOWNLOAD_QUERY_BUCKET, DOWNLOAD_QUERY_BUCKET_VALUE)
-            .build()
+        val encodedCoverName = Uri.encode(cover.audio)
+        val downloadUri = Uri.parse(
+            "$DOWNLOAD_SCHEME://$DOWNLOAD_HOST/$DOWNLOAD_PATH?$DOWNLOAD_QUERY_FILE_NAME=${encodedCoverName}&$DOWNLOAD_QUERY_BUCKET=$DOWNLOAD_QUERY_BUCKET_VALUE"
+        )
 
         _sideEffect.emit(
             CoverSideEffect.DownloadAudio(
                 uri = downloadUri,
-                outputPath = cover.title,
-                notificationTitle = cover.title
+                outputPath = cover.audio,
+                notificationTitle = cover.audio
             )
         )
     }
@@ -110,6 +107,5 @@ class CoverViewModel @Inject constructor(
         private const val DOWNLOAD_QUERY_FILE_NAME = "fileName"
         private const val DOWNLOAD_QUERY_BUCKET = "bucketName"
         private const val DOWNLOAD_QUERY_BUCKET_VALUE = "cover"
-
     }
 }

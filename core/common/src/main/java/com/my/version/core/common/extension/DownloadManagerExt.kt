@@ -4,7 +4,6 @@ import android.app.DownloadManager
 import android.net.Uri
 import android.os.Environment
 import androidx.compose.runtime.compositionLocalOf
-import timber.log.Timber
 import java.io.File
 
 fun DownloadManager.download(

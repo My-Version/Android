@@ -34,8 +34,8 @@ android {
 
             buildConfigField(
                 "String",
-                "BASE_URL",
-                properties.getProperty("base.url")
+                "DOWNLOAD_HOST",
+                properties.getProperty("download.host")
             )
         }
         release {
