@@ -28,6 +28,9 @@
     <string name="cover_dialog_button_start">Start</string>
     <string name="cover_dialog_button_stop">Stop</string>
 
+    //Cover Upload Dialog
+    <string name="cover_dialog_confirm_upload">Would you like to upload?</string>
+
     // Cover Toast
     <string name="cover_toast_music_error">music load failed</string>
 </resources>

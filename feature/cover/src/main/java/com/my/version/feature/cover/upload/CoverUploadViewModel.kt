@@ -3,25 +3,32 @@ package com.my.version.feature.cover.upload
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.my.version.core.common.media.MyVersionMediaPlayer
+import com.my.version.core.common.state.UiState
 import com.my.version.core.domain.entity.RecordAudioFile
-import com.my.version.core.domain.repository.MusicLocalRepository
+import com.my.version.core.domain.repository.CoverUploadRepository
 import com.my.version.core.domain.repository.RecordLocalRepository
+import com.my.version.feature.cover.upload.state.ConfirmDialogUiState
 import com.my.version.feature.cover.upload.state.UploadUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class CoverUploadViewModel @Inject constructor(
-    private val musicLocalRepository: MusicLocalRepository,
-    private val recordLocalRepository: RecordLocalRepository
+    private val recordLocalRepository: RecordLocalRepository,
+    private val coverUploadRepository: CoverUploadRepository
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(UploadUiState())
     val uiState = _uiState.asStateFlow()
+
+    private val _dialogState = MutableStateFlow(ConfirmDialogUiState())
+    val dialogState = _dialogState.asStateFlow()
 
     private var mediaPlayer = MyVersionMediaPlayer()
 
@@ -39,6 +46,14 @@ class CoverUploadViewModel @Inject constructor(
                 uploadFiles = newFileList
             )
         }
+
+    fun updateUploadDialogVisibility(visibility: Boolean) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                uploadDialogVisibility = visibility
+            )
+        }
+    }
 
     fun addRecordFile(filePath: String) = viewModelScope.launch {
         val file = File(filePath)
@@ -76,8 +91,36 @@ class CoverUploadViewModel @Inject constructor(
         }
     }
 
-
     fun stopRecordFile() = viewModelScope.launch {
         mediaPlayer.stopMusic()
+    }
+
+    fun uploadFilesForCover(musicName: String) = viewModelScope.launch {
+        updateUploadDialogState(UiState.Loading)
+        delay(3000)
+
+        _uiState.value.uploadFiles[0].audio?.run {
+            coverUploadRepository.uploadCover(
+                file = this,
+                userId = "sdsds",
+                musicName = musicName
+            ).fold(
+                onSuccess = {
+                    updateUploadDialogState(UiState.Success("Success"))
+                },
+                onFailure = { message ->
+                    Timber.tag("Uploading").d(message)
+                    updateUploadDialogState(UiState.Failure("Fail"))
+                }
+            )
+        }
+    }
+
+    private fun updateUploadDialogState(state: UiState<String>) {
+        _dialogState.update { currentState ->
+            currentState.copy(
+                loadState = state
+            )
+        }
     }
 }

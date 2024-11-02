@@ -7,4 +7,5 @@ data class UploadUiState(
     val uploadedFiles: List<File> = emptyList(),
     val uploadFiles: List<RecordAudioFile> = emptyList(),
     val recordDialogVisibility: Boolean = false,
+    val uploadDialogVisibility: Boolean = false
 )
