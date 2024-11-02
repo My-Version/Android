@@ -92,6 +92,10 @@ fun HomeRoute(
             }
     }
 
+    LaunchedEffect(true) {
+        viewModel.getMusicList()
+    }
+
     HomeScreen(
         uiState = uiState,
         onSelectMusic = viewModel::onMusicSelected,

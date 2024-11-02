@@ -19,14 +19,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
+import com.my.version.core.common.extension.showToast
+import com.my.version.core.common.musicplayer.StreamMediaPlayer
 import com.my.version.core.common.state.UiState
 import com.my.version.core.designsystem.component.bottomsheet.SortingBottomSheet
 import com.my.version.core.designsystem.component.button.RectangleButton
@@ -39,54 +43,63 @@ import com.my.version.core.designsystem.theme.Grey200
 import com.my.version.core.designsystem.theme.MyVersionMain
 import com.my.version.core.designsystem.type.SortBy
 import com.my.version.core.designsystem.type.VerticalItemType
-import com.my.version.core.domain.entity.MusicAudioFile
+import com.my.version.core.domain.entity.MusicAudio
 import com.my.version.feature.cover.R
 import com.my.version.feature.cover.select.state.CoverSelectUiState
 
 @Composable
 fun CoverSelectRoute(
     navigateUp: () -> Unit,
-    navigateToUpload: () -> Unit,
+    navigateToUpload: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CoverSelectViewModel = hiltViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle(lifecycleOwner = lifecycleOwner)
+    val context = LocalContext.current
+    val mediaPlayer = remember { StreamMediaPlayer(context) }
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
             .collect { sideEffect ->
-                when(sideEffect) {
+                when (sideEffect) {
+                    is CoverSelectSideEffect.ShowToast -> context.showToast(sideEffect.message)
                     is CoverSelectSideEffect.NavigateUp -> navigateUp()
-                    is CoverSelectSideEffect.NavigateNext -> navigateToUpload()
-
+                    is CoverSelectSideEffect.NavigateNext -> navigateToUpload(sideEffect.music.audio)
+                    is CoverSelectSideEffect.StartMusic -> mediaPlayer.prepareMediaPlayer(sideEffect.uri)
+                    is CoverSelectSideEffect.PauseMusic -> mediaPlayer.pauseMediaPlayer()
+                    is CoverSelectSideEffect.PlayMusic -> mediaPlayer.playMediaPlayer()
                 }
             }
     }
 
-    DisposableEffect(Unit) {
-        onDispose {
-            viewModel.stopMusic()
-            viewModel.updateSelectedIndex(-1)
-        }
+    LaunchedEffect(true) {
+        viewModel.getMusicList()
     }
 
     CoverSelectScreen(
         modifier = modifier,
         uiState = uiState,
-        onItemClicked = viewModel::onClickMusic,
+        onItemClicked = viewModel::onMusicSelected,
         onNavigateUp = viewModel::navigateUp,
         onChangeSortBy = viewModel::updateSortByIndex,
         onChangeSortSheetVisibility = viewModel::updateSheetVisibility,
         onNextClicked = viewModel::navigateToUpload
     )
+
+    DisposableEffect(true) {
+        onDispose {
+            mediaPlayer.endMediaPlayer()
+            viewModel.updateCurrentMusic(null)
+        }
+    }
 }
 
 @Composable
 fun CoverSelectScreen(
     modifier: Modifier = Modifier,
     uiState: CoverSelectUiState,
-    onItemClicked: (Int) -> Unit,
+    onItemClicked: (MusicAudio) -> Unit,
     onNavigateUp: () -> Unit,
     onNextClicked: () -> Unit,
     onChangeSortBy: (Int) -> Unit,
@@ -157,7 +170,7 @@ fun CoverSelectScreen(
                 is UiState.Success -> {
                     SuccessScreen(
                         musicList = uiState.loadState.data,
-                        selectIndex = uiState.selected,
+                        selectedAudio = uiState.currentMusic,
                         onMusicSelected = onItemClicked
                     )
                 }
@@ -166,7 +179,7 @@ fun CoverSelectScreen(
         }
 
         RectangleButton(
-            isEnabled = uiState.selected != -1,
+            isEnabled = uiState.currentMusic != null,
             text = "Next",
             textStyle = MaterialTheme.typography.titleMedium,
             innerPadding = 20,
@@ -178,24 +191,24 @@ fun CoverSelectScreen(
 
 @Composable
 private fun SuccessScreen(
-    musicList: List<MusicAudioFile>,
-    selectIndex: Int,
-    onMusicSelected: (Int) -> Unit,
+    musicList: List<MusicAudio>,
+    selectedAudio: MusicAudio?,
+    onMusicSelected: (MusicAudio) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(vertical = 12.dp)
     ) {
-        itemsIndexed(musicList) { index, cover ->
-            val selected = selectIndex == index
+        itemsIndexed(musicList) { index, music ->
+            val selected = selectedAudio == music
 
             MyVersionVerticalItem(
                 itemType = VerticalItemType.MUSIC,
                 iconColor = if (selected) MyVersionMain else Black,
-                onClick = { onMusicSelected(index) },
-                title = cover.title,
-                subTitle = cover.artist
+                onClick = { onMusicSelected(music) },
+                title = music.title,
+                subTitle = music.artist
             )
             if (index < musicList.size - 1) {
                 Spacer(modifier = Modifier.height(16.dp))

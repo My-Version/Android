@@ -7,9 +7,9 @@
     <string name="cover_empty_screen">AI Cover Not Available</string>
 
     //Cover TopBar title
-    <string name = "cover_topbar_main">Create Cover</string>
-    <string name = "cover_topbar_selection">Create New Cover</string>
-    <string name = "cover_topbar_upload">Create New Cover</string>
+    <string name="cover_topbar_main">Create Cover</string>
+    <string name="cover_topbar_selection">Create New Cover</string>
+    <string name="cover_topbar_upload">Create New Cover</string>
 
     // Cover OnBoarding 1
     <string name="cover_on_boarding_title1">Select music to cover</string>
@@ -27,4 +27,7 @@
     // Cover Recording Dialog
     <string name="cover_dialog_button_start">Start</string>
     <string name="cover_dialog_button_stop">Stop</string>
+
+    // Cover Toast
+    <string name="cover_toast_music_error">music load failed</string>
 </resources>

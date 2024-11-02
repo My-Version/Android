@@ -47,6 +47,7 @@ import com.my.version.core.designsystem.R as DesignSystemR
 
 @Composable
 fun CoverUploadRoute(
+    selectedMusicName: String,
     onNavigateUp: () -> Unit,
     onUploadComplete: () -> Unit,
     modifier: Modifier = Modifier,
