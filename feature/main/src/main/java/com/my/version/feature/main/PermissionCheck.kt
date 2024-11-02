@@ -2,6 +2,7 @@ package com.my.version.feature.main
 
 import android.Manifest
 import android.app.Activity
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
@@ -18,7 +19,11 @@ internal fun PermissionChecker() {
     val activity = LocalContext.current as? Activity
     val permissions = arrayOf(
         Manifest.permission.RECORD_AUDIO
-    )
+    ).apply {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            plus(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
     val permissionState = rememberMultiplePermissionsState(
         permissions = permissions.toList()
     )
@@ -30,7 +35,7 @@ internal fun PermissionChecker() {
             acc && next
         }
 
-        if(granted) {
+        if (granted) {
             Timber.tag("PermissionChecker").d("All Permission are granted")
         } else {
             activity?.finish()

@@ -7,6 +7,7 @@ import com.my.version.core.common.state.UiState
 import com.my.version.core.domain.entity.CoverAudio
 import com.my.version.core.domain.repository.CoverRepository
 import com.my.version.feature.cover.BuildConfig.COVER_STREAM_URL
+import com.my.version.feature.cover.BuildConfig.DOWNLOAD_HOST
 import com.my.version.feature.cover.main.state.CoverUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -27,11 +28,7 @@ class CoverViewModel @Inject constructor(
     private val _sideEffect = MutableSharedFlow<CoverSideEffect>()
     val sideEffect = _sideEffect.asSharedFlow()
 
-    init {
-        getCoverList()
-    }
-
-    private fun getCoverList() = viewModelScope.launch {
+    fun getCoverList() = viewModelScope.launch {
         coverRepository.getCoverList()
             .onSuccess { coverList ->
                 if (coverList.isEmpty()) {
@@ -87,5 +84,28 @@ class CoverViewModel @Inject constructor(
 
     fun pausePlayer() = viewModelScope.launch {
         _sideEffect.emit(CoverSideEffect.PauseCoverAudio)
+    }
+
+    fun downloadAudio(cover: CoverAudio) = viewModelScope.launch {
+        val encodedCoverName = Uri.encode(cover.audio)
+        val downloadUri = Uri.parse(
+            "$DOWNLOAD_SCHEME://$DOWNLOAD_HOST/$DOWNLOAD_PATH?$DOWNLOAD_QUERY_FILE_NAME=${encodedCoverName}&$DOWNLOAD_QUERY_BUCKET=$DOWNLOAD_QUERY_BUCKET_VALUE"
+        )
+
+        _sideEffect.emit(
+            CoverSideEffect.DownloadAudio(
+                uri = downloadUri,
+                outputPath = cover.audio,
+                notificationTitle = cover.audio
+            )
+        )
+    }
+
+    companion object {
+        private const val DOWNLOAD_SCHEME = "http"
+        private const val DOWNLOAD_PATH = "download"
+        private const val DOWNLOAD_QUERY_FILE_NAME = "fileName"
+        private const val DOWNLOAD_QUERY_BUCKET = "bucketName"
+        private const val DOWNLOAD_QUERY_BUCKET_VALUE = "cover"
     }
 }

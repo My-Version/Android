@@ -31,6 +31,12 @@ android {
                 "COVER_STREAM_URL",
                 properties.getProperty("cover.stream.url")
             )
+
+            buildConfigField(
+                "String",
+                "DOWNLOAD_HOST",
+                properties.getProperty("download.host")
+            )
         }
         release {
             isMinifyEnabled = false
