@@ -74,16 +74,25 @@ class CoverViewModel @Inject constructor(
         )
     }
 
+    fun updateIsMusicPlaying(isPlaying: Boolean) = _uiState.update { currentState ->
+        currentState.copy(
+            isAudioPlaying = isPlaying
+        )
+    }
+
     fun startCoverAudio(audio: String) = viewModelScope.launch {
         _sideEffect.emit(CoverSideEffect.StartCoverAudio(Uri.parse(COVER_STREAM_URL + audio)))
+        updateIsMusicPlaying(true)
     }
 
     fun playPlayer() = viewModelScope.launch {
         _sideEffect.emit(CoverSideEffect.PlayCoverAudio)
+        updateIsMusicPlaying(true)
     }
 
     fun pausePlayer() = viewModelScope.launch {
         _sideEffect.emit(CoverSideEffect.PauseCoverAudio)
+        updateIsMusicPlaying(false)
     }
 
     fun downloadAudio(cover: CoverAudio) = viewModelScope.launch {
