@@ -260,10 +260,10 @@ private fun SuccessScreen(
     ) {
         itemsIndexed(coverList) { index, cover ->
             MyVersionVerticalItemTwoButton(
-                firstItemType = VerticalItemType.COVER,
-                secondItemType = VerticalItemType.DOWNLOAD,
-                onClickFirstItem = { onCoverSelected(cover) },
-                onClickSecondItem = { onCoverDownloadClicked(cover) },
+                firstItemType = VerticalItemType.DOWNLOAD,
+                secondItemType = VerticalItemType.COVER,
+                onClickFirstItem = { onCoverDownloadClicked(cover) },
+                onClickSecondItem = { onCoverSelected(cover) },
                 title = cover.title,
                 subTitle = stringResource(id = R.string.cover_created_date, cover.createdDate)
             )
