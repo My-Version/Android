@@ -91,12 +91,4 @@ class CoverSelectViewModel @Inject constructor(
         _sideEffect.emit(CoverSelectSideEffect.StartMusic(uri))
 
     }
-
-    fun playPlayer() = viewModelScope.launch {
-        _sideEffect.emit(CoverSelectSideEffect.PlayMusic)
-    }
-
-    fun pausePlayer() = viewModelScope.launch {
-        _sideEffect.emit(CoverSelectSideEffect.PauseMusic)
-    }
 }
