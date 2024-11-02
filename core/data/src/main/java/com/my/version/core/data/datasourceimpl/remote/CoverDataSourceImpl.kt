@@ -22,7 +22,7 @@ class CoverDataSourceImpl @Inject constructor(
         musicName: String
     ): String {
         Timber.tag("Uploading").d("Upload called")
-        val msg = coverService.postCoverUpload(prepareFilePart(file))//, userId, musicName)
+        val msg = coverService.postCoverUpload(prepareFilePart(file), userId, musicName)
 
         Timber.tag("Uploading").d("Upload ended $msg")
         return msg.toString()
