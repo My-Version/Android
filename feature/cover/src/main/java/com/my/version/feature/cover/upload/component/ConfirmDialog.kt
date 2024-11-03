@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import com.my.version.core.common.state.UiState
 import com.my.version.core.designsystem.component.button.RectangleButton
 import com.my.version.core.designsystem.component.dialog.MyVersionBasicDialog
@@ -35,36 +36,56 @@ fun ConfirmDialog(
     visibility: Boolean = false
 ) {
     if (visibility) {
-        MyVersionBasicDialog(
-            onDismiss = onDismissRequest,
-            modifier = modifier.wrapContentHeight()
-        ) {
-            when (dialogState.loadState) {
-                is UiState.Empty -> {
+
+        when (dialogState.loadState) {
+            is UiState.Empty -> {
+                MyVersionBasicDialog(
+                    onDismiss = onDismissRequest,
+                    modifier = modifier.wrapContentHeight(),
+                ) {
                     ConfirmView(
                         text = text,
                         onDismissRequest = onDismissRequest,
                         onConfirmRequest = onUploadRequest
                     )
                 }
+            }
 
-                is UiState.Loading -> {
+            is UiState.Loading -> {
+                MyVersionBasicDialog(
+                    onDismiss = {},
+                    modifier = modifier.wrapContentHeight(),
+                    properties = DialogProperties(
+                        dismissOnBackPress = false,
+                        dismissOnClickOutside = false
+                    )
+                ) {
                     UploadProcessView(
                         titleTextRes = R.string.cover_dialog_uploading,
                         buttonTextRes = R.string.cover_dialog_button_uploading,
                         buttonEnabled = false
                     )
                 }
+            }
 
-                is UiState.Failure -> {
+            is UiState.Failure -> {
+                MyVersionBasicDialog(
+                    onDismiss = onDismissRequest,
+                    modifier = modifier.wrapContentHeight(),
+                ) {
                     UploadProcessView(
                         titleTextRes = R.string.cover_dialog_upload_error,
                         buttonTextRes = R.string.cover_dialog_button_retry,
                         onClick = onUploadRequest
                     )
                 }
+            }
 
-                is UiState.Success -> {
+            is UiState.Success -> {
+                MyVersionBasicDialog(
+                    onDismiss = onConfirmRequest,
+                    modifier = modifier.wrapContentHeight(),
+                ) {
                     UploadProcessView(
                         titleTextRes = R.string.cover_dialog_upload_complete,
                         buttonTextRes = R.string.cover_dialog_button_complete,
@@ -75,6 +96,7 @@ fun ConfirmDialog(
         }
     }
 }
+
 
 @Composable
 private fun ConfirmView(
