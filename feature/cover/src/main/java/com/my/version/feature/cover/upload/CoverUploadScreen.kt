@@ -42,7 +42,6 @@ import com.my.version.feature.cover.record.RecordDialog
 import com.my.version.feature.cover.upload.component.ConfirmDialog
 import com.my.version.feature.cover.upload.component.CoverUploadIconButton
 import com.my.version.feature.cover.upload.component.uploadResultLauncher
-import timber.log.Timber
 import java.io.File
 import com.my.version.core.designsystem.R as DesignSystemR
 
@@ -61,7 +60,6 @@ fun CoverUploadRoute(
         onResultOk = { dataUri ->
             val file = File(dataUri.toString())
             viewModel.addRecordFile(file.absolutePath)
-            Timber.tag("Upload").d(file.absolutePath)
         }
     )
 
@@ -91,7 +89,6 @@ fun CoverUploadRoute(
         onPlayButtonClicked = viewModel::playRecordFile,
         onUploadComplete = {
             viewModel.updateUploadDialogVisibility(true)
-            //viewModel.clearRecordFiles()
         }
     )
 
@@ -106,7 +103,10 @@ fun CoverUploadRoute(
 
     DisposableEffect(true) {
         onDispose {
-            viewModel.clearRecordFiles()
+            with(viewModel) {
+                clearRecordFiles()
+                stopRecordFile()
+            }
         }
     }
 }

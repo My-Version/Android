@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.my.version.core.designsystem.R
 import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionTheme
@@ -24,10 +25,12 @@ import com.my.version.core.designsystem.theme.White
 fun MyVersionBasicDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
+    properties: DialogProperties = DialogProperties(),
+    content: @Composable () -> Unit
 ) {
     Dialog(
         onDismissRequest = onDismiss,
+        properties = properties
     ) {
         Column(
             modifier = modifier
