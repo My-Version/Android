@@ -6,7 +6,7 @@ import com.my.version.core.data.service.CoverService
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import timber.log.Timber
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import javax.inject.Inject
 
@@ -20,20 +20,25 @@ class CoverDataSourceImpl @Inject constructor(
         file: File,
         userId: String,
         musicName: String
-    ): String {
-        Timber.tag("Uploading").d("Upload called")
-        val msg = coverService.postCoverUpload(prepareFilePart(file), userId, musicName)
+    ): Boolean {
+        val filePart = prepareFilePart(file)
+        val userIdPart = userId.toRequestBody(MIME_TEXT.toMediaTypeOrNull())
+        val musicNamePart = musicName.toRequestBody(MIME_TEXT.toMediaTypeOrNull())
 
-        Timber.tag("Uploading").d("Upload ended $msg")
-        return msg.toString()
+        return coverService.postCoverUpload(
+            filePart, userIdPart, musicNamePart
+        )
     }
 
     private fun prepareFilePart(file: File): MultipartBody.Part {
-        val requestFile = file.asRequestBody("audio/mp4".toMediaTypeOrNull())
-        return MultipartBody.Part.createFormData("file", file.name, requestFile)
+        val requestFile = file.asRequestBody(MIME_AUDIO.toMediaTypeOrNull())
+        return MultipartBody.Part.createFormData(REQUEST_BODY_FILE, file.name, requestFile)
     }
 
     companion object {
         private const val BUCKET = "cover"
+        private const val MIME_TEXT = "text/plain"
+        private const val MIME_AUDIO = "audio/mp4"
+        private const val REQUEST_BODY_FILE = "file"
     }
 }

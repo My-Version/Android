@@ -30,6 +30,14 @@
 
     //Cover Upload Dialog
     <string name="cover_dialog_confirm_upload">Would you like to upload?</string>
+    <string name="cover_dialog_confirm_cancel">Cancel</string>
+    <string name="cover_dialog_confirm_next">Confirm</string>
+    <string name="cover_dialog_uploading">Uploading...</string>
+    <string name="cover_dialog_button_uploading">Wait</string>
+    <string name="cover_dialog_upload_error">Upload Failed</string>
+    <string name="cover_dialog_button_retry">Retry</string>
+    <string name="cover_dialog_upload_complete">Upload Complete!</string>
+    <string name="cover_dialog_button_complete">Back to Home</string>
 
     // Cover Toast
     <string name="cover_toast_music_error">music load failed</string>

@@ -1,16 +1,16 @@
 package com.my.version.feature.cover.upload.component
 
-import androidx.compose.foundation.layout.Box
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,6 +21,7 @@ import com.my.version.core.designsystem.component.divider.BasicSpacer
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.Grey400
 import com.my.version.core.designsystem.theme.MyVersionTypography
+import com.my.version.feature.cover.R
 import com.my.version.feature.cover.upload.state.ConfirmDialogUiState
 
 @Composable
@@ -36,9 +37,9 @@ fun ConfirmDialog(
     if (visibility) {
         MyVersionBasicDialog(
             onDismiss = onDismissRequest,
-            modifier = modifier.height(300.dp)
+            modifier = modifier.wrapContentHeight()
         ) {
-            when(dialogState.loadState) {
+            when (dialogState.loadState) {
                 is UiState.Empty -> {
                     ConfirmView(
                         text = text,
@@ -46,16 +47,29 @@ fun ConfirmDialog(
                         onConfirmRequest = onUploadRequest
                     )
                 }
+
                 is UiState.Loading -> {
-                    LoadingView()
-                }
-                is UiState.Failure -> {
-                    UploadFailView(
-                        onRetryRequest = onUploadRequest
+                    UploadProcessView(
+                        titleTextRes = R.string.cover_dialog_uploading,
+                        buttonTextRes = R.string.cover_dialog_button_uploading,
+                        buttonEnabled = false
                     )
                 }
+
+                is UiState.Failure -> {
+                    UploadProcessView(
+                        titleTextRes = R.string.cover_dialog_upload_error,
+                        buttonTextRes = R.string.cover_dialog_button_retry,
+                        onClick = onUploadRequest
+                    )
+                }
+
                 is UiState.Success -> {
-                    UploadCompleteView(onConfirmRequest = onConfirmRequest)
+                    UploadProcessView(
+                        titleTextRes = R.string.cover_dialog_upload_complete,
+                        buttonTextRes = R.string.cover_dialog_button_complete,
+                        onClick = onConfirmRequest
+                    )
                 }
             }
         }
@@ -91,7 +105,7 @@ private fun ConfirmView(
                 textStyle = MyVersionTypography.bodyMedium,
                 innerPadding = 10,
                 cornerRadius = 5.dp,
-                text = "Cancel",
+                text = stringResource(R.string.cover_dialog_confirm_cancel),
                 onClick = onDismissRequest,
                 modifier = Modifier.weight(1f),
                 backgroundColor = Grey400
@@ -102,7 +116,7 @@ private fun ConfirmView(
                 textStyle = MyVersionTypography.bodyMedium,
                 innerPadding = 10,
                 cornerRadius = 5.dp,
-                text = "Confirm",
+                text = stringResource(R.string.cover_dialog_confirm_next),
                 onClick = onConfirmRequest,
                 modifier = Modifier.weight(1f)
             )
@@ -111,47 +125,77 @@ private fun ConfirmView(
 }
 
 @Composable
-private fun LoadingView(
-    modifier: Modifier = Modifier
-) {
-    Box(modifier = modifier, contentAlignment = Alignment.Center) {
-        Text("Uploading...")
-    }
-}
-
-@Composable
-private fun UploadFailView(
+private fun UploadProcessView(
+    @StringRes titleTextRes: Int,
+    @StringRes buttonTextRes: Int,
     modifier: Modifier = Modifier,
-    onRetryRequest: () -> Unit = {}
+    onClick: () -> Unit = {},
+    buttonEnabled: Boolean = true
 ) {
-    Column(modifier = modifier) {
-        Text("Upload Failed..")
-        Button(onClick = onRetryRequest) {
-            Text("Retry")
-        }
+    Column(
+        modifier = modifier
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = stringResource(titleTextRes),
+            style = MyVersionTypography.bodyLarge,
+            color = Black,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 20.dp, bottom = 40.dp)
+        )
+        RectangleButton(
+            isEnabled = buttonEnabled,
+            textStyle = MyVersionTypography.bodyMedium,
+            innerPadding = 10,
+            cornerRadius = 5.dp,
+            text = stringResource(buttonTextRes),
+            onClick = onClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 40.dp)
+        )
     }
 }
 
-@Composable
-private fun UploadCompleteView(
-    modifier: Modifier = Modifier,
-    onConfirmRequest: () -> Unit = {}
-) {
-    Column(modifier = modifier) {
-        Text("Upload Complete!")
-        Button(onClick = onConfirmRequest) {
-            Text("Back to Home")
-        }
-    }
-}
-
-@Preview(showBackground = false)
+@Preview(showBackground = true)
 @Composable
 private fun UploadDialogPreview() {
-    ConfirmDialog(
+    ConfirmView(
         text = "Are you sure you want to delete this file?",
         onDismissRequest = { },
-        onConfirmRequest = { },
-        dialogState = ConfirmDialogUiState(),
+        onConfirmRequest = { }
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun LoadingDialogPreview() {
+    UploadProcessView(
+        titleTextRes = R.string.cover_dialog_uploading,
+        buttonTextRes = R.string.cover_dialog_button_uploading,
+        buttonEnabled = false
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CompleteDialogPreview() {
+    UploadProcessView(
+        titleTextRes = R.string.cover_dialog_upload_error,
+        buttonTextRes = R.string.cover_dialog_button_retry,
+        onClick = { }
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun FailedDialogPreview() {
+    UploadProcessView(
+        titleTextRes = R.string.cover_dialog_upload_complete,
+        buttonTextRes = R.string.cover_dialog_button_complete,
+        onClick = { }
     )
 }

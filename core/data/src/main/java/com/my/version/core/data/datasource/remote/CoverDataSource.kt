@@ -9,5 +9,5 @@ interface CoverDataSource {
         file: File,
         userId: String,
         musicName: String
-    ): String
+    ): Boolean
 }

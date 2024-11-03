@@ -13,6 +13,6 @@ class CoverUploadRepositoryImpl @Inject constructor(
         userId: String,
         musicName: String
     ): Result<Boolean> = runCatching {
-        coverDataSource.postCoverUpload(file, userId, musicName) == "true"
+        coverDataSource.postCoverUpload(file, userId, musicName)
     }
 }
