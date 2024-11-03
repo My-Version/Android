@@ -16,6 +16,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,7 +24,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.my.version.core.designsystem.component.button.RectangleButton
 import com.my.version.core.designsystem.component.divider.BasicSpacer
@@ -39,6 +39,7 @@ import com.my.version.core.designsystem.type.VerticalItemType
 import com.my.version.core.domain.entity.RecordAudioFile
 import com.my.version.feature.cover.R
 import com.my.version.feature.cover.record.RecordDialog
+import com.my.version.feature.cover.upload.component.ConfirmDialog
 import com.my.version.feature.cover.upload.component.CoverUploadIconButton
 import com.my.version.feature.cover.upload.component.uploadResultLauncher
 import timber.log.Timber
@@ -47,15 +48,14 @@ import com.my.version.core.designsystem.R as DesignSystemR
 
 @Composable
 fun CoverUploadRoute(
+    selectedMusicName: String,
     onNavigateUp: () -> Unit,
     onUploadComplete: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CoverUploadViewModel = hiltViewModel()
 ) {
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle(
-        lifecycleOwner = lifecycleOwner
-    )
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val dialogUiState by viewModel.dialogState.collectAsStateWithLifecycle()
 
     val fileResultLauncher = uploadResultLauncher(
         onResultOk = { dataUri ->
@@ -83,17 +83,32 @@ fun CoverUploadRoute(
         onFileSystemButtonClicked = {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
-                type = "audio/*"
+                type = "audio/mp3"
             }
             fileResultLauncher.launch(intent)
         },
         onCancelButtonClicked = viewModel::removeRecordFile,
         onPlayButtonClicked = viewModel::playRecordFile,
         onUploadComplete = {
-            viewModel.clearRecordFiles()
-            onUploadComplete()
+            viewModel.updateUploadDialogVisibility(true)
+            //viewModel.clearRecordFiles()
         }
     )
+
+    ConfirmDialog(
+        text = stringResource(R.string.cover_dialog_confirm_upload),
+        onDismissRequest = { viewModel.updateUploadDialogVisibility(false) },
+        onConfirmRequest = onUploadComplete,
+        onUploadRequest = { viewModel.uploadFilesForCover(musicName = selectedMusicName) },
+        visibility = uiState.uploadDialogVisibility,
+        dialogState = dialogUiState
+    )
+
+    DisposableEffect(true) {
+        onDispose {
+            viewModel.clearRecordFiles()
+        }
+    }
 }
 
 @Composable

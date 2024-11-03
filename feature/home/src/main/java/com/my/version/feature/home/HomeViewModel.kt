@@ -28,10 +28,6 @@ class HomeViewModel @Inject constructor(
     private var _sideEffect = MutableSharedFlow<HomeSideEffect>()
     val sideEffect = _sideEffect.asSharedFlow()
 
-    init {
-        getMusicList()
-    }
-
     fun getMusicList() = viewModelScope.launch {
         musicRepository.getMusicList()
             .onSuccess { musicList ->

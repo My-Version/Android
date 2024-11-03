@@ -9,14 +9,15 @@ import com.my.version.core.common.navigation.Route
 import com.my.version.feature.cover.select.CoverSelectRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateToCoverSelect(navOptions: NavOptions? = null) = navigate(CoverSelect, navOptions)
+fun NavController.navigateToCoverSelect(navOptions: NavOptions? = null) =
+    navigate(CoverSelect, navOptions)
 
 fun NavGraphBuilder.coverSelectScreen(
     modifier: Modifier,
     navigateUp: () -> Unit,
-    navigateToUpload: () -> Unit
+    navigateToUpload: (String) -> Unit
 ) {
-    composable<CoverSelect>{
+    composable<CoverSelect> {
         CoverSelectRoute(
             modifier = modifier,
             navigateUp = navigateUp,
@@ -26,4 +27,4 @@ fun NavGraphBuilder.coverSelectScreen(
 }
 
 @Serializable
-data object CoverSelect: Route
+data object CoverSelect : Route

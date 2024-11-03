@@ -7,5 +7,6 @@ data class CoverUiState(
     val loadState: UiState<List<CoverAudio>> = UiState.Loading,
     val currentAudio: CoverAudio? = null,
     val sortByIndex: Int = 0,
-    val isSortSheetVisible: Boolean = false
+    val isSortSheetVisible: Boolean = false,
+    val isAudioPlaying: Boolean = false
 )

@@ -219,9 +219,8 @@ private fun CoverScreen(
         AudioPlayBox(
             title = uiState.currentAudio?.title,
             subTitle = uiState.currentAudio?.createdDate,
-            colorList = listOf(
-                CoverGradient1, CoverGradient2, CoverGradient3
-            ),
+            isPlaying = uiState.isAudioPlaying,
+            colorList = listOf(CoverGradient1, CoverGradient2, CoverGradient3),
             onClickPlayButton = onPressPlay,
             onClickPauseButton = onPressPause
         )

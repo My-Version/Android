@@ -1,10 +1,13 @@
 package com.my.version.feature.cover.select
 
-import android.media.MediaPlayer
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.my.version.core.common.state.UiState
-import com.my.version.core.domain.repository.MusicLocalRepository
+import com.my.version.core.domain.entity.MusicAudio
+import com.my.version.core.domain.repository.MusicRepository
+import com.my.version.feature.cover.BuildConfig.STREAM_URL
+import com.my.version.feature.cover.R
 import com.my.version.feature.cover.select.state.CoverSelectUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -17,19 +20,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CoverSelectViewModel @Inject constructor(
-    private val musicLocalRepository: MusicLocalRepository
+    private val musicRepository: MusicRepository
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(CoverSelectUiState())
     val uiState = _uiState.asStateFlow()
 
     private var _sideEffect = MutableSharedFlow<CoverSelectSideEffect>()
     val sideEffect = _sideEffect.asSharedFlow()
-
-    private var mediaPlayer: MediaPlayer? = null
-
-    init {
-        getMusicList()
-    }
 
     fun updateSortByIndex(index: Int) = _uiState.update { currentState ->
         currentState.copy(
@@ -43,65 +40,25 @@ class CoverSelectViewModel @Inject constructor(
         )
     }
 
-    fun updateSelectedIndex(index: Int) = _uiState.update { currentState ->
+    fun updateCurrentMusic(audio: MusicAudio?) = _uiState.update { currentState ->
         currentState.copy(
-            selected = index
+            currentMusic = audio
         )
     }
 
-    fun onClickMusic(selected: Int) {
-        if (_uiState.value.selected != selected) {
-            stopMusic()
-            mediaPlayer = null
-            updateSelectedIndex(selected)
-            prepareMediaPlayer(selected)
-        }
-        playMusic()
-    }
 
-    private fun getMusicList() = viewModelScope.launch {
-        val musicList = musicLocalRepository.getMusicAudioList()
-        _uiState.update { currentState ->
-            currentState.copy(
-                loadState = UiState.Success(musicList),
-            )
-        }
-    }
-
-    private fun prepareMediaPlayer(index: Int) {
-        (_uiState.value.loadState as UiState.Success).takeIf {
-            _uiState.value.loadState is UiState.Success
-        }?.run {
-            val music = this.data[index].audio
-            if (music?.absolutePath != null) {
-                mediaPlayer = MediaPlayer().apply {
-                    setDataSource(music.absolutePath)
-                    prepare()
-                    setOnCompletionListener {
-                        reset()
-                    }
+    fun getMusicList() = viewModelScope.launch {
+        musicRepository.getMusicList()
+            .onSuccess { musicList ->
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        loadState = UiState.Success(musicList)
+                    )
                 }
             }
-        }
-    }
-
-    private fun playMusic() {
-        mediaPlayer?.run {
-            if (this.isPlaying) {
-                this.pause()
-            } else {
-                this.start()
+            .onFailure {
+                _sideEffect.emit(CoverSelectSideEffect.ShowToast(R.string.cover_toast_music_error))
             }
-        }
-    }
-
-    fun stopMusic() = mediaPlayer?.run {
-        if (this.isPlaying) {
-            this.reset()
-            this.stop()
-            this.release()
-        }
-        mediaPlayer = null
     }
 
 
@@ -110,6 +67,28 @@ class CoverSelectViewModel @Inject constructor(
     }
 
     fun navigateToUpload() = viewModelScope.launch {
-        _sideEffect.emit(CoverSelectSideEffect.NavigateNext)
+        _uiState.value.currentMusic?.run {
+            _sideEffect.emit(CoverSelectSideEffect.NavigateNext(this))
+        }
+    }
+
+    fun onMusicSelected(selectedMusic: MusicAudio) = viewModelScope.launch {
+        _uiState.update { currentState ->
+            currentState.copy(
+                currentMusic = selectedMusic
+            )
+        }
+
+        val uri =
+            Uri.parse(STREAM_URL + selectedMusic.audio)
+
+        uri?.run {
+            startPlayer(this)
+        }
+    }
+
+    fun startPlayer(uri: Uri) = viewModelScope.launch {
+        _sideEffect.emit(CoverSelectSideEffect.StartMusic(uri))
+
     }
 }
