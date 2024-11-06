@@ -16,15 +16,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
+import com.my.version.core.common.extension.noRippleClickable
+import com.my.version.core.common.extension.showToast
+import com.my.version.core.common.musicplayer.StreamMediaPlayer
 import com.my.version.core.common.state.UiState
 import com.my.version.core.designsystem.component.bottomsheet.SortingBottomSheet
 import com.my.version.core.designsystem.component.button.RectangleButton
@@ -39,7 +46,7 @@ import com.my.version.core.designsystem.theme.Grey350
 import com.my.version.core.designsystem.theme.MyVersionMain
 import com.my.version.core.designsystem.type.SortBy
 import com.my.version.core.designsystem.type.VerticalItemType
-import com.my.version.core.domain.entity.CoverAudioFile
+import com.my.version.core.domain.entity.CoverAudio
 import com.my.version.feature.evaluate.R
 import com.my.version.feature.evaluate.select.state.EvaluationSelectUiState
 
@@ -51,30 +58,58 @@ fun EvaluationSelectRoute(
     viewModel: EvaluationSelectViewModel = hiltViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle(lifecycleOwner = lifecycleOwner)
+    val context = LocalContext.current
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val mediaPlayer = remember { StreamMediaPlayer(context) }
 
-    DisposableEffect(Unit) {
-        onDispose {
-            viewModel.updateSelectedIndex(-1)
-            viewModel.stopMusic()
-        }
+    LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
+        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle).collect { sideEffect ->
+                when (sideEffect) {
+                    is EvaluationSelectSideEffect.ShowToast -> context.showToast(sideEffect.message)
+
+                    is EvaluationSelectSideEffect.NavigateUp -> navigateUp()
+
+                    is EvaluationSelectSideEffect.NavigateNext -> navigateToRecord()
+
+                    is EvaluationSelectSideEffect.PauseCoverAudio -> mediaPlayer.pauseMediaPlayer()
+
+                    is EvaluationSelectSideEffect.PlayCoverAudio -> mediaPlayer.playMediaPlayer()
+
+                    is EvaluationSelectSideEffect.StartCoverAudio -> with(mediaPlayer) {
+                        endMediaPlayer()
+                        prepareMediaPlayer(sideEffect.uri)
+                    }
+                }
+            }
+    }
+
+    LaunchedEffect(true) {
+        viewModel.getCoverList()
     }
 
     EvaluationSelectScreen(
         modifier = modifier,
         uiState = uiState,
-        onItemClicked = viewModel::onClickMusic,
-        onNextClicked = navigateToRecord,
-        onBackPressed = navigateUp,
+        onItemClicked = viewModel::onCoverSelected,
+        onNextClicked = viewModel::navigateToRecord,
+        onBackPressed = viewModel::navigateUp,
         onSortSheetVisibilityChanged = viewModel::updateSheetVisibility,
         onSortByChanged = viewModel::updateSortByIndex
     )
+
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.updateSelectedIndex(-1)
+            viewModel.onCoverSelected(null)
+            mediaPlayer.endMediaPlayer()
+        }
+    }
 }
 
 @Composable
 private fun EvaluationSelectScreen(
     onNextClicked: () -> Unit,
-    onItemClicked: (Int) -> Unit,
+    onItemClicked: (CoverAudio) -> Unit,
     onBackPressed: () -> Unit,
     onSortSheetVisibilityChanged: (Boolean) -> Unit,
     onSortByChanged: (Int) -> Unit,
@@ -86,9 +121,7 @@ private fun EvaluationSelectScreen(
             onDismiss = { index ->
                 onSortSheetVisibilityChanged(false)
                 onSortByChanged(index)
-            },
-            onSelectSortBy = onSortByChanged,
-            initialSortBy = uiState.sortByIndex
+            }, onSelectSortBy = onSortByChanged, initialSortBy = uiState.sortByIndex
         )
     }
 
@@ -117,16 +150,12 @@ private fun EvaluationSelectScreen(
             )
             Spacer(modifier = Modifier.weight(1f))
 
-            SortingButton(
-                text = stringResource(SortBy.entries[uiState.sortByIndex].sortBy),
-                onClick = { onSortSheetVisibilityChanged(true) }
-            )
+            SortingButton(text = stringResource(SortBy.entries[uiState.sortByIndex].sortBy),
+                onClick = { onSortSheetVisibilityChanged(true) })
         }
 
         HorizontalDivider(
-            thickness = 1.dp,
-            color = Grey200,
-            modifier = Modifier.padding(
+            thickness = 1.dp, color = Grey200, modifier = Modifier.padding(
                 horizontal = 20.dp
             )
         )
@@ -142,7 +171,7 @@ private fun EvaluationSelectScreen(
                 is UiState.Loading -> {}
                 is UiState.Success -> SuccessScreen(
                     coverList = uiState.loadState.data,
-                    selectedIndex = uiState.selected,
+                    selectedCover = uiState.selectedCover,
                     onItemClicked = onItemClicked
                 )
 
@@ -152,7 +181,7 @@ private fun EvaluationSelectScreen(
 
 
         RectangleButton(
-            isEnabled = (uiState.selected != -1),
+            isEnabled = uiState.selectedCover != null,
             text = "Next",
             textStyle = MaterialTheme.typography.titleMedium,
             innerPadding = 20,
@@ -168,8 +197,7 @@ private fun EmptyScreen(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = stringResource(id = R.string.evaluation_select_empty),
@@ -192,25 +220,25 @@ private fun EmptyScreen(
 
 @Composable
 private fun SuccessScreen(
-    onItemClicked: (Int) -> Unit,
-    coverList: List<CoverAudioFile>,
-    selectedIndex: Int,
+    onItemClicked: (CoverAudio) -> Unit,
+    coverList: List<CoverAudio>,
+    selectedCover: CoverAudio?,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(vertical = 10.dp)
+        modifier = modifier.fillMaxSize(), contentPadding = PaddingValues(vertical = 10.dp)
     ) {
         itemsIndexed(coverList) { index, cover ->
-            val color = if (index == selectedIndex) MyVersionMain else Black
+            val color = if (cover == selectedCover) MyVersionMain else Black
 
-            MyVersionVerticalItem(
-                itemType = VerticalItemType.COVER,
+            MyVersionVerticalItem(itemType = VerticalItemType.COVER,
                 iconColor = color,
-                onClick = { onItemClicked(index) },
+                onClick = { onItemClicked(cover) },
                 title = cover.title,
-                subTitle = cover.createdDate
-            )
+                subTitle = cover.createdDate,
+                modifier = Modifier.noRippleClickable {
+                    onItemClicked(cover)
+                })
             if (index < coverList.lastIndex) {
                 BasicSpacer(height = 16.dp)
             }
