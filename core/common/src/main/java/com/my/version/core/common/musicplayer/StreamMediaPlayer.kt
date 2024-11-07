@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
 import dagger.hilt.android.qualifiers.ApplicationContext
+import timber.log.Timber
 import javax.inject.Inject
 
 class StreamMediaPlayer @Inject constructor(
@@ -11,18 +12,27 @@ class StreamMediaPlayer @Inject constructor(
 ) {
     private var mediaPlayer: MediaPlayer? = null
 
-    fun prepareMediaPlayer(uri: Uri) = runCatching {
-        if (mediaPlayer == null) {
-            mediaPlayer = MediaPlayer().apply {
-                setDataSource(context, uri)
-                prepareAsync()
-                setOnPreparedListener {
-                    it.start()
+    fun prepareMediaPlayer(
+        uri: Uri,
+        onPrepared: () -> Unit = {},
+        onCompletion: () -> Unit = {}
+    ) {
+        try {
+            if (mediaPlayer == null) {
+                mediaPlayer = MediaPlayer().apply {
+                    setDataSource(context, uri)
+                    prepareAsync()
+                    setOnPreparedListener {
+                        onPrepared()
+                    }
+                    setOnCompletionListener {
+                        onCompletion()
+                    }
                 }
             }
+        } catch (e: Exception) {
+            Timber.tag("StreamMediaPlayer").d(e.toString())
         }
-    }.onSuccess {
-        playMediaPlayer()
     }
 
     fun playMediaPlayer() {
@@ -40,9 +50,9 @@ class StreamMediaPlayer @Inject constructor(
     }
 
     fun seekInMediaPlayer(target: Int) {
-        mediaPlayer?.run {
-            seekTo(target)
-        }
+        mediaPlayer?.seekTo(target)
+        val progress = mediaPlayer?.currentPosition?.toFloat() ?: 0f
+        Timber.tag("StreamMediaPlayer").d("progress: $progress")
     }
 
     fun endMediaPlayer() {
@@ -56,5 +66,13 @@ class StreamMediaPlayer @Inject constructor(
                 mediaPlayer = null
             }
         }
+    }
+
+    fun getMediaPlayerDuration(): Int = mediaPlayer?.duration ?: 0
+    fun getMediaPlayerProgress(): Float {
+        val progress = mediaPlayer?.currentPosition?.toFloat() ?: 0f
+        val duration = mediaPlayer?.duration?.toFloat() ?: 0f
+        return if (duration != 0f) progress / duration
+        else 0f
     }
 }

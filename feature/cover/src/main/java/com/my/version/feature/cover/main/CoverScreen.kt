@@ -21,10 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -35,13 +33,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.my.version.core.common.extension.download
 import com.my.version.core.common.extension.localDownloadManager
-import com.my.version.core.common.musicplayer.StreamMediaPlayer
 import com.my.version.core.common.state.UiState
 import com.my.version.core.designsystem.component.bottomsheet.SortingBottomSheet
 import com.my.version.core.designsystem.component.box.AudioPlayBox
 import com.my.version.core.designsystem.component.button.SortingButton
 import com.my.version.core.designsystem.component.divider.BasicSpacer
 import com.my.version.core.designsystem.component.item.MyVersionVerticalItemTwoButton
+import com.my.version.core.designsystem.component.slider.AudioPlayBoxSlider
 import com.my.version.core.designsystem.component.topappbar.NewCreationTopAppBar
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.CoverGradient1
@@ -61,24 +59,19 @@ fun CoverRoute(
     modifier: Modifier = Modifier,
     viewModel: CoverViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val mediaPlayer = remember { StreamMediaPlayer(context) }
     val downloadManager = localDownloadManager.current
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
             .collect { sideEffect ->
                 when (sideEffect) {
-                    is CoverSideEffect.PauseCoverAudio -> mediaPlayer.pauseMediaPlayer()
+                    is CoverSideEffect.PauseCoverAudio -> {}
 
-                    is CoverSideEffect.PlayCoverAudio -> mediaPlayer.playMediaPlayer()
+                    is CoverSideEffect.PlayCoverAudio -> {}
 
-                    is CoverSideEffect.StartCoverAudio -> with(mediaPlayer) {
-                        endMediaPlayer()
-                        prepareMediaPlayer(sideEffect.uri)
-                    }
+                    is CoverSideEffect.StartCoverAudio -> {}
 
                     is CoverSideEffect.DownloadAudio -> with(sideEffect) {
                         downloadManager.download(uri, outputPath, notificationTitle)
@@ -96,21 +89,17 @@ fun CoverRoute(
         uiState = uiState,
         onPressPlay = viewModel::playPlayer,
         onPressPause = viewModel::pausePlayer,
-        onCreateClicked = navigateToSelect,
+        onProgressChange = viewModel::seekPlayer,
         onChangeSortBy = viewModel::updateSortByIndex,
         onChangeSortSheetVisibility = viewModel::updateSheetVisibility,
         onCoverDownloadClicked = viewModel::downloadAudio,
-        onCoverSelected = { selectedCover ->
-            with(viewModel) {
-                onCoverSelected(selectedCover)
-                startCoverAudio(selectedCover.audio)
-            }
-        }
+        onCoverSelected = viewModel::onCoverSelected,
+        onCreateClicked = navigateToSelect,
     )
 
     DisposableEffect(true) {
         onDispose {
-            mediaPlayer.endMediaPlayer()
+            viewModel.stopPlayer()
         }
     }
 }
@@ -125,7 +114,8 @@ private fun CoverScreen(
     onChangeSortSheetVisibility: (Boolean) -> Unit,
     onPressPlay: () -> Unit,
     onPressPause: () -> Unit,
-    onChangeSortBy: (Int) -> Unit
+    onChangeSortBy: (Int) -> Unit,
+    onProgressChange: (Float) -> Unit = {},
 ) {
     val commonModifier = Modifier.padding(horizontal = 20.dp)
     if (uiState.isSortSheetVisible) {
@@ -216,6 +206,11 @@ private fun CoverScreen(
             }
         }
 
+
+        AudioPlayBoxSlider(
+            progress = uiState.audioProgress,
+            onValueChange = onProgressChange
+        )
         AudioPlayBox(
             title = uiState.currentAudio?.title,
             subTitle = uiState.currentAudio?.createdDate,
