@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,13 +33,13 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.my.version.core.common.extension.showToast
-import com.my.version.core.common.musicplayer.StreamMediaPlayer
 import com.my.version.core.common.state.UiState
 import com.my.version.core.designsystem.component.bottomsheet.SortingBottomSheet
 import com.my.version.core.designsystem.component.box.AudioPlayBox
 import com.my.version.core.designsystem.component.button.SortingButton
 import com.my.version.core.designsystem.component.divider.BasicSpacer
 import com.my.version.core.designsystem.component.item.MyVersionVerticalItem
+import com.my.version.core.designsystem.component.slider.AudioPlayBoxSlider
 import com.my.version.core.designsystem.component.topappbar.LogoTopAppBar
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.Grey200
@@ -60,7 +59,6 @@ fun HomeRoute(
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    val mediaPlayer = remember { StreamMediaPlayer(context) }
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect.flowWithLifecycle(lifecycle = lifecycleOwner.lifecycle)
@@ -68,25 +66,6 @@ fun HomeRoute(
                 when (sideEffect) {
                     is HomeSideEffect.ShowToast -> {
                         context.showToast(sideEffect.message)
-                    }
-
-                    is HomeSideEffect.StartMusic -> {
-                        with(mediaPlayer) {
-                            endMediaPlayer()
-                            prepareMediaPlayer(sideEffect.uri)
-                        }
-                    }
-
-                    is HomeSideEffect.PlayMusic -> {
-                        mediaPlayer.playMediaPlayer()
-                    }
-
-                    is HomeSideEffect.PauseMusic -> {
-                        mediaPlayer.pauseMediaPlayer()
-                    }
-
-                    is HomeSideEffect.StopMusic -> {
-                        mediaPlayer.endMediaPlayer()
                     }
                 }
             }
@@ -103,12 +82,13 @@ fun HomeRoute(
         onPressPause = viewModel::pausePlayer,
         onChangeSortBy = viewModel::updateSortByIndex,
         onChangeSortSheetVisibility = viewModel::updateSheetVisibility,
+        onProgressChange = viewModel::seekPlayer,
         modifier = modifier.background(White)
     )
 
     DisposableEffect(Unit) {
         onDispose {
-            mediaPlayer.endMediaPlayer()
+            viewModel.stopPlayer()
         }
     }
 }
@@ -121,6 +101,7 @@ private fun HomeScreen(
     onPressPause: () -> Unit,
     onChangeSortBy: (Int) -> Unit,
     onChangeSortSheetVisibility: (Boolean) -> Unit,
+    onProgressChange: (Float) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (uiState.isSortSheetVisible) {
@@ -198,6 +179,10 @@ private fun HomeScreen(
             }
         }
 
+        AudioPlayBoxSlider(
+            progress = uiState.audioProgress,
+            onValueChange = onProgressChange
+        )
         AudioPlayBox(
             title = uiState.currentMusic?.title,
             subTitle = uiState.currentMusic?.artist,
