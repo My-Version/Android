@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,7 +30,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.my.version.core.common.extension.noRippleClickable
 import com.my.version.core.common.extension.showToast
-import com.my.version.core.common.musicplayer.StreamMediaPlayer
 import com.my.version.core.common.state.UiState
 import com.my.version.core.designsystem.component.bottomsheet.SortingBottomSheet
 import com.my.version.core.designsystem.component.button.RectangleButton
@@ -57,30 +55,20 @@ fun EvaluationSelectRoute(
     modifier: Modifier = Modifier,
     viewModel: EvaluationSelectViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val mediaPlayer = remember { StreamMediaPlayer(context) }
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle).collect { sideEffect ->
-                when (sideEffect) {
-                    is EvaluationSelectSideEffect.ShowToast -> context.showToast(sideEffect.message)
+            when (sideEffect) {
+                is EvaluationSelectSideEffect.ShowToast -> context.showToast(sideEffect.message)
 
-                    is EvaluationSelectSideEffect.NavigateUp -> navigateUp()
+                is EvaluationSelectSideEffect.NavigateUp -> navigateUp()
 
-                    is EvaluationSelectSideEffect.NavigateNext -> navigateToRecord()
-
-                    is EvaluationSelectSideEffect.PauseCoverAudio -> mediaPlayer.pauseMediaPlayer()
-
-                    is EvaluationSelectSideEffect.PlayCoverAudio -> mediaPlayer.playMediaPlayer()
-
-                    is EvaluationSelectSideEffect.StartCoverAudio -> with(mediaPlayer) {
-                        endMediaPlayer()
-                        prepareMediaPlayer(sideEffect.uri)
-                    }
-                }
+                is EvaluationSelectSideEffect.NavigateNext -> navigateToRecord()
             }
+        }
     }
 
     LaunchedEffect(true) {
@@ -99,9 +87,7 @@ fun EvaluationSelectRoute(
 
     DisposableEffect(Unit) {
         onDispose {
-            viewModel.updateSelectedIndex(-1)
-            viewModel.onCoverSelected(null)
-            mediaPlayer.endMediaPlayer()
+            viewModel.stopPlayer()
         }
     }
 }

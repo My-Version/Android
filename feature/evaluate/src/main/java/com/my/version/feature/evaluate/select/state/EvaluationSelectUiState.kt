@@ -7,6 +7,7 @@ data class EvaluationSelectUiState(
     val loadState: UiState<List<CoverAudio>> = UiState.Loading,
     val selected: Int = -1,
     val selectedCover: CoverAudio? = null,
+    val currentCover: CoverAudio? = null,
     val sortByIndex: Int = 0,
     val isSortSheetVisible: Boolean = false
 )
