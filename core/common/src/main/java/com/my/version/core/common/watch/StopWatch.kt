@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.Instant
@@ -18,19 +19,25 @@ class StopWatch {
     var formattedTime by mutableStateOf("00:00")
     var timeMillis = 0L
 
-    var isActive = false
+    private var isActive = MutableStateFlow(false)
 
     private var lastTimestamp = 0L
 
 
     fun start() {
-        if(isActive) return
+        if (isActive.value) return
 
         CoroutineScope(Dispatchers.Main).launch {
             lastTimestamp = System.currentTimeMillis()
-            this@StopWatch.isActive = true
+            resume()
+        }
+    }
 
-            while(this@StopWatch.isActive) {
+    suspend fun resume() {
+        this@StopWatch.isActive.value = true
+
+        this@StopWatch.isActive.collect { isActive ->
+            while (isActive) {
                 delay(1000L)
                 timeMillis += System.currentTimeMillis() - lastTimestamp
                 lastTimestamp = System.currentTimeMillis()
@@ -40,26 +47,26 @@ class StopWatch {
     }
 
     fun pause() {
-        isActive = false
+        isActive.value = false
     }
 
     fun reset() {
-        isActive = false
+        isActive.value = false
         timeMillis = 0L
         lastTimestamp = 0L
         formattedTime = "00:00"
     }
 
     fun startForLyrics() {
-        if(isActive) return
+        if (isActive.value) return
 
         Timber.tag("lyrics").d("starting stopwatch for lyrics")
 
         CoroutineScope(Dispatchers.Default).launch {
             lastTimestamp = System.currentTimeMillis()
-            this@StopWatch.isActive = true
+            this@StopWatch.isActive.value = true
 
-            while(this@StopWatch.isActive) {
+            while (this@StopWatch.isActive.value) {
                 timeMillis = System.currentTimeMillis() - lastTimestamp
             }
         }

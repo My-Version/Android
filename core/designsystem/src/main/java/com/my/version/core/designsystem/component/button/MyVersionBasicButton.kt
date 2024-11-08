@@ -24,11 +24,12 @@ fun MyVersionBasicButton(
         containerColor = Color.Transparent,
         contentColor = White
     ),
+    enabled: Boolean = true,
     contents: @Composable BoxScope.() -> Unit,
 ) {
     Box(
         modifier = modifier
-            .noRippleClickable { onClick() }
+            .noRippleClickable { if (enabled) onClick() }
             .background(color = buttonColors.containerColor)
             .padding(contentPadding),
         contentAlignment = Alignment.Center

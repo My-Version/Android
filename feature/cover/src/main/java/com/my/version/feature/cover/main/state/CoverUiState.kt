@@ -8,5 +8,6 @@ data class CoverUiState(
     val currentAudio: CoverAudio? = null,
     val sortByIndex: Int = 0,
     val isSortSheetVisible: Boolean = false,
-    val isAudioPlaying: Boolean = false
+    val isAudioPlaying: Boolean = false,
+    val audioProgress: Float = 0f
 )

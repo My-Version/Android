@@ -23,7 +23,7 @@ android {
             buildConfigField(
                 "String",
                 "STREAM_URL",
-                properties.getProperty("s3.url")
+                properties.getProperty("music.stream.url")
             )
 
             buildConfigField(

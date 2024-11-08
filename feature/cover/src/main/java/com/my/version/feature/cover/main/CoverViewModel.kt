@@ -3,6 +3,7 @@ package com.my.version.feature.cover.main
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.my.version.core.common.musicplayer.StreamMediaPlayer
 import com.my.version.core.common.state.UiState
 import com.my.version.core.domain.entity.CoverAudio
 import com.my.version.core.domain.repository.CoverRepository
@@ -10,17 +11,21 @@ import com.my.version.feature.cover.BuildConfig.COVER_STREAM_URL
 import com.my.version.feature.cover.BuildConfig.DOWNLOAD_HOST
 import com.my.version.feature.cover.main.state.CoverUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class CoverViewModel @Inject constructor(
-    private val coverRepository: CoverRepository
+    private val coverRepository: CoverRepository,
+    private val streamMediaPlayer: StreamMediaPlayer
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CoverUiState())
     val uiState = _uiState.asStateFlow()
@@ -54,14 +59,6 @@ class CoverViewModel @Inject constructor(
             }
     }
 
-    fun onCoverSelected(selectedCover: CoverAudio) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                currentAudio = selectedCover
-            )
-        }
-    }
-
     fun updateSortByIndex(index: Int) = _uiState.update { currentState ->
         currentState.copy(
             sortByIndex = index
@@ -80,20 +77,93 @@ class CoverViewModel @Inject constructor(
         )
     }
 
-    fun startCoverAudio(audio: String) = viewModelScope.launch {
-        _sideEffect.emit(CoverSideEffect.StartCoverAudio(Uri.parse(COVER_STREAM_URL + audio)))
-        updateIsMusicPlaying(true)
+    fun updateProgress(progress: Float) = _uiState.update { currentState ->
+        currentState.copy(
+            audioProgress = progress
+        )
+    }
+
+    //오디오 재생 버튼을 클릭한 경우
+    fun onCoverSelected(selectedCover: CoverAudio) {
+        if (selectedCover.audio != _uiState.value.currentAudio?.audio) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    currentAudio = selectedCover
+                )
+            }
+            prepareCoverAudio(selectedCover.audio)
+        }
+    }
+
+    private fun prepareCoverAudio(audio: String) = viewModelScope.launch {
+        streamMediaPlayer.endMediaPlayer()
+        updateProgress(0f)
+
+        streamMediaPlayer.prepareMediaPlayer(
+            uri = Uri.parse(COVER_STREAM_URL + audio),
+            onPrepared = {
+                updateIsMusicPlaying(true)
+                playPlayer()
+            },
+            onCompletion = {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        isAudioPlaying = false,
+                        audioProgress = 0f,
+                        currentAudio = null
+                    )
+                }
+                stopPlayer()
+            }
+        )
     }
 
     fun playPlayer() = viewModelScope.launch {
-        _sideEffect.emit(CoverSideEffect.PlayCoverAudio)
+        streamMediaPlayer.playMediaPlayer()
         updateIsMusicPlaying(true)
+        proceedProgress()
     }
 
     fun pausePlayer() = viewModelScope.launch {
-        _sideEffect.emit(CoverSideEffect.PauseCoverAudio)
+        streamMediaPlayer.pauseMediaPlayer()
         updateIsMusicPlaying(false)
     }
+
+    fun stopPlayer() = viewModelScope.launch {
+        streamMediaPlayer.endMediaPlayer()
+        _uiState.update { currentState ->
+            currentState.copy(
+                isAudioPlaying = false,
+                audioProgress = 0f,
+                currentAudio = null
+            )
+        }
+    }
+
+    fun seekPlayer(progress: Float) {
+        val duration = streamMediaPlayer.getMediaPlayerDuration()
+        val newSeek = (duration * progress).toInt()
+        streamMediaPlayer.seekInMediaPlayer(newSeek)
+        _uiState.update { currentState ->
+            currentState.copy(
+                audioProgress = progress
+            )
+        }
+    }
+
+    private suspend fun proceedProgress() = withContext(Dispatchers.Default) {
+        try {
+            while (_uiState.value.isAudioPlaying) {
+                val progress = streamMediaPlayer.getMediaPlayerProgress()
+                Timber.tag("StreamMediaPlayer")
+                    .d("progress: $progress, playing: ${_uiState.value.isAudioPlaying}")
+
+                updateProgress(progress)
+            }
+        } catch (_: Exception) {
+        }
+    }
+
 
     fun downloadAudio(cover: CoverAudio) = viewModelScope.launch {
         val encodedCoverName = Uri.encode(cover.audio)

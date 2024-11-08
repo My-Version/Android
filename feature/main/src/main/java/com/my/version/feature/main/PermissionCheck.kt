@@ -15,22 +15,16 @@ import timber.log.Timber
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 internal fun PermissionChecker() {
-
     val activity = LocalContext.current as? Activity
-    val permissions = arrayOf(
-        Manifest.permission.RECORD_AUDIO
-    ).apply {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            plus(Manifest.permission.POST_NOTIFICATIONS)
-        }
-    }
+    val permissions = getAppropriatePermissions()
     val permissionState = rememberMultiplePermissionsState(
-        permissions = permissions.toList()
+        permissions = getAppropriatePermissions().toList()
     )
 
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
     ) { permissionMap ->
+
         val granted: Boolean = permissionMap.values.reduce { acc, next ->
             acc && next
         }
@@ -50,6 +44,16 @@ internal fun PermissionChecker() {
             requestPermissionLauncher.launch(permissions)
         }
     }
-
-
 }
+
+private fun getAppropriatePermissions(): Array<String> =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        arrayOf(
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.POST_NOTIFICATIONS
+        )
+    } else {
+        arrayOf(
+            Manifest.permission.RECORD_AUDIO
+        )
+    }
