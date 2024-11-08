@@ -1,4 +1,4 @@
-package com.my.version.feature.cover.upload.component
+package com.my.version.core.designsystem.component.dialog
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
@@ -16,28 +16,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.my.version.core.common.state.UiState
+import com.my.version.core.designsystem.R
 import com.my.version.core.designsystem.component.button.RectangleButton
-import com.my.version.core.designsystem.component.dialog.MyVersionBasicDialog
 import com.my.version.core.designsystem.component.divider.BasicSpacer
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.Grey400
 import com.my.version.core.designsystem.theme.MyVersionTypography
-import com.my.version.feature.cover.R
-import com.my.version.feature.cover.upload.state.ConfirmDialogUiState
 
 @Composable
 fun ConfirmDialog(
-    dialogState: ConfirmDialogUiState,
+    loadState: UiState<String>,
     text: String,
     onDismissRequest: () -> Unit,
     onConfirmRequest: () -> Unit,
-    onUploadRequest: () -> Unit = {},
+    onUploadRequest: () -> Unit,
     modifier: Modifier = Modifier,
     visibility: Boolean = false
 ) {
     if (visibility) {
 
-        when (dialogState.loadState) {
+        when (loadState) {
             is UiState.Empty -> {
                 MyVersionBasicDialog(
                     onDismiss = onDismissRequest,
@@ -61,8 +59,8 @@ fun ConfirmDialog(
                     )
                 ) {
                     UploadProcessView(
-                        titleTextRes = R.string.cover_dialog_uploading,
-                        buttonTextRes = R.string.cover_dialog_button_uploading,
+                        titleTextRes = R.string.confirm_dialog_uploading,
+                        buttonTextRes = R.string.confirm_dialog_button_uploading,
                         buttonEnabled = false
                     )
                 }
@@ -74,8 +72,8 @@ fun ConfirmDialog(
                     modifier = modifier.wrapContentHeight(),
                 ) {
                     UploadProcessView(
-                        titleTextRes = R.string.cover_dialog_upload_error,
-                        buttonTextRes = R.string.cover_dialog_button_retry,
+                        titleTextRes = R.string.confirm_dialog_upload_error,
+                        buttonTextRes = R.string.confirm_dialog_button_retry,
                         onClick = onUploadRequest
                     )
                 }
@@ -87,8 +85,8 @@ fun ConfirmDialog(
                     modifier = modifier.wrapContentHeight(),
                 ) {
                     UploadProcessView(
-                        titleTextRes = R.string.cover_dialog_upload_complete,
-                        buttonTextRes = R.string.cover_dialog_button_complete,
+                        titleTextRes = R.string.confirm_dialog_upload_complete,
+                        buttonTextRes = R.string.confirm_dialog_button_complete,
                         onClick = onConfirmRequest
                     )
                 }
@@ -127,7 +125,7 @@ private fun ConfirmView(
                 textStyle = MyVersionTypography.bodyMedium,
                 innerPadding = 10,
                 cornerRadius = 5.dp,
-                text = stringResource(R.string.cover_dialog_confirm_cancel),
+                text = stringResource(R.string.confirm_dialog_confirm_cancel),
                 onClick = onDismissRequest,
                 modifier = Modifier.weight(1f),
                 backgroundColor = Grey400
@@ -138,7 +136,7 @@ private fun ConfirmView(
                 textStyle = MyVersionTypography.bodyMedium,
                 innerPadding = 10,
                 cornerRadius = 5.dp,
-                text = stringResource(R.string.cover_dialog_confirm_next),
+                text = stringResource(R.string.confirm_dialog_confirm_next),
                 onClick = onConfirmRequest,
                 modifier = Modifier.weight(1f)
             )
@@ -186,7 +184,7 @@ private fun UploadProcessView(
 @Composable
 private fun UploadDialogPreview() {
     ConfirmView(
-        text = "Are you sure you want to delete this file?",
+        text = "Are you sure you want to upload this file?",
         onDismissRequest = { },
         onConfirmRequest = { }
     )
@@ -196,8 +194,8 @@ private fun UploadDialogPreview() {
 @Composable
 private fun LoadingDialogPreview() {
     UploadProcessView(
-        titleTextRes = R.string.cover_dialog_uploading,
-        buttonTextRes = R.string.cover_dialog_button_uploading,
+        titleTextRes = R.string.confirm_dialog_uploading,
+        buttonTextRes = R.string.confirm_dialog_button_uploading,
         buttonEnabled = false
     )
 }
@@ -206,8 +204,8 @@ private fun LoadingDialogPreview() {
 @Composable
 private fun CompleteDialogPreview() {
     UploadProcessView(
-        titleTextRes = R.string.cover_dialog_upload_error,
-        buttonTextRes = R.string.cover_dialog_button_retry,
+        titleTextRes = R.string.confirm_dialog_upload_error,
+        buttonTextRes = R.string.confirm_dialog_button_retry,
         onClick = { }
     )
 }
@@ -216,8 +214,8 @@ private fun CompleteDialogPreview() {
 @Composable
 private fun FailedDialogPreview() {
     UploadProcessView(
-        titleTextRes = R.string.cover_dialog_upload_complete,
-        buttonTextRes = R.string.cover_dialog_button_complete,
+        titleTextRes = R.string.confirm_dialog_upload_complete,
+        buttonTextRes = R.string.confirm_dialog_button_complete,
         onClick = { }
     )
 }

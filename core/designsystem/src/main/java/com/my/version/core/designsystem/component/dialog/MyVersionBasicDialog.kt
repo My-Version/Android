@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.my.version.core.common.extension.noRippleClickable
 import com.my.version.core.designsystem.R
 import com.my.version.core.designsystem.theme.MyVersionBackground
 import com.my.version.core.designsystem.theme.MyVersionTheme
@@ -43,7 +44,8 @@ fun MyVersionBasicDialog(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_close),
-                    contentDescription = stringResource(id = R.string.btn_close)
+                    contentDescription = stringResource(id = R.string.btn_close),
+                    modifier = Modifier.noRippleClickable { onDismiss() }
                 )
             }
 
