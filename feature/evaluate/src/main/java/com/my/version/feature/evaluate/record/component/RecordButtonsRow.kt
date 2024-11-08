@@ -23,8 +23,7 @@ internal fun RecordButtonsRow(
     isRecordEnabled: Boolean,
     modifier: Modifier = Modifier,
     onResetButtonClick: () -> Unit = {},
-    onPlayButtonClick: () -> Unit = {},
-    onPauseButtonClick: () -> Unit = {},
+    onPlayButtonClick: () -> Unit = {}
 ) {
     Row(
         modifier = modifier,
@@ -54,12 +53,6 @@ internal fun RecordButtonsRow(
                 enabled = isRecordEnabled
             )
         }
-
-        MyVersionBasicIconButton(
-            icon = R.drawable.ic_pause,
-            onClick = onPauseButtonClick,
-            color = Grey200
-        )
     }
 }
 

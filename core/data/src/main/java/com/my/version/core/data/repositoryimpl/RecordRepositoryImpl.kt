@@ -72,8 +72,4 @@ class RecordRepositoryImpl @Inject constructor(
             }
         }
     }
-
-    fun deleteRecording() {
-
-    }
 }

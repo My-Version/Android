@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
+import com.my.version.core.common.extension.showToast
 import com.my.version.core.common.media.LrcConverter
 import com.my.version.core.designsystem.component.button.RectangleButton
 import com.my.version.core.designsystem.component.divider.MyVersionHorizontalDivider
@@ -43,28 +45,37 @@ fun EvaluationRecordRoute(
     navigateUp: () -> Unit,
     navigateToEvaluationUpload: (String) -> Unit,
     modifier: Modifier = Modifier,
+    musicUriString: String = "Ditto-NewJeans.mp3",
     viewModel: EvaluationRecordViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle(lifecycleOwner)
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
+        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collect { sideEffect ->
+                when (sideEffect) {
+                    is EvaluationRecordSideEffect.ShowToast ->
+                        context.showToast(sideEffect.message)
+
+                    is EvaluationRecordSideEffect.NavigateUp ->
+                        navigateUp()
+
+                    is EvaluationRecordSideEffect.NavigateToUpload ->
+                        navigateToEvaluationUpload(sideEffect.recordId)
+                }
+            }
+    }
 
     LaunchedEffect(true) {
         with(viewModel) {
-            prepareMusic("Ditto-NewJeans.mp3")
-            updateSongLyrics(
-                LrcConverter.convertToLyricMap(
-                    context.resources.openRawResource(
-                        R.raw.ditto
-                    )
+            prepareMusic(uriString = musicUriString)
+            prepareMusicLyrics(
+                lyric = LrcConverter.convertToLyricMap(
+                    context.resources.openRawResource(R.raw.ditto)
                 )
             )
-        }
-    }
-    DisposableEffect(true) {
-        onDispose {
-            viewModel.stopMusic()
-            viewModel.stopRecording()
         }
     }
 
@@ -72,21 +83,28 @@ fun EvaluationRecordRoute(
         EvaluationRecordScreen(
             modifier = modifier,
             uiState = uiState,
-            onPlayMusic = viewModel::onStartRecording,
-            onStopMusic = viewModel::onStopRecording,
-            onPressNextButton = { navigateToEvaluationUpload("") },
-            onPressBackButton = navigateUp
+            onClickBackButton = viewModel::navigateUp,
+            onClickResetButton = viewModel::resetPlayers,
+            onClickPlayButton = viewModel::startPlayers,
+            onClickNextButton = viewModel::navigateToUpload,
         )
     }
+
+    DisposableEffect(true) {
+        onDispose {
+            viewModel.stopPlayers()
+        }
+    }
+
 }
 
 @Composable
 fun EvaluationRecordScreen(
     uiState: EvaluationRecordUiState,
-    onPressNextButton: () -> Unit,
-    onPressBackButton: () -> Unit,
-    onPlayMusic: () -> Unit,
-    onStopMusic: () -> Unit,
+    onClickNextButton: () -> Unit,
+    onClickBackButton: () -> Unit,
+    onClickResetButton: () -> Unit,
+    onClickPlayButton: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val commonModifier = Modifier
@@ -97,7 +115,7 @@ fun EvaluationRecordScreen(
         modifier = modifier
     ) {
         NavigateUpTopAppBar(
-            onNavigateUp = onPressBackButton,
+            onNavigateUp = onClickBackButton,
             title = stringResource(id = R.string.evaluation_topbar_record)
         )
 
@@ -120,9 +138,8 @@ fun EvaluationRecordScreen(
         RecordButtonsRow(
             modifier = commonModifier.padding(top = 20.dp),
             isRecordEnabled = uiState.isRecordEnabled,
-            onResetButtonClick = {},
-            onPlayButtonClick = onPlayMusic,
-            onPauseButtonClick = onStopMusic
+            onResetButtonClick = onClickResetButton,
+            onPlayButtonClick = onClickPlayButton
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -131,23 +148,23 @@ fun EvaluationRecordScreen(
             text = "Next",
             textStyle = MaterialTheme.typography.titleMedium,
             innerPadding = 20,
-            onClick = onPressNextButton,
+            onClick = onClickNextButton,
             modifier = Modifier.fillMaxWidth()
         )
 
     }
 }
 
-@Preview(showBackground = true,)
+@Preview(showBackground = true)
 @Composable
 private fun EvaluationRecordScreenPreview() {
     MyVersionTheme {
         EvaluationRecordScreen(
             modifier = Modifier.background(MyVersionBackground),
-            onPressNextButton = {},
-            onPressBackButton = {},
-            onPlayMusic = {},
-            onStopMusic = {},
+            onClickNextButton = {},
+            onClickBackButton = {},
+            onClickPlayButton = {},
+            onClickResetButton = {},
             uiState = EvaluationRecordUiState()
         )
     }

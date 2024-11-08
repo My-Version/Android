@@ -1,11 +1,10 @@
 package com.my.version.feature.evaluate.record.state
 
-import com.my.version.core.domain.entity.MusicAudioFile
-
 data class EvaluationRecordUiState(
-    val music: MusicAudioFile?= null,
+    val musicUri: String = "",
     val songLyrics: Map<Long, String> = mapOf(),
     val currentTimeStamp: Long = 0L,
     val isRecordEnabled: Boolean = false,
-    val isNextEnabled: Boolean = true,
+    val isNextEnabled: Boolean = false,
+    val isPlaying: Boolean = false
 )

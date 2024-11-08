@@ -39,6 +39,7 @@ import com.my.version.feature.evaluate.R
 import com.my.version.feature.evaluate.component.ClickableLyricView
 import com.my.version.feature.evaluate.component.LyricView
 import com.my.version.feature.evaluate.upload.state.EvaluationUploadUiState
+import timber.log.Timber
 import com.my.version.core.designsystem.R as DesignSystemR
 
 /**
@@ -56,9 +57,9 @@ fun EvaluationUploadRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle(lifecycleOwner)
 
     LaunchedEffect(true) {
-        //viewModel.updateFilePath(filePath)
+        Timber.tag("StreamMediaPlayer").d(filePath)
         viewModel.initUiState(
-            filePath = "/storage/emulated/0/Android/data/com.my.version/files/Music/Ditto_NewJeans.mp3",
+            filePath = filePath,
             //filePath = "/storage/emulated/0/Android/data/com.my.version/files/Music/wonderful_240628.mp3",
             songLyrics = LrcConverter.convertToLyricMap(context.resources.openRawResource(R.raw.ditto))
         )

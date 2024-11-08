@@ -74,6 +74,16 @@ class StreamMediaPlayer @Inject constructor(
         }
     }
 
+    fun resetMediaPlayer() {
+        mediaPlayer?.run {
+            try {
+                reset()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
     fun getMediaPlayerDuration(): Int = mediaPlayer?.duration ?: 0
     fun getMediaPlayerProgress(): Float {
         val progress = mediaPlayer?.currentPosition?.toFloat() ?: 0f
