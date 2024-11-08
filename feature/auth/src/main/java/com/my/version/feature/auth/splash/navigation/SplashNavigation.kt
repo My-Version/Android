@@ -14,15 +14,17 @@ fun NavController.navigateToSplash(navOptions: NavOptions? = null) = navigate(Sp
 
 fun NavGraphBuilder.splashScreen(
     modifier: Modifier,
-    navigateToSignIn: () -> Unit = {},
-    navigateToHome: () -> Unit = {}
+    navigateToSignIn: (NavOptions) -> Unit = {},
+    navigateToHome: (NavOptions) -> Unit = {}
 ) {
+    val navOptions = NavOptions.Builder().setPopUpTo(
+        route = Splash, inclusive = true
+    ).build()
+
     composable<Splash> {
-        SplashRoute(
-            modifier = modifier,
-            navigateToSignIn = navigateToSignIn,
-            navigateToHome = navigateToHome
-        )
+        SplashRoute(modifier = modifier,
+            navigateToSignIn = { navigateToSignIn(navOptions) },
+            navigateToHome = { navigateToHome(navOptions) })
     }
 }
 
