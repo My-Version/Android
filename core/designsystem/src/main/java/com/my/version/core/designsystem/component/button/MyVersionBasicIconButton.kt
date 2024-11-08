@@ -20,12 +20,14 @@ fun MyVersionBasicIconButton(
     modifier: Modifier = Modifier,
     contentDescription: String = "",
     backgroundColor: Color = Color.Transparent,
+    enabled: Boolean = true,
 ) {
     MyVersionBasicButton(
         buttonColors = ButtonDefaults.buttonColors(
             containerColor = backgroundColor,
             contentColor = color
         ),
+        enabled = enabled,
         onClick = onClick,
         modifier = modifier
     ) {

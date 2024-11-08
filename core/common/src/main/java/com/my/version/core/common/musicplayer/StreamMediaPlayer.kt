@@ -15,7 +15,8 @@ class StreamMediaPlayer @Inject constructor(
     fun prepareMediaPlayer(
         uri: Uri,
         onPrepared: () -> Unit = {},
-        onCompletion: () -> Unit = {}
+        onCompletion: () -> Unit = {},
+        onBufferingComplete: () -> Unit = {}
     ) {
         try {
             if (mediaPlayer == null) {
@@ -24,6 +25,11 @@ class StreamMediaPlayer @Inject constructor(
                     prepareAsync()
                     setOnPreparedListener {
                         onPrepared()
+                    }
+                    setOnBufferingUpdateListener { _, percent ->
+                        if (percent == 100) {
+                            onBufferingComplete()
+                        }
                     }
                     setOnCompletionListener {
                         onCompletion()

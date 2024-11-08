@@ -24,7 +24,7 @@ android {
             buildConfigField(
                 "String",
                 "STREAM_URL",
-                properties.getProperty("s3.url")
+                properties.getProperty("music.stream.url")
             )
         }
         release {
@@ -34,7 +34,7 @@ android {
                 "proguard-rules.pro"
             )
         }
-        
+
         buildFeatures {
             buildConfig = true
         }

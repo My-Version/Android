@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -141,9 +140,6 @@ class HomeViewModel @Inject constructor(
         try {
             while (_uiState.value.isMusicPlaying) {
                 val progress = streamMediaPlayer.getMediaPlayerProgress()
-                Timber.tag("StreamMediaPlayer")
-                    .d("progress: $progress, playing: ${_uiState.value.isMusicPlaying}")
-
                 updateProgress(progress)
             }
         } catch (_: Exception) {

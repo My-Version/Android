@@ -6,5 +6,6 @@ data class EvaluationRecordUiState(
     val music: MusicAudioFile?= null,
     val songLyrics: Map<Long, String> = mapOf(),
     val currentTimeStamp: Long = 0L,
+    val isRecordEnabled: Boolean = false,
     val isNextEnabled: Boolean = true,
 )

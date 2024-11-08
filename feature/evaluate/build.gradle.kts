@@ -16,16 +16,22 @@ android {
 
     defaultConfig {
         consumerProguardFiles("consumer-rules.pro")
+
+        buildConfigField(
+            "String",
+            "COVER_STREAM_URL",
+            properties.getProperty("cover.stream.url")
+        )
+
+        buildConfigField(
+            "String",
+            "MUSIC_STREAM_URL",
+            properties.getProperty("music.stream.url")
+        )
     }
 
+
     buildTypes {
-        debug {
-            buildConfigField(
-                "String",
-                "COVER_STREAM_URL",
-                properties.getProperty("cover.stream.url")
-            )
-        }
 
         release {
             isMinifyEnabled = false
