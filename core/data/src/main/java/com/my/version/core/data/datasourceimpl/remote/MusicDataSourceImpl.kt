@@ -9,9 +9,5 @@ class MusicDataSourceImpl @Inject constructor(
     private val musicService: MusicService
 ) : MusicDataSource {
     override suspend fun getMusicList(): List<MusicListResponse> =
-        musicService.getMusicList(bucket = BUCKET)
-
-    companion object {
-        private const val BUCKET = "song"
-    }
+        musicService.getMusicList()
 }
