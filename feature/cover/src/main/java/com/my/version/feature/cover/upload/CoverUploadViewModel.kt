@@ -7,7 +7,6 @@ import com.my.version.core.common.state.UiState
 import com.my.version.core.domain.entity.RecordAudioFile
 import com.my.version.core.domain.repository.CoverUploadRepository
 import com.my.version.core.domain.repository.RecordLocalRepository
-import com.my.version.feature.cover.upload.state.ConfirmDialogUiState
 import com.my.version.feature.cover.upload.state.UploadUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -26,9 +25,6 @@ class CoverUploadViewModel @Inject constructor(
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(UploadUiState())
     val uiState = _uiState.asStateFlow()
-
-    private val _dialogState = MutableStateFlow(ConfirmDialogUiState())
-    val dialogState = _dialogState.asStateFlow()
 
     private var mediaPlayer = MyVersionMediaPlayer()
 
@@ -117,9 +113,9 @@ class CoverUploadViewModel @Inject constructor(
     }
 
     private fun updateUploadDialogState(state: UiState<String>) {
-        _dialogState.update { currentState ->
+        _uiState.update { currentState ->
             currentState.copy(
-                loadState = state
+                dialogLoadState = state
             )
         }
     }

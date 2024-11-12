@@ -56,18 +56,15 @@ fun MainScreen(
 ) {
     PermissionChecker()
 
-    Scaffold(
-        bottomBar = {
-            MainBottomBar(
-                isVisible = navigator.showBottomBar(),
-                tabs = MainTab.entries.toList(),
-                currentTab = navigator.currentTab,
-                onTabSelected = navigator::navigate
-            )
-        }
-    ) { paddingValues ->
-        val modifier = Modifier
-            .padding(bottom = paddingValues.calculateBottomPadding())
+    Scaffold(bottomBar = {
+        MainBottomBar(
+            isVisible = navigator.showBottomBar(),
+            tabs = MainTab.entries.toList(),
+            currentTab = navigator.currentTab,
+            onTabSelected = navigator::navigate
+        )
+    }) { paddingValues ->
+        val modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding())
 
         MyVersionNavHost(
             navController = navigator.navController,
@@ -79,12 +76,9 @@ fun MainScreen(
 
 @Composable
 private fun MyVersionNavHost(
-    navController: NavHostController,
-    startDestination: Route,
-    modifier: Modifier = Modifier
+    navController: NavHostController, startDestination: Route, modifier: Modifier = Modifier
 ) {
-    val noBottomBarModifier = Modifier
-        .systemBarsPadding()
+    val noBottomBarModifier = Modifier.systemBarsPadding()
 
     NavHost(
         navController = navController,
@@ -102,36 +96,32 @@ private fun MyVersionNavHost(
             ExitTransition.None
         },
     ) {
-        splashScreen(
-            modifier = noBottomBarModifier,
-            navigateToSignIn = navController::navigateToSignIn,
-            navigateToHome = navController::navigateToHome
-        )
+        splashScreen(modifier = noBottomBarModifier, navigateToSignIn = { navOptions ->
+            navController.navigateToSignIn(navOptions = navOptions)
+        }, navigateToHome = { navOptions ->
+            navController.navigateToHome(navOptions = navOptions)
+        })
         homeScreen(
             modifier = modifier
         )
         coverScreen(
-            modifier = modifier,
-            navigateToSelect = navController::navigateToCoverSelect
+            modifier = modifier, navigateToSelect = navController::navigateToCoverSelect
         )
         coverSelectScreen(
             modifier = noBottomBarModifier,
             navigateUp = navController::navigateUp,
             navigateToUpload = navController::navigateToCoverUpload
         )
-        coverUploadScreen(
-            modifier = noBottomBarModifier,
+        coverUploadScreen(modifier = noBottomBarModifier,
             navigateUp = navController::navigateUp,
-            onUploadComplete = { navController.popBackStack(Cover, inclusive = false) }
-        )
+            onUploadComplete = { navController.popBackStack(Cover, inclusive = false) })
         evaluationScreen(
             modifier = modifier,
             navigateToSelect = navController::navigateToEvaluationSelect,
             navigateToResult = navController::navigateToEvaluationResult
         )
         evaluationResultScreen(
-            modifier = noBottomBarModifier,
-            navigateUp = navController::navigateUp
+            modifier = noBottomBarModifier, navigateUp = navController::navigateUp
         )
         evaluationSelectScreen(
             modifier = noBottomBarModifier,
@@ -139,11 +129,9 @@ private fun MyVersionNavHost(
             navigateToRecord = navController::navigateToEvaluationRecord
         )
         evaluationRecordScreen(
-            navigateUp = navController::navigateUp,
-            navigateToEvaluationUpload = { filePath ->
+            navigateUp = navController::navigateUp, navigateToEvaluationUpload = { filePath ->
                 navController.navigateToEvaluationUpload(filePath = filePath)
-            },
-            modifier = noBottomBarModifier
+            }, modifier = noBottomBarModifier
         )
         evaluationUploadScreen(
             modifier = noBottomBarModifier
@@ -154,8 +142,7 @@ private fun MyVersionNavHost(
             navigateToHome = navController::navigateToHome,
         )
         signUpScreen(
-            modifier = noBottomBarModifier,
-            navigateUp = navController::navigateUp
+            modifier = noBottomBarModifier, navigateUp = navController::navigateUp
         )
     }
 }
@@ -168,13 +155,10 @@ private fun MainBottomBar(
     onTabSelected: (MainTab) -> Unit,
 ) {
     AnimatedVisibility(
-        visible = isVisible,
-        enter = fadeIn(),
-        exit = fadeOut()
+        visible = isVisible, enter = fadeIn(), exit = fadeOut()
     ) {
         NavigationBar(
-            containerColor = White,
-            modifier = Modifier.height(120.dp)
+            containerColor = White, modifier = Modifier.height(120.dp)
         ) {
             tabs.forEach { itemType ->
                 NavigationBarItem(
@@ -196,8 +180,7 @@ private fun MainBottomBar(
                             style = MaterialTheme.typography.labelMedium
                         )
                     },
-                    colors = androidx.compose.material3.NavigationBarItemDefaults
-                        .colors(
+                    colors = androidx.compose.material3.NavigationBarItemDefaults.colors(
                             selectedIconColor = Black,
                             selectedTextColor = Black,
                             unselectedIconColor = Grey300,

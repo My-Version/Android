@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.my.version.core.designsystem.component.button.RectangleButton
+import com.my.version.core.designsystem.component.dialog.ConfirmDialog
 import com.my.version.core.designsystem.component.divider.BasicSpacer
 import com.my.version.core.designsystem.component.item.MyVersionVerticalItemTwoButton
 import com.my.version.core.designsystem.component.text.SingleLineText
@@ -39,7 +40,6 @@ import com.my.version.core.designsystem.type.VerticalItemType
 import com.my.version.core.domain.entity.RecordAudioFile
 import com.my.version.feature.cover.R
 import com.my.version.feature.cover.record.RecordDialog
-import com.my.version.feature.cover.upload.component.ConfirmDialog
 import com.my.version.feature.cover.upload.component.CoverUploadIconButton
 import com.my.version.feature.cover.upload.component.uploadResultLauncher
 import java.io.File
@@ -54,7 +54,6 @@ fun CoverUploadRoute(
     viewModel: CoverUploadViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val dialogUiState by viewModel.dialogState.collectAsStateWithLifecycle()
 
     val fileResultLauncher = uploadResultLauncher(
         onResultOk = { dataUri ->
@@ -93,12 +92,12 @@ fun CoverUploadRoute(
     )
 
     ConfirmDialog(
-        text = stringResource(R.string.cover_dialog_confirm_upload),
+        text = stringResource(R.string.confirm_dialog_confirm_upload),
         onDismissRequest = { viewModel.updateUploadDialogVisibility(false) },
         onConfirmRequest = onUploadComplete,
         onUploadRequest = { viewModel.uploadFilesForCover(musicName = selectedMusicName) },
         visibility = uiState.uploadDialogVisibility,
-        dialogState = dialogUiState
+        loadState = uiState.dialogLoadState
     )
 
     DisposableEffect(true) {

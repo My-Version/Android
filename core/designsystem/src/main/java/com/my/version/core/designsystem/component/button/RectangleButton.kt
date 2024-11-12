@@ -23,11 +23,11 @@ import com.my.version.core.designsystem.theme.White
 
 @Composable
 fun RectangleButton(
-    isEnabled: Boolean,
     text: String,
     textStyle: TextStyle,
     innerPadding: Int,
     modifier: Modifier = Modifier,
+    isEnabled: Boolean = true,
     textColor: Color = White,
     cornerRadius: Dp = 0.dp,
     onClick: () -> Unit = {},
