@@ -1,11 +1,10 @@
 package com.my.version.feature.auth.splash
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import com.my.version.core.domain.repository.TokenRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -14,9 +13,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SplashViewModel @Inject constructor() : ViewModel() {
-    private var isLoginPossible: MutableState<Boolean> = mutableStateOf(false)
-
+class SplashViewModel @Inject constructor(
+    private val tokenRepository: TokenRepository,
+) : ViewModel() {
     private var _sideEffect = MutableSharedFlow<SplashSideEffect>()
     val sideEffect = _sideEffect.asSharedFlow()
 
@@ -29,10 +28,11 @@ class SplashViewModel @Inject constructor() : ViewModel() {
 
     private fun checkLoginPossible() {
         viewModelScope.launch {
-            if (isLoginPossible.value) {
+            /*TODO: 가능하다면 Token 자체의 유효성을 검증하는 API를 추가할 것*/
+            if (tokenRepository.getTokenFromPreference() != null) {
                 _sideEffect.emit(SplashSideEffect.NavigateToHome)
             } else {
-                _sideEffect.emit(SplashSideEffect.NavigateToHome)
+                _sideEffect.emit(SplashSideEffect.NavigateToSignIn)
             }
         }
     }

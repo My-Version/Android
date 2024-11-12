@@ -15,13 +15,17 @@ fun NavController.navigateToSignIn(navOptions: NavOptions? = null) = navigate(Si
 fun NavGraphBuilder.signInScreen(
     modifier: Modifier,
     navigateToSignUp: () -> Unit = {},
-    navigateToHome: () -> Unit = {}
+    navigateToHome: (navOptions: NavOptions) -> Unit = {}
 ) {
+    val navOptions = NavOptions.Builder().setPopUpTo(
+        route = SignIn, inclusive = true
+    ).build()
+
     composable<SignIn> {
         SignInRoute(
             modifier = modifier,
             navigateToSignUp = navigateToSignUp,
-            navigateToHome = navigateToHome
+            navigateToHome = { navigateToHome(navOptions) }
         )
     }
 }
