@@ -10,8 +10,8 @@ import retrofit2.http.Part
 import retrofit2.http.Query
 
 interface CoverService {
-    @GET("listDownload")
-    suspend fun getCoverList(@Query("bucketName") bucket: String): List<CoverListResponse>
+    @GET("coverList")
+    suspend fun getCoverList(@Query("userId") userId: String): List<CoverListResponse>
 
     @Multipart
     @POST("upload")
