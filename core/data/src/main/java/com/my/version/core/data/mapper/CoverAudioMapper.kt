@@ -15,6 +15,7 @@ fun CoverListResponse.toCoverAudio(): CoverAudio {
     val formattedDateString = formattedDate.format(toStringFormatter)
 
     return CoverAudio(
+        coverId = id.toLong(),
         title = this.music,
         createdDate = formattedDateString,
         audio = this.s3FileLocation.orEmpty()
