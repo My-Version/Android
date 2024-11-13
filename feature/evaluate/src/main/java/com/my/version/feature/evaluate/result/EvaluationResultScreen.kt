@@ -1,6 +1,7 @@
 package com.my.version.feature.evaluate.result
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -22,7 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -34,9 +35,11 @@ import com.my.version.core.designsystem.theme.Grey400
 import com.my.version.core.designsystem.theme.MyVersionMain
 import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.theme.MyVersionTypography
+import com.my.version.core.designsystem.theme.TransparentGray
 import com.my.version.core.designsystem.theme.White
 import com.my.version.feature.evaluate.R
 import com.my.version.feature.evaluate.result.component.ExpandableAudioItem
+import com.my.version.feature.evaluate.result.state.EvaluationResultAudioState
 import com.my.version.feature.evaluate.result.state.EvaluationResultUiState
 
 @Composable
@@ -54,38 +57,98 @@ fun EvaluationResultRoute(
     modifier: Modifier = Modifier,
     viewModel: EvaluationResultViewModel = hiltViewModel()
 ) {
-    val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val coverState by viewModel.coverState.collectAsStateWithLifecycle()
+    val recordState by viewModel.recordState.collectAsStateWithLifecycle()
 
     LaunchedEffect(true) {
-        viewModel.updateUiState(
-            title = title,
-            createdDate = createdDate,
-            similarity = similarity,
-            mostSimilarPeriod = mostSimilarPeriod,
-            leastSimilarPeriod = leastSimilarPeriod,
-            timeLength = timeLength,
-            coverUrl = coverUrl,
-            recordUrl = recordUrl,
-            imageUrl = imageUrl
-        )
+        with(viewModel) {
+            updateUiState(
+                title = title,
+                createdDate = createdDate,
+                similarity = similarity,
+                mostSimilarPeriod = mostSimilarPeriod,
+                leastSimilarPeriod = leastSimilarPeriod,
+                timeLength = timeLength,
+                coverUrl = coverUrl,
+                recordUrl = recordUrl,
+                imageUrl = imageUrl
+            )
+        }
     }
+
 
     EvaluationResultScreen(
         uiState = uiState,
-        onClickCover = viewModel::coverClicked,
-        onClickRecord = viewModel::recordClicked,
+        coverState = coverState,
+        recordState = recordState,
+        onClickCover = { viewModel.updateItemEnable(ResultType.COVER) },
+        onClickCoverIcon = viewModel::onClickCoverIcon,
+        onClickCoverMostSimilar = {
+            viewModel.seekToSimilarPeriod(
+                ResultType.COVER,
+                uiState.mostSimilarPeriod
+            )
+        },
+        onClickCoverLeastSimilar = {
+            viewModel.seekToSimilarPeriod(
+                ResultType.COVER,
+                uiState.leastSimilarPeriod
+            )
+        },
+        onClickRecord = { viewModel.updateItemEnable(ResultType.RECORD) },
+        onClickRecordIcon = viewModel::onClickRecordIcon,
+        onClickRecordMostSimilar = {
+            viewModel.seekToSimilarPeriod(
+                ResultType.RECORD,
+                uiState.mostSimilarPeriod
+            )
+        },
+        onClickRecordLeastSimilar = {
+            viewModel.seekToSimilarPeriod(
+                ResultType.RECORD,
+                uiState.leastSimilarPeriod
+            )
+        },
+        onChangeCoverProgress = { viewModel.updateProgress(ResultType.COVER, it) },
+        onChangeRecordProgress = { viewModel.updateProgress(ResultType.RECORD, it) },
         navigateUp = navigateUp,
         modifier = modifier
     )
+
+    if (!(coverState.prepared || recordState.prepared)) {
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .background(color = TransparentGray)
+                .clickable(enabled = false) {}
+        )
+    }
+
+
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.stopPlayer()
+        }
+    }
 }
 
 @Composable
 private fun EvaluationResultScreen(
     uiState: EvaluationResultUiState,
+    coverState: EvaluationResultAudioState,
+    recordState: EvaluationResultAudioState,
     navigateUp: () -> Unit,
     onClickCover: () -> Unit,
     onClickRecord: () -> Unit,
+    onClickCoverIcon: () -> Unit,
+    onClickRecordIcon: () -> Unit,
+    onClickCoverMostSimilar: () -> Unit,
+    onClickCoverLeastSimilar: () -> Unit,
+    onClickRecordMostSimilar: () -> Unit,
+    onClickRecordLeastSimilar: () -> Unit,
+    onChangeCoverProgress: (Float) -> Unit,
+    onChangeRecordProgress: (Float) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
@@ -162,10 +225,15 @@ private fun EvaluationResultScreen(
                 ExpandableAudioItem(
                     title = stringResource(id = R.string.evaluation_result_cover_title),
                     subTitle = "",//uiState.createdDate,
-                    progress = uiState.progressCover,
-                    isExpanded = uiState.isCoverEnabled,
+                    progress = coverState.progress,
+                    isExpanded = coverState.isExpanded,
+                    isPlaying = coverState.isPlaying,
                     backgroundColor = Grey200,
-                    onClickItem = onClickCover
+                    onClickItem = onClickCover,
+                    onClickIcon = onClickCoverIcon,
+                    onSliderValueChange = onChangeCoverProgress,
+                    onClickLeastSimilar = onClickCoverLeastSimilar,
+                    onClickMostSimilar = onClickCoverMostSimilar
                 )
 
                 BasicSpacer(height = 20.dp)
@@ -173,10 +241,15 @@ private fun EvaluationResultScreen(
                 ExpandableAudioItem(
                     title = stringResource(id = R.string.evaluation_result_record_title),
                     subTitle = "",//uiState.createdDate,
-                    progress = uiState.progressRecord,
-                    isExpanded = uiState.isRecordEnabled,
+                    progress = recordState.progress,
+                    isExpanded = recordState.isExpanded,
+                    isPlaying = recordState.isPlaying,
                     backgroundColor = Grey200,
-                    onClickItem = onClickRecord
+                    onClickItem = onClickRecord,
+                    onClickIcon = onClickRecordIcon,
+                    onSliderValueChange = onChangeRecordProgress,
+                    onClickLeastSimilar = onClickRecordLeastSimilar,
+                    onClickMostSimilar = onClickRecordMostSimilar
                 )
 
                 BasicSpacer(height = 32.dp)
@@ -218,7 +291,17 @@ private fun EvaluationResultScreenPreview() {
             navigateUp = {},
             onClickRecord = {},
             onClickCover = {},
-            uiState = EvaluationResultUiState()
+            onClickCoverIcon = {},
+            onClickRecordIcon = {},
+            uiState = EvaluationResultUiState(),
+            coverState = EvaluationResultAudioState(),
+            recordState = EvaluationResultAudioState(),
+            onChangeCoverProgress = {},
+            onChangeRecordProgress = {},
+            onClickCoverLeastSimilar = {},
+            onClickCoverMostSimilar = {},
+            onClickRecordLeastSimilar = {},
+            onClickRecordMostSimilar = {}
         )
     }
 }
