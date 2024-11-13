@@ -18,6 +18,8 @@ fun CoverListResponse.toCoverAudio(): CoverAudio {
         coverId = id.toLong(),
         title = this.music,
         createdDate = formattedDateString,
-        audio = this.s3FileLocation.orEmpty()
+        audio = this.s3FileLocation.orEmpty(),
+        artist = this.artist,
+        music = this.music
     )
 }

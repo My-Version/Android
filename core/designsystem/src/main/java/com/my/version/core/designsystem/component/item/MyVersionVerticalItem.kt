@@ -31,10 +31,12 @@ fun MyVersionVerticalItem(
     title: String,
     subTitle: String,
     modifier: Modifier = Modifier,
-    iconColor: Color = Black
+    iconColor: Color = Black,
+    itemBackgroundColor: Color = White,
+    textColor: Color = Black,
 ) {
     MyVersionBasicItem(
-        color = White,
+        color = itemBackgroundColor,
         cornerRadius = 10,
         modifier = modifier
     ) {
@@ -50,11 +52,13 @@ fun MyVersionVerticalItem(
             ) {
                 SingleLineText(
                     text = title,
+                    color = textColor,
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 SingleLineText(
                     text = subTitle,
+                    color = textColor,
                     style = MaterialTheme.typography.labelMedium,
                 )
             }

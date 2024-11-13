@@ -6,20 +6,22 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 fun EvaluationListResponse.toEvaluationResult(): EvaluationDetail = with(this) {
-    val dateString = title.split("_")[0]
-    val toLocalDateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
-    val toStringFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
+    val formattedDateString = createdTime?.let {
+        val dateString = it.split("_")[0]
+        val toLocalDateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+        val toStringFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
 
-    val formattedDate = LocalDate.parse(dateString, toLocalDateFormatter)
-    val formattedDateString = formattedDate.format(toStringFormatter)
+        val formattedDate = LocalDate.parse(dateString, toLocalDateFormatter)
+        formattedDate.format(toStringFormatter)
+    }
 
     EvaluationDetail(
-        title = title,
-        date = formattedDateString,
-        similarity = similarityScore.toInt(),
-        mostSimilarPeriod = mostSimilarPeriod.toDouble(),
-        leastSimilarPeriod = leastSimilarPeriod.toDouble(),
-        timeLength = similarityTimeLength.toInt(),
+        title = createdTime ?: "not prepared",
+        date = formattedDateString ?: "not prepared",
+        similarity = similarityScore?.toInt(),
+        mostSimilarPeriod = mostSimilarPeriod?.toDouble(),
+        leastSimilarPeriod = leastSimilarPeriod?.toDouble(),
+        timeLength = similarityTimeLength?.toInt(),
         imageUrl = imageUrl,
         coverUrl = coverUrl,
         recordUrl = recordUrl

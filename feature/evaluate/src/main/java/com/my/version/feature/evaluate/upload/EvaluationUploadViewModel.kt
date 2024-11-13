@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 
@@ -73,7 +72,6 @@ class EvaluationUploadViewModel @Inject constructor(
 
     fun playAudio() {
         mediaPlayer.value?.run {
-            Timber.tag("StreamMediaPlayer").d("isPlaying: ${this.isPlaying}")
             if (this.isPlaying) {
                 this.pause()
                 updateIsPlaying(false)
@@ -129,9 +127,6 @@ class EvaluationUploadViewModel @Inject constructor(
                             }
                         }
                     }
-
-                    Timber.tag("Progress")
-                        .d("${_uiState.value.progress} <-> ${_uiState.value.currentTimeStamp}")
                 }
             }
         } catch (_: Exception) {

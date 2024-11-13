@@ -19,8 +19,10 @@ class EvaluationDataSourceImpl @Inject constructor(
         return response
     }
 
-    override suspend fun postEvaluation(coverId: Long, file: File): Long {
-        Timber.tag("EvaluationUpload").d("coverId: $coverId, file: ${file.absolutePath}")
+    //TODO: userId가 필요하지 않을까 싶어서 일단 넣어둠
+    override suspend fun postEvaluation(coverId: Long, file: File, userId: String): Long {
+        Timber.tag("EvaluationUpload")
+            .d("coverId: $coverId, file: ${file.absolutePath}, userId: $userId")
         val filePart = prepareFilePart(file)
         val coverIdPart = coverId.toString().toRequestBody(MIME_TEXT.toMediaTypeOrNull())
 

@@ -5,5 +5,5 @@ import java.io.File
 
 interface EvaluationDataSource {
     suspend fun fetchEvaluationList(userId: String): List<EvaluationListResponse>
-    suspend fun postEvaluation(coverId: Long, file: File): Long?
+    suspend fun postEvaluation(coverId: Long, file: File, userId: String): Long?
 }

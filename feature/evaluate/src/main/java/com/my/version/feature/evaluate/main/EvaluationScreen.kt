@@ -206,17 +206,21 @@ private fun SuccessScreen(
         contentPadding = PaddingValues(vertical = 10.dp)
     ) {
         itemsIndexed(evaluationList) { index, evaluation ->
+            val color = if (evaluation.imageUrl != null) Black else Grey350
+
             MyVersionVerticalItem(
                 itemType = VerticalItemType.EVALUATION,
-                iconColor = Black,
-                onClick = { onEvaluationSelected(evaluation) },
+                onClick = { if (evaluation.imageUrl != null) onEvaluationSelected(evaluation) },
                 title = evaluation.title,
-                subTitle = evaluation.date
+                subTitle = evaluation.date,
+                iconColor = color,
+                textColor = color,
             )
             if (index < evaluationList.size - 1) {
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
+
     }
 }
 

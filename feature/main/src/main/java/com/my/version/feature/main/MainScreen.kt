@@ -129,7 +129,9 @@ private fun MyVersionNavHost(
         evaluationSelectScreen(
             modifier = noBottomBarModifier,
             navigateUp = navController::navigateUp,
-            navigateToRecord = navController::navigateToEvaluationRecord
+            navigateToRecord = { coverAudio ->
+                navController.navigateToEvaluationRecord(coverAudio = coverAudio)
+            }
         )
         evaluationRecordScreen(
             navigateUp = navController::navigateUp,

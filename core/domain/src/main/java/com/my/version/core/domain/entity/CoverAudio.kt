@@ -4,5 +4,7 @@ data class CoverAudio(
     val coverId: Long = 0,
     val title: String = "",
     val createdDate: String = "",
-    val audio: String = ""
+    val audio: String = "",
+    val artist: String = "",
+    val music: String = ""
 )

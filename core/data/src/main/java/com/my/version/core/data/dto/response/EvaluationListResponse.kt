@@ -14,15 +14,15 @@ data class EvaluationListResponse(
     @SerialName("coverLocation")
     val coverUrl: String,
     @SerialName("createTime")
-    val title: String,
+    val createdTime: String?,
     @SerialName("similarity")
-    val similarityScore: String,
+    val similarityScore: String?,
     @SerialName("worst_time")
-    val leastSimilarPeriod: String,
+    val leastSimilarPeriod: String?,
     @SerialName("best_time")
-    val mostSimilarPeriod: String,
+    val mostSimilarPeriod: String?,
     @SerialName("time_length")
-    val similarityTimeLength: String,
+    val similarityTimeLength: String?,
     @SerialName("imgLocation")
-    val imageUrl: String
+    val imageUrl: String?
 )

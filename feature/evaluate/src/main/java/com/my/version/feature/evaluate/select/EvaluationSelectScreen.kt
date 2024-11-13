@@ -51,7 +51,7 @@ import com.my.version.feature.evaluate.select.state.EvaluationSelectUiState
 @Composable
 fun EvaluationSelectRoute(
     navigateUp: () -> Unit,
-    navigateToRecord: () -> Unit,
+    navigateToRecord: (CoverAudio) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: EvaluationSelectViewModel = hiltViewModel()
 ) {
@@ -66,7 +66,7 @@ fun EvaluationSelectRoute(
 
                 is EvaluationSelectSideEffect.NavigateUp -> navigateUp()
 
-                is EvaluationSelectSideEffect.NavigateNext -> navigateToRecord()
+                is EvaluationSelectSideEffect.NavigateNext -> navigateToRecord(sideEffect.cover)
             }
         }
     }

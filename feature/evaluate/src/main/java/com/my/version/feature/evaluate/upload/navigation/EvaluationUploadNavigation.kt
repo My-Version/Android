@@ -28,7 +28,7 @@ fun NavGraphBuilder.evaluationUploadScreen(
             modifier = modifier,
             onNavigateToHome = navigateToEvaluationMain,
             filePath = filePath,
-            coverId = 1
+            coverId = coverId
         )
     }
 }
