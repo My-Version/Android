@@ -2,6 +2,7 @@ package com.my.version.feature.evaluate.main
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -155,17 +156,22 @@ private fun EvaluationScreen(
             )
         )
 
-
-        when (uiState.loadState) {
-            is UiState.Loading -> {}
-            is UiState.Empty -> EmptyScreen(modifier = commonModifier)
-            is UiState.Failure -> {}
-            is UiState.Success -> {
-                SuccessScreen(
-                    onEvaluationSelected = onEvaluationSelected,
-                    evaluationList = uiState.loadState.data,
-                    modifier = commonModifier
-                )
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 30.dp)
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
+            when (uiState.loadState) {
+                is UiState.Loading -> {}
+                is UiState.Empty -> EmptyScreen(modifier = commonModifier)
+                is UiState.Failure -> {}
+                is UiState.Success -> {
+                    SuccessScreen(
+                        onEvaluationSelected = onEvaluationSelected,
+                        evaluationList = uiState.loadState.data,
+                    )
+                }
             }
         }
     }
@@ -196,9 +202,8 @@ private fun SuccessScreen(
     evaluationList: List<EvaluationDetail> = emptyList()
 ) {
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 20.dp)
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(vertical = 10.dp)
     ) {
         itemsIndexed(evaluationList) { index, evaluation ->
             MyVersionVerticalItem(

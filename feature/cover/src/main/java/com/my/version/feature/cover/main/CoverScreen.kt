@@ -248,9 +248,8 @@ private fun SuccessScreen(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize(),
-        contentPadding = PaddingValues(vertical = 12.dp)
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(vertical = 10.dp)
     ) {
         itemsIndexed(coverList) { index, cover ->
             val color = if (cover.audio.isNotBlank()) Black else Grey350
