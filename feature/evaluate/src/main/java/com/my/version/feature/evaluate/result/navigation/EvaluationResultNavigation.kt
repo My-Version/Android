@@ -36,12 +36,14 @@ fun NavGraphBuilder.evaluationResultScreen(
             modifier = modifier,
             navigateUp = navigateUp,
             title = evaluationResult.title,
+            similarity = evaluationResult.similarity,
             createdDate = evaluationResult.date,
             mostSimilarPeriod = evaluationResult.mostSimilarPeriod,
             leastSimilarPeriod = evaluationResult.leastSimilarPeriod,
             timeLength = evaluationResult.timeLength,
-            coverUrl = "",
-            recordUrl = ""
+            coverUrl = evaluationResult.coverUrl,
+            recordUrl = evaluationResult.recordUrl,
+            imageUrl = evaluationResult.imageUrl
         )
     }
 }

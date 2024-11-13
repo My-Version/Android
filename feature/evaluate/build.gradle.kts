@@ -48,5 +48,5 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.coil)
 }

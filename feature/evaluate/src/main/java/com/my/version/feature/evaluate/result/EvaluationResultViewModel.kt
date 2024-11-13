@@ -18,14 +18,25 @@ class EvaluationResultViewModel @Inject constructor(
     fun updateUiState(
         title: String,
         createdDate: String,
+        similarity: Int,
         mostSimilarPeriod: Double,
         leastSimilarPeriod: Double,
         timeLength: Int,
         coverUrl: String,
-        recordUrl: String
+        recordUrl: String,
+        imageUrl: String
     ) {
         _uiState.update { currentState ->
             currentState.copy(
+                title = title,
+                createdDate = createdDate,
+                similarity = similarity,
+                mostSimilarPeriod = mostSimilarPeriod,
+                leastSimilarPeriod = leastSimilarPeriod,
+                timeLength = timeLength,
+                coverUrl = coverUrl,
+                recordUrl = recordUrl,
+                imageUrl = imageUrl
             )
         }
     }

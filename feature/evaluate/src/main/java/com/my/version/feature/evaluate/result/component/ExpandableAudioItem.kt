@@ -62,7 +62,7 @@ fun ExpandableAudioItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp, vertical = 20.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -71,14 +71,6 @@ fun ExpandableAudioItem(
                     text = title,
                     color = Black,
                     style = MyVersionTypography.bodyLarge
-                )
-
-                BasicSpacer(height = 10.dp)
-
-                Text(
-                    text = subTitle,
-                    color = Black,
-                    style = MyVersionTypography.bodyMedium
                 )
             }
 

@@ -10,5 +10,7 @@ data class EvaluationDetail(
     val leastSimilarPeriod: Double,
     val mostSimilarPeriod: Double,
     val timeLength: Int,
-    val imageUrl: String
+    val imageUrl: String,
+    val coverUrl: String,
+    val recordUrl: String
 )

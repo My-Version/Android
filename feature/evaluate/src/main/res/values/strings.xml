@@ -28,8 +28,8 @@
     <string name="evaluation_result_similarity_4">Not Similar to AI cover</string>
     <string name="evaluation_result_subtitle1">Compared Audio Files</string>
     <string name="evaluation_result_subtitle2">Graph</string>
-    <string name="evaluation_result_cover_title">Cover: %s</string>
-    <string name="evaluation_result_record_title">Record: %s</string>
+    <string name="evaluation_result_cover_title">Play Cover</string>
+    <string name="evaluation_result_record_title">Play Record</string>
 
     <!--Evaluation Upload Screen-->
     <string name="evaluation_upload_dialog_confirm">Would you like to upload?</string>

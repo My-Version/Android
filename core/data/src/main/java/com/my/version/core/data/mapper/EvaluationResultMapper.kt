@@ -20,6 +20,8 @@ fun EvaluationListResponse.toEvaluationResult(): EvaluationDetail = with(this) {
         mostSimilarPeriod = mostSimilarPeriod.toDouble(),
         leastSimilarPeriod = leastSimilarPeriod.toDouble(),
         timeLength = similarityTimeLength.toInt(),
-        imageUrl = imageUrl
+        imageUrl = imageUrl,
+        coverUrl = coverUrl,
+        recordUrl = recordUrl
     )
 }
