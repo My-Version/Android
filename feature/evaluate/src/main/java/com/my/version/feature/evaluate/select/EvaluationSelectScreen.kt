@@ -215,18 +215,20 @@ private fun SuccessScreen(
         modifier = modifier.fillMaxSize(), contentPadding = PaddingValues(vertical = 10.dp)
     ) {
         itemsIndexed(coverList) { index, cover ->
-            val color = if (cover == selectedCover) MyVersionMain else Black
+            if (cover.audio.isNotBlank()) {
+                val color = if (cover == selectedCover) MyVersionMain else Black
 
-            MyVersionVerticalItem(itemType = VerticalItemType.COVER,
-                iconColor = color,
-                onClick = { onItemClicked(cover) },
-                title = cover.title,
-                subTitle = cover.createdDate,
-                modifier = Modifier.noRippleClickable {
-                    onItemClicked(cover)
-                })
-            if (index < coverList.lastIndex) {
-                BasicSpacer(height = 16.dp)
+                MyVersionVerticalItem(itemType = VerticalItemType.COVER,
+                    iconColor = color,
+                    onClick = { onItemClicked(cover) },
+                    title = cover.title,
+                    subTitle = cover.createdDate,
+                    modifier = Modifier.noRippleClickable {
+                        onItemClicked(cover)
+                    })
+                if (index < coverList.lastIndex) {
+                    BasicSpacer(height = 16.dp)
+                }
             }
         }
     }

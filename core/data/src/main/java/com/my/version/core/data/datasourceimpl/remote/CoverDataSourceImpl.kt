@@ -25,9 +25,6 @@ class CoverDataSourceImpl @Inject constructor(
         music: String
     ): Boolean {
         val filePart = prepareFilePart(file)
-        /*val userIdPart = userId.toRequestBody(MIME_TEXT.toMediaTypeOrNull())
-        val artistPart = artist.toRequestBody(MIME_TEXT.toMediaTypeOrNull())
-        val musicPart = music.toRequestBody(MIME_TEXT.toMediaTypeOrNull())*/
 
         return coverService.postCoverUpload(
             filePart, userId, artist, music
@@ -40,7 +37,6 @@ class CoverDataSourceImpl @Inject constructor(
     }
 
     companion object {
-        private const val MIME_TEXT = "text/plain"
         private const val MIME_AUDIO = "audio/mp4"
         private const val REQUEST_BODY_FILE = "file"
     }

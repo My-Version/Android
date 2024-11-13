@@ -7,7 +7,6 @@ import com.my.version.core.common.musicplayer.StreamMediaPlayer
 import com.my.version.core.common.state.UiState
 import com.my.version.core.domain.entity.CoverAudio
 import com.my.version.core.domain.repository.CoverRepository
-import com.my.version.feature.evaluate.BuildConfig.COVER_STREAM_URL
 import com.my.version.feature.evaluate.select.state.EvaluationSelectUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -79,13 +78,13 @@ class EvaluationSelectViewModel @Inject constructor(
             }
 
             stopPlayer()
-            preparePlayer(audioName = coverAudio?.audio.orEmpty())
+            preparePlayer(coverUrl = coverAudio?.audio.orEmpty())
         }
     }
 
-    private fun preparePlayer(audioName: String) = viewModelScope.launch {
+    private fun preparePlayer(coverUrl: String) = viewModelScope.launch {
         streamMediaPlayer.prepareMediaPlayer(
-            uri = Uri.parse(COVER_STREAM_URL + audioName),
+            uri = Uri.parse(coverUrl),
             onPrepared = {
                 playPlayer()
             },
