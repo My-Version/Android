@@ -8,6 +8,7 @@ interface CoverDataSource {
     suspend fun postCoverUpload(
         file: File,
         userId: String,
-        musicName: String
+        artist: String,
+        music: String
     ): Boolean
 }

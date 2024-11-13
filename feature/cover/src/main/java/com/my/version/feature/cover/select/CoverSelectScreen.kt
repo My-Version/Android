@@ -50,7 +50,7 @@ import com.my.version.feature.cover.select.state.CoverSelectUiState
 @Composable
 fun CoverSelectRoute(
     navigateUp: () -> Unit,
-    navigateToUpload: (String) -> Unit,
+    navigateToUpload: (String, String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CoverSelectViewModel = hiltViewModel()
 ) {
@@ -60,17 +60,24 @@ fun CoverSelectRoute(
     val mediaPlayer = remember { StreamMediaPlayer(context) }
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
-        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
-            .collect { sideEffect ->
-                when (sideEffect) {
-                    is CoverSelectSideEffect.ShowToast -> context.showToast(sideEffect.message)
-                    is CoverSelectSideEffect.NavigateUp -> navigateUp()
-                    is CoverSelectSideEffect.NavigateNext -> navigateToUpload(sideEffect.music.audio)
-                    is CoverSelectSideEffect.StartMusic -> mediaPlayer.prepareMediaPlayer(sideEffect.uri)
-                    is CoverSelectSideEffect.PauseMusic -> mediaPlayer.pauseMediaPlayer()
-                    is CoverSelectSideEffect.PlayMusic -> mediaPlayer.playMediaPlayer()
-                }
+        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle).collect { sideEffect ->
+            when (sideEffect) {
+                is CoverSelectSideEffect.ShowToast -> context.showToast(sideEffect.message)
+                is CoverSelectSideEffect.NavigateUp -> navigateUp()
+                is CoverSelectSideEffect.NavigateNext -> navigateToUpload(
+                    sideEffect.music.artist,
+                    sideEffect.music.title
+                )
+
+                is CoverSelectSideEffect.StartMusic -> mediaPlayer.prepareMediaPlayer(
+                    uri = sideEffect.uri,
+                    onPrepared = { mediaPlayer.playMediaPlayer() }
+                )
+
+                is CoverSelectSideEffect.PauseMusic -> mediaPlayer.pauseMediaPlayer()
+                is CoverSelectSideEffect.PlayMusic -> mediaPlayer.playMediaPlayer()
             }
+        }
     }
 
     LaunchedEffect(true) {
@@ -110,9 +117,7 @@ fun CoverSelectScreen(
             onDismiss = { index ->
                 onChangeSortSheetVisibility(false)
                 onChangeSortBy(index)
-            },
-            onSelectSortBy = onChangeSortBy,
-            initialSortBy = uiState.sortByIndex
+            }, onSelectSortBy = onChangeSortBy, initialSortBy = uiState.sortByIndex
         )
     }
 
@@ -141,18 +146,14 @@ fun CoverSelectScreen(
             )
             Spacer(modifier = Modifier.weight(1f))
 
-            SortingButton(
-                text = stringResource(SortBy.entries[uiState.sortByIndex].sortBy),
-                onClick = { onChangeSortSheetVisibility(true) }
-            )
+            SortingButton(text = stringResource(SortBy.entries[uiState.sortByIndex].sortBy),
+                onClick = { onChangeSortSheetVisibility(true) })
         }
 
         BasicSpacer(height = 12.dp)
 
         HorizontalDivider(
-            thickness = 1.dp,
-            color = Grey200,
-            modifier = Modifier.padding(
+            thickness = 1.dp, color = Grey200, modifier = Modifier.padding(
                 horizontal = 20.dp
             )
         )
@@ -197,8 +198,7 @@ private fun SuccessScreen(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(vertical = 12.dp)
+        modifier = modifier.fillMaxSize(), contentPadding = PaddingValues(vertical = 12.dp)
     ) {
         itemsIndexed(musicList) { index, music ->
             val selected = selectedAudio == music

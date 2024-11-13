@@ -91,15 +91,15 @@ class CoverUploadViewModel @Inject constructor(
         mediaPlayer.stopMusic()
     }
 
-    fun uploadFilesForCover(musicName: String) = viewModelScope.launch {
+    fun uploadFilesForCover(artist: String, music: String) = viewModelScope.launch {
         updateUploadDialogState(UiState.Loading)
         delay(3000)
 
         _uiState.value.uploadFiles[0].audio?.run {
             coverUploadRepository.uploadCover(
                 file = this,
-                userId = "sdsds",
-                musicName = musicName
+                artist = artist,
+                music = music
             ).fold(
                 onSuccess = {
                     updateUploadDialogState(UiState.Success("Success"))

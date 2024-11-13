@@ -15,7 +15,7 @@ fun NavController.navigateToCoverSelect(navOptions: NavOptions? = null) =
 fun NavGraphBuilder.coverSelectScreen(
     modifier: Modifier,
     navigateUp: () -> Unit,
-    navigateToUpload: (String) -> Unit
+    navigateToUpload: (String, String) -> Unit
 ) {
     composable<CoverSelect> {
         CoverSelectRoute(

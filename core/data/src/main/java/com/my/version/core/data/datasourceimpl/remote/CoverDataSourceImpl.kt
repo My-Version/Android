@@ -6,7 +6,6 @@ import com.my.version.core.data.service.CoverService
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import javax.inject.Inject
 
@@ -22,14 +21,16 @@ class CoverDataSourceImpl @Inject constructor(
     override suspend fun postCoverUpload(
         file: File,
         userId: String,
-        musicName: String
+        artist: String,
+        music: String
     ): Boolean {
         val filePart = prepareFilePart(file)
-        val userIdPart = userId.toRequestBody(MIME_TEXT.toMediaTypeOrNull())
-        val musicNamePart = musicName.toRequestBody(MIME_TEXT.toMediaTypeOrNull())
+        /*val userIdPart = userId.toRequestBody(MIME_TEXT.toMediaTypeOrNull())
+        val artistPart = artist.toRequestBody(MIME_TEXT.toMediaTypeOrNull())
+        val musicPart = music.toRequestBody(MIME_TEXT.toMediaTypeOrNull())*/
 
         return coverService.postCoverUpload(
-            filePart, userIdPart, musicNamePart
+            filePart, userId, artist, music
         )
     }
 

@@ -9,8 +9,11 @@ import com.my.version.core.common.navigation.Route
 import com.my.version.feature.cover.upload.CoverUploadRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateToCoverUpload(musicName: String, navOptions: NavOptions? = null) =
-    navigate(CoverUpload(musicName), navOptions)
+fun NavController.navigateToCoverUpload(
+    artist: String,
+    music: String,
+    navOptions: NavOptions? = null
+) = navigate(CoverUpload(artist = artist, music = music), navOptions)
 
 fun NavGraphBuilder.coverUploadScreen(
     modifier: Modifier,
@@ -18,10 +21,12 @@ fun NavGraphBuilder.coverUploadScreen(
     onUploadComplete: () -> Unit
 ) {
     composable<CoverUpload> { backStackEntry ->
-        val musicName = backStackEntry.arguments?.getString("musicName") ?: ""
+        val music = backStackEntry.arguments?.getString("music").orEmpty()
+        val artist = backStackEntry.arguments?.getString("artist").orEmpty()
 
         CoverUploadRoute(
-            selectedMusicName = musicName,
+            selectedMusicArtist = artist,
+            selectedMusic = music,
             modifier = modifier,
             onNavigateUp = navigateUp,
             onUploadComplete = onUploadComplete
@@ -31,5 +36,6 @@ fun NavGraphBuilder.coverUploadScreen(
 
 @Serializable
 data class CoverUpload(
-    val musicName: String
+    val artist: String,
+    val music: String
 ) : Route
