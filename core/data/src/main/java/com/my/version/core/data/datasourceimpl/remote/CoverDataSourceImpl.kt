@@ -36,7 +36,6 @@ class CoverDataSourceImpl @Inject constructor(
     }
 
     companion object {
-        private const val BUCKET = "cover"
         private const val MIME_TEXT = "text/plain"
         private const val MIME_AUDIO = "audio/mp4"
         private const val REQUEST_BODY_FILE = "file"

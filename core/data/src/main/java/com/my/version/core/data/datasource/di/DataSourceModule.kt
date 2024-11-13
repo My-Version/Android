@@ -4,11 +4,13 @@ import com.my.version.core.data.datasource.local.RecordDataSource
 import com.my.version.core.data.datasource.local.ScopedStorageDataSource
 import com.my.version.core.data.datasource.remote.AuthDataSource
 import com.my.version.core.data.datasource.remote.CoverDataSource
+import com.my.version.core.data.datasource.remote.EvaluationDataSource
 import com.my.version.core.data.datasource.remote.MusicDataSource
 import com.my.version.core.data.datasourceimpl.local.RecordDataSourceImpl
 import com.my.version.core.data.datasourceimpl.local.ScopedStorageDataSourceImpl
 import com.my.version.core.data.datasourceimpl.remote.AuthDataSourceImpl
 import com.my.version.core.data.datasourceimpl.remote.CoverDataSourceImpl
+import com.my.version.core.data.datasourceimpl.remote.EvaluationDataSourceImpl
 import com.my.version.core.data.datasourceimpl.remote.MusicDataSourceImpl
 import dagger.Binds
 import dagger.Module
@@ -49,4 +51,10 @@ abstract class DataSourceModule {
     abstract fun bindCoverDataSource(
         coverDataSourceImpl: CoverDataSourceImpl
     ): CoverDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindEvaluationDataSource(
+        evaluationDataSourceImpl: EvaluationDataSourceImpl
+    ): EvaluationDataSource
 }
