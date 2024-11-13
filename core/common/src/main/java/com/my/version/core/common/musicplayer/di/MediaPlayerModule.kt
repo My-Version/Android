@@ -13,8 +13,14 @@ import dagger.hilt.components.SingletonComponent
 object MediaPlayerModule {
 
     @Provides
-    fun provideMediaPlayer(
+    @CoverMediaPlayer
+    fun provideCoverMediaPlayer(
         @ApplicationContext context: Context
     ): StreamMediaPlayer = StreamMediaPlayer(context)
 
+    @Provides
+    @RecordMediaPlayer
+    fun provideRecordMediaPlayer(
+        @ApplicationContext context: Context
+    ): StreamMediaPlayer = StreamMediaPlayer(context)
 }

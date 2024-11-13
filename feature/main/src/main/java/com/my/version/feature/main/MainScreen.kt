@@ -38,6 +38,7 @@ import com.my.version.feature.cover.select.navigation.navigateToCoverSelect
 import com.my.version.feature.cover.upload.navigation.coverUploadScreen
 import com.my.version.feature.cover.upload.navigation.navigateToCoverUpload
 import com.my.version.feature.evaluate.main.navigation.evaluationScreen
+import com.my.version.feature.evaluate.main.navigation.navigateToEvaluation
 import com.my.version.feature.evaluate.record.navigation.evaluationRecordScreen
 import com.my.version.feature.evaluate.record.navigation.navigateToEvaluationRecord
 import com.my.version.feature.evaluate.result.navigation.evaluationResultScreen
@@ -118,7 +119,9 @@ private fun MyVersionNavHost(
         evaluationScreen(
             modifier = modifier,
             navigateToSelect = navController::navigateToEvaluationSelect,
-            navigateToResult = navController::navigateToEvaluationResult
+            navigateToResult = { evaluationDetail ->
+                navController.navigateToEvaluationResult(evaluationDetail = evaluationDetail)
+            }
         )
         evaluationResultScreen(
             modifier = noBottomBarModifier, navigateUp = navController::navigateUp
@@ -126,14 +129,19 @@ private fun MyVersionNavHost(
         evaluationSelectScreen(
             modifier = noBottomBarModifier,
             navigateUp = navController::navigateUp,
-            navigateToRecord = navController::navigateToEvaluationRecord
+            navigateToRecord = { coverAudio ->
+                navController.navigateToEvaluationRecord(coverAudio = coverAudio)
+            }
         )
         evaluationRecordScreen(
-            navigateUp = navController::navigateUp, navigateToEvaluationUpload = { filePath ->
-                navController.navigateToEvaluationUpload(filePath = filePath)
-            }, modifier = noBottomBarModifier
+            navigateUp = navController::navigateUp,
+            navigateToEvaluationUpload = { filePath, coverId ->
+                navController.navigateToEvaluationUpload(filePath = filePath, coverId = coverId)
+            },
+            modifier = noBottomBarModifier
         )
         evaluationUploadScreen(
+            navigateToEvaluationMain = navController::navigateToEvaluation,
             modifier = noBottomBarModifier
         )
         signInScreen(
@@ -181,12 +189,12 @@ private fun MainBottomBar(
                         )
                     },
                     colors = androidx.compose.material3.NavigationBarItemDefaults.colors(
-                            selectedIconColor = Black,
-                            selectedTextColor = Black,
-                            unselectedIconColor = Grey300,
-                            unselectedTextColor = Grey300,
-                            indicatorColor = White
-                        ),
+                        selectedIconColor = Black,
+                        selectedTextColor = Black,
+                        unselectedIconColor = Grey300,
+                        unselectedTextColor = Grey300,
+                        indicatorColor = White
+                    ),
                 )
             }
         }

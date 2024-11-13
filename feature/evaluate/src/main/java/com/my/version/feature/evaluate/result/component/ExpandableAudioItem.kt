@@ -7,30 +7,26 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.my.version.core.common.extension.noRippleClickable
-import com.my.version.core.designsystem.component.divider.BasicSpacer
 import com.my.version.core.designsystem.component.slider.MyVersionSlider
 import com.my.version.core.designsystem.theme.Black
 import com.my.version.core.designsystem.theme.Grey200
-import com.my.version.core.designsystem.theme.MyVersionSub1
 import com.my.version.core.designsystem.theme.MyVersionTheme
 import com.my.version.core.designsystem.theme.MyVersionTypography
-import com.my.version.core.designsystem.theme.White
 import com.my.version.core.designsystem.R as DesignSystemR
 
 @Composable
@@ -38,11 +34,15 @@ fun ExpandableAudioItem(
     title: String,
     subTitle: String,
     progress: Float,
-    isExpanded: Boolean,
-    backgroundColor: Color,
-    onClickItem: () -> Unit,
-    onSliderValueChange: (Float) -> Unit = {},
     modifier: Modifier = Modifier,
+    backgroundColor: Color,
+    onClickItem: () -> Unit = {},
+    onClickIcon: () -> Unit = {},
+    onClickMostSimilar: () -> Unit = {},
+    onClickLeastSimilar: () -> Unit = {},
+    onSliderValueChange: (Float) -> Unit = {},
+    isExpanded: Boolean = false,
+    isPlaying: Boolean = false,
 ) {
     Column(
         modifier = modifier
@@ -62,7 +62,7 @@ fun ExpandableAudioItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -72,22 +72,18 @@ fun ExpandableAudioItem(
                     color = Black,
                     style = MyVersionTypography.bodyLarge
                 )
-
-                BasicSpacer(height = 10.dp)
-
-                Text(
-                    text = subTitle,
-                    color = Black,
-                    style = MyVersionTypography.bodyMedium
-                )
             }
 
             Icon(
-                painter = painterResource(
-                    id = com.my.version.core.designsystem.R.drawable.ic_play
+                imageVector = ImageVector.vectorResource(
+                    id = if (isPlaying)
+                        com.my.version.core.designsystem.R.drawable.ic_pause
+                    else
+                        com.my.version.core.designsystem.R.drawable.ic_play
                 ),
                 tint = Black,
-                contentDescription = ""
+                contentDescription = "",
+                modifier = Modifier.noRippleClickable (onClickIcon)
             )
         }
 
@@ -108,14 +104,14 @@ fun ExpandableAudioItem(
                     iconRes = DesignSystemR.drawable.ic_thumbs_up_16,
                     text = "Most Similar",
                     modifier = Modifier.weight(1f),
-                    onClick = {}
+                    onClick = onClickMostSimilar
                 )
 
                 RoundedIconButton(
                     iconRes = DesignSystemR.drawable.ic_thumbs_down_16,
                     text = "Least Similar",
                     modifier = Modifier.weight(1f),
-                    onClick = {}
+                    onClick = onClickLeastSimilar
                 )
             }
         }

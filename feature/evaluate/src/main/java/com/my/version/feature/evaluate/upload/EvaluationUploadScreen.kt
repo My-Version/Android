@@ -45,7 +45,9 @@ import com.my.version.core.designsystem.R as DesignSystemR
 
 @Composable
 fun EvaluationUploadRoute(
+    coverId: Long,
     filePath: String,
+    onNavigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: EvaluationUploadViewModel = hiltViewModel()
 ) {
@@ -77,8 +79,10 @@ fun EvaluationUploadRoute(
     ConfirmDialog(
         text = stringResource(R.string.evaluation_upload_dialog_confirm),
         onDismissRequest = { viewModel.updateUploadDialogVisibility(false) },
-        onConfirmRequest = { /*TODO: 파일 최종 업로드 후 홈화면 귀환*/ },
-        onUploadRequest = { /*TODO: 서버에 업로드 요청*/ },
+        onConfirmRequest = onNavigateToHome,
+        onUploadRequest = {
+            viewModel.uploadFilesForEvaluation(coverId = coverId)
+        },
         visibility = uiState.uploadDialogVisibility,
         loadState = uiState.dialogLoadState
     )

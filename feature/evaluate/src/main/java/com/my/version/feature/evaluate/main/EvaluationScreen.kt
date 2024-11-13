@@ -2,6 +2,7 @@ package com.my.version.feature.evaluate.main
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,9 +18,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -27,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
+import com.my.version.core.common.extension.showToast
 import com.my.version.core.common.state.UiState
 import com.my.version.core.designsystem.component.bottomsheet.SortingBottomSheet
 import com.my.version.core.designsystem.component.button.SortingButton
@@ -39,27 +44,41 @@ import com.my.version.core.designsystem.theme.Grey200
 import com.my.version.core.designsystem.theme.Grey350
 import com.my.version.core.designsystem.type.SortBy
 import com.my.version.core.designsystem.type.VerticalItemType
-import com.my.version.core.domain.entity.EvaluationResult
+import com.my.version.core.domain.entity.EvaluationDetail
 import com.my.version.feature.evaluate.R
 import com.my.version.feature.evaluate.main.state.EvaluationUiState
 
 @Composable
 fun EvaluationRoute(
     navigateToSelect: () -> Unit,
-    navigateToResult: (String) -> Unit,
+    navigateToResult: (EvaluationDetail) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: EvaluationViewModel = hiltViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle(lifecycleOwner)
+    val context = LocalContext.current
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
+        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collect { sideEffect ->
+                when (sideEffect) {
+                    is EvaluationSideEffect.ShowToast -> context.showToast(sideEffect.message)
+                    is EvaluationSideEffect.NavigateToSelect -> navigateToSelect()
+                    is EvaluationSideEffect.NavigateToResult -> navigateToResult(sideEffect.result)
+                }
+            }
+    }
+
+    LaunchedEffect(true) {
+        viewModel.getEvaluationList()
+    }
 
     EvaluationScreen(
         modifier = modifier,
         uiState = uiState,
         onCreateClicked = navigateToSelect,
-        onEvaluationSelected = { index ->       //Temporary Logic
-            navigateToResult(index.toString())
-        },
+        onEvaluationSelected = viewModel::onEvaluationResultSelected,
         onChangeSortBy = viewModel::updateSortByIndex,
         onChangeSortSheetVisibility = viewModel::updateSheetVisibility
     )
@@ -69,7 +88,7 @@ fun EvaluationRoute(
 private fun EvaluationScreen(
     uiState: EvaluationUiState,
     onCreateClicked: () -> Unit,
-    onEvaluationSelected: (Int) -> Unit,
+    onEvaluationSelected: (EvaluationDetail) -> Unit,
     onChangeSortBy: (Int) -> Unit,
     onChangeSortSheetVisibility: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -137,17 +156,22 @@ private fun EvaluationScreen(
             )
         )
 
-
-        when (uiState.loadState) {
-            is UiState.Loading -> {}
-            is UiState.Empty -> EmptyScreen(modifier = commonModifier)
-            is UiState.Failure -> {}
-            is UiState.Success -> {
-                SuccessScreen(
-                    onEvaluationSelected = onEvaluationSelected,
-                    evaluationList = uiState.loadState.data,
-                    modifier = commonModifier
-                )
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 30.dp)
+                .fillMaxWidth()
+                .weight(1f)
+        ) {
+            when (uiState.loadState) {
+                is UiState.Loading -> {}
+                is UiState.Empty -> EmptyScreen(modifier = commonModifier)
+                is UiState.Failure -> {}
+                is UiState.Success -> {
+                    SuccessScreen(
+                        onEvaluationSelected = onEvaluationSelected,
+                        evaluationList = uiState.loadState.data,
+                    )
+                }
             }
         }
     }
@@ -173,27 +197,30 @@ private fun EmptyScreen(
 
 @Composable
 private fun SuccessScreen(
-    onEvaluationSelected: (Int) -> Unit,
+    onEvaluationSelected: (EvaluationDetail) -> Unit,
     modifier: Modifier = Modifier,
-    evaluationList: List<EvaluationResult> = emptyList()
+    evaluationList: List<EvaluationDetail> = emptyList()
 ) {
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 20.dp)
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(vertical = 10.dp)
     ) {
-        itemsIndexed(evaluationList) { index, cover ->
+        itemsIndexed(evaluationList) { index, evaluation ->
+            val color = if (evaluation.imageUrl != null) Black else Grey350
+
             MyVersionVerticalItem(
                 itemType = VerticalItemType.EVALUATION,
-                iconColor = Black,
-                onClick = { onEvaluationSelected(index) },
-                title = cover.title,
-                subTitle = cover.date
+                onClick = { if (evaluation.imageUrl != null) onEvaluationSelected(evaluation) },
+                title = evaluation.title,
+                subTitle = evaluation.date,
+                iconColor = color,
+                textColor = color,
             )
             if (index < evaluationList.size - 1) {
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
+
     }
 }
 

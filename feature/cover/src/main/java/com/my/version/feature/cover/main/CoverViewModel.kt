@@ -7,7 +7,6 @@ import com.my.version.core.common.musicplayer.StreamMediaPlayer
 import com.my.version.core.common.state.UiState
 import com.my.version.core.domain.entity.CoverAudio
 import com.my.version.core.domain.repository.CoverRepository
-import com.my.version.feature.cover.BuildConfig.COVER_STREAM_URL
 import com.my.version.feature.cover.BuildConfig.DOWNLOAD_HOST
 import com.my.version.feature.cover.main.state.CoverUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -56,6 +55,7 @@ class CoverViewModel @Inject constructor(
                         loadState = UiState.Failure("Error")
                     )
                 }
+                Timber.tag("CoverResult").d(message = it.message.toString())
             }
     }
 
@@ -100,7 +100,7 @@ class CoverViewModel @Inject constructor(
         updateProgress(0f)
 
         streamMediaPlayer.prepareMediaPlayer(
-            uri = Uri.parse(COVER_STREAM_URL + audio),
+            uri = Uri.parse(audio),
             onPrepared = {
                 updateIsMusicPlaying(true)
                 playPlayer()

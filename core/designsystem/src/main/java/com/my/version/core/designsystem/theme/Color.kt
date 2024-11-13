@@ -29,3 +29,6 @@ val Grey400 = Color(0xFF666666)
 val Grey500 = Color(0xFF373737)
 val Black = Color(0xFF171717)
 
+
+val TransparentGray = Color(0xAA666666)
+

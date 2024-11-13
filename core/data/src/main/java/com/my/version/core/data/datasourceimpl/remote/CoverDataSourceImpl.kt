@@ -6,27 +6,28 @@ import com.my.version.core.data.service.CoverService
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import javax.inject.Inject
 
 class CoverDataSourceImpl @Inject constructor(
     private val coverService: CoverService,
 ) : CoverDataSource {
-    override suspend fun getCoverList(): List<CoverListResponse> =
-        coverService.getCoverList(bucket = BUCKET)
+    override suspend fun getCoverList(userId: String): List<CoverListResponse> {
+        val coverList = coverService.getCoverList(userId = userId)
+
+        return coverList
+    }
 
     override suspend fun postCoverUpload(
         file: File,
         userId: String,
-        musicName: String
+        artist: String,
+        music: String
     ): Boolean {
         val filePart = prepareFilePart(file)
-        val userIdPart = userId.toRequestBody(MIME_TEXT.toMediaTypeOrNull())
-        val musicNamePart = musicName.toRequestBody(MIME_TEXT.toMediaTypeOrNull())
 
         return coverService.postCoverUpload(
-            filePart, userIdPart, musicNamePart
+            filePart, userId, artist, music
         )
     }
 
@@ -36,8 +37,6 @@ class CoverDataSourceImpl @Inject constructor(
     }
 
     companion object {
-        private const val BUCKET = "cover"
-        private const val MIME_TEXT = "text/plain"
         private const val MIME_AUDIO = "audio/mp4"
         private const val REQUEST_BODY_FILE = "file"
     }

@@ -2,9 +2,8 @@ package com.my.version.core.data.service
 
 import com.my.version.core.data.dto.response.MusicListResponse
 import retrofit2.http.GET
-import retrofit2.http.Query
 
 interface MusicService {
-    @GET("listDownload")
-    suspend fun getMusicList(@Query("bucketName") bucket: String): List<MusicListResponse>
+    @GET("songList")
+    suspend fun getMusicList(): List<MusicListResponse>
 }

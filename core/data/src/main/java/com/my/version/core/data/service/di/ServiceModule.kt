@@ -2,6 +2,7 @@ package com.my.version.core.data.service.di
 
 import com.my.version.core.data.service.AuthService
 import com.my.version.core.data.service.CoverService
+import com.my.version.core.data.service.EvaluationService
 import com.my.version.core.data.service.MusicService
 import com.my.version.core.data.service.di.qualifier.JWT
 import dagger.Module
@@ -29,4 +30,9 @@ object ServiceModule {
     @Singleton
     fun provideCoverService(@JWT retrofit: Retrofit): CoverService =
         retrofit.create(CoverService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideEvaluationService(@JWT retrofit: Retrofit): EvaluationService =
+        retrofit.create(EvaluationService::class.java)
 }

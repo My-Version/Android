@@ -58,7 +58,6 @@ class StreamMediaPlayer @Inject constructor(
     fun seekInMediaPlayer(target: Int) {
         mediaPlayer?.seekTo(target)
         val progress = mediaPlayer?.currentPosition?.toFloat() ?: 0f
-        Timber.tag("StreamMediaPlayer").d("progress: $progress")
     }
 
     fun endMediaPlayer() {

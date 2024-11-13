@@ -10,21 +10,31 @@ import com.my.version.core.common.navigation.Route
 import com.my.version.feature.evaluate.upload.EvaluationUploadRoute
 import kotlinx.serialization.Serializable
 
-fun NavController.navigateToEvaluationUpload(navOptions: NavOptions? = null, filePath: String) = navigate(EvaluationUpload(filePath), navOptions)
+fun NavController.navigateToEvaluationUpload(
+    navOptions: NavOptions? = null,
+    filePath: String,
+    coverId: Long
+) = navigate(EvaluationUpload(filePath, coverId), navOptions)
 
 fun NavGraphBuilder.evaluationUploadScreen(
+    navigateToEvaluationMain: () -> Unit,
     modifier: Modifier
 ) {
-    composable<EvaluationUpload>{ backStackEntry ->
+    composable<EvaluationUpload> { backStackEntry ->
         val filePath = backStackEntry.toRoute<EvaluationUpload>().filePath
+        val coverId = backStackEntry.toRoute<EvaluationUpload>().coverId
+
         EvaluationUploadRoute(
             modifier = modifier,
-            filePath = filePath
+            onNavigateToHome = navigateToEvaluationMain,
+            filePath = filePath,
+            coverId = coverId
         )
     }
 }
 
 @Serializable
 data class EvaluationUpload(
-    val filePath: String = ""
-): Route
+    val filePath: String = "",
+    val coverId: Long = 0L
+) : Route

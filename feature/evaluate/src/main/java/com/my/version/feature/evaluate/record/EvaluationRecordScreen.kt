@@ -42,8 +42,11 @@ import com.my.version.feature.evaluate.record.state.EvaluationRecordUiState
 
 @Composable
 fun EvaluationRecordRoute(
+    music: String,
+    artist: String,
+    coverId: Long,
     navigateUp: () -> Unit,
-    navigateToEvaluationUpload: (String) -> Unit,
+    navigateToEvaluationUpload: (String, Long) -> Unit,
     modifier: Modifier = Modifier,
     musicUriString: String = "Ditto-NewJeans.mp3",
     viewModel: EvaluationRecordViewModel = hiltViewModel()
@@ -63,7 +66,7 @@ fun EvaluationRecordRoute(
                         navigateUp()
 
                     is EvaluationRecordSideEffect.NavigateToUpload ->
-                        navigateToEvaluationUpload(sideEffect.recordId)
+                        navigateToEvaluationUpload(sideEffect.recordId, coverId)
                 }
             }
     }
@@ -83,6 +86,8 @@ fun EvaluationRecordRoute(
         EvaluationRecordScreen(
             modifier = modifier,
             uiState = uiState,
+            music = music,
+            artist = artist,
             onClickBackButton = viewModel::navigateUp,
             onClickResetButton = viewModel::resetPlayers,
             onClickPlayButton = viewModel::startPlayers,
@@ -100,6 +105,8 @@ fun EvaluationRecordRoute(
 
 @Composable
 fun EvaluationRecordScreen(
+    music: String,
+    artist: String,
     uiState: EvaluationRecordUiState,
     onClickNextButton: () -> Unit,
     onClickBackButton: () -> Unit,
@@ -120,8 +127,8 @@ fun EvaluationRecordScreen(
         )
 
         TitleWithDivider(
-            text = stringResource(id = R.string.evaluation_on_boarding_title2),
-            textStyle = MaterialTheme.typography.titleMedium,
+            text = "$artist - $music",
+            textStyle = MaterialTheme.typography.titleSmall,
             modifier = commonModifier
         )
 
@@ -165,7 +172,9 @@ private fun EvaluationRecordScreenPreview() {
             onClickBackButton = {},
             onClickPlayButton = {},
             onClickResetButton = {},
-            uiState = EvaluationRecordUiState()
+            uiState = EvaluationRecordUiState(),
+            music = "Ditto",
+            artist = "NewJeans"
         )
     }
 }

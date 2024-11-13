@@ -3,6 +3,8 @@ package com.my.version.feature.evaluate.upload
 import android.media.MediaPlayer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.my.version.core.common.state.UiState
+import com.my.version.core.domain.repository.EvaluationUploadRepository
 import com.my.version.feature.evaluate.upload.state.EvaluationUploadUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -12,12 +14,12 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class EvaluationUploadViewModel @Inject constructor(
-
+    private val evaluationUploadRepository: EvaluationUploadRepository
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(EvaluationUploadUiState())
     val uiState = _uiState.asStateFlow()
@@ -70,7 +72,6 @@ class EvaluationUploadViewModel @Inject constructor(
 
     fun playAudio() {
         mediaPlayer.value?.run {
-            Timber.tag("StreamMediaPlayer").d("isPlaying: ${this.isPlaying}")
             if (this.isPlaying) {
                 this.pause()
                 updateIsPlaying(false)
@@ -126,9 +127,6 @@ class EvaluationUploadViewModel @Inject constructor(
                             }
                         }
                     }
-
-                    Timber.tag("Progress")
-                        .d("${_uiState.value.progress} <-> ${_uiState.value.currentTimeStamp}")
                 }
             }
         } catch (_: Exception) {
@@ -149,4 +147,25 @@ class EvaluationUploadViewModel @Inject constructor(
             )
         }
     }
+
+    fun uploadFilesForEvaluation(coverId: Long) = viewModelScope.launch {
+        updateUploadDialogState(UiState.Loading)
+
+        val file = File(_uiState.value.filePath)
+        evaluationUploadRepository.uploadEvaluation(file = file, coverId = coverId)
+            .onSuccess {
+                updateUploadDialogState(UiState.Success("Success"))
+            }
+            .onFailure { message ->
+                message.printStackTrace()
+                updateUploadDialogState(UiState.Failure("Fail"))
+            }
+    }
+
+    fun updateUploadDialogState(state: UiState<String>) =
+        _uiState.update { currentState ->
+            currentState.copy(
+                dialogLoadState = state
+            )
+        }
 }

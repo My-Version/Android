@@ -47,7 +47,8 @@ import com.my.version.core.designsystem.R as DesignSystemR
 
 @Composable
 fun CoverUploadRoute(
-    selectedMusicName: String,
+    selectedMusicArtist: String,
+    selectedMusic: String,
     onNavigateUp: () -> Unit,
     onUploadComplete: () -> Unit,
     modifier: Modifier = Modifier,
@@ -95,7 +96,12 @@ fun CoverUploadRoute(
         text = stringResource(R.string.confirm_dialog_confirm_upload),
         onDismissRequest = { viewModel.updateUploadDialogVisibility(false) },
         onConfirmRequest = onUploadComplete,
-        onUploadRequest = { viewModel.uploadFilesForCover(musicName = selectedMusicName) },
+        onUploadRequest = {
+            viewModel.uploadFilesForCover(
+                artist = selectedMusicArtist,
+                music = selectedMusic
+            )
+        },
         visibility = uiState.uploadDialogVisibility,
         loadState = uiState.dialogLoadState
     )
