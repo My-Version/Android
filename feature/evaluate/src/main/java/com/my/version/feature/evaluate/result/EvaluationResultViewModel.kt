@@ -15,6 +15,21 @@ class EvaluationResultViewModel @Inject constructor(
     private var _uiState = MutableStateFlow(EvaluationResultUiState())
     val uiState = _uiState.asStateFlow()
 
+    fun updateUiState(
+        title: String,
+        createdDate: String,
+        mostSimilarPeriod: Double,
+        leastSimilarPeriod: Double,
+        timeLength: Int,
+        coverUrl: String,
+        recordUrl: String
+    ) {
+        _uiState.update { currentState ->
+            currentState.copy(
+            )
+        }
+    }
+
     fun coverClicked() = _uiState.update { currentState ->
         currentState.copy(
             isCoverEnabled = !_uiState.value.isCoverEnabled,

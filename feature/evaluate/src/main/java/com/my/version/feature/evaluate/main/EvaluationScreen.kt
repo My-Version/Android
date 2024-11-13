@@ -43,14 +43,14 @@ import com.my.version.core.designsystem.theme.Grey200
 import com.my.version.core.designsystem.theme.Grey350
 import com.my.version.core.designsystem.type.SortBy
 import com.my.version.core.designsystem.type.VerticalItemType
-import com.my.version.core.domain.entity.EvaluationResult
+import com.my.version.core.domain.entity.EvaluationDetail
 import com.my.version.feature.evaluate.R
 import com.my.version.feature.evaluate.main.state.EvaluationUiState
 
 @Composable
 fun EvaluationRoute(
     navigateToSelect: () -> Unit,
-    navigateToResult: (String) -> Unit,
+    navigateToResult: (EvaluationDetail) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: EvaluationViewModel = hiltViewModel()
 ) {
@@ -63,6 +63,8 @@ fun EvaluationRoute(
             .collect { sideEffect ->
                 when (sideEffect) {
                     is EvaluationSideEffect.ShowToast -> context.showToast(sideEffect.message)
+                    is EvaluationSideEffect.NavigateToSelect -> navigateToSelect()
+                    is EvaluationSideEffect.NavigateToResult -> navigateToResult(sideEffect.result)
                 }
             }
     }
@@ -75,9 +77,7 @@ fun EvaluationRoute(
         modifier = modifier,
         uiState = uiState,
         onCreateClicked = navigateToSelect,
-        onEvaluationSelected = { index ->       //Temporary Logic
-            navigateToResult(index.toString())
-        },
+        onEvaluationSelected = viewModel::onEvaluationResultSelected,
         onChangeSortBy = viewModel::updateSortByIndex,
         onChangeSortSheetVisibility = viewModel::updateSheetVisibility
     )
@@ -87,7 +87,7 @@ fun EvaluationRoute(
 private fun EvaluationScreen(
     uiState: EvaluationUiState,
     onCreateClicked: () -> Unit,
-    onEvaluationSelected: (Int) -> Unit,
+    onEvaluationSelected: (EvaluationDetail) -> Unit,
     onChangeSortBy: (Int) -> Unit,
     onChangeSortSheetVisibility: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -191,22 +191,22 @@ private fun EmptyScreen(
 
 @Composable
 private fun SuccessScreen(
-    onEvaluationSelected: (Int) -> Unit,
+    onEvaluationSelected: (EvaluationDetail) -> Unit,
     modifier: Modifier = Modifier,
-    evaluationList: List<EvaluationResult> = emptyList()
+    evaluationList: List<EvaluationDetail> = emptyList()
 ) {
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
             .padding(horizontal = 20.dp)
     ) {
-        itemsIndexed(evaluationList) { index, cover ->
+        itemsIndexed(evaluationList) { index, evaluation ->
             MyVersionVerticalItem(
                 itemType = VerticalItemType.EVALUATION,
                 iconColor = Black,
-                onClick = { onEvaluationSelected(index) },
-                title = cover.title,
-                subTitle = cover.date
+                onClick = { onEvaluationSelected(evaluation) },
+                title = evaluation.title,
+                subTitle = evaluation.date
             )
             if (index < evaluationList.size - 1) {
                 Spacer(modifier = Modifier.height(16.dp))

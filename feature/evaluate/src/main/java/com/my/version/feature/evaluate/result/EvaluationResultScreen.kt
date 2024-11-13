@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,13 +39,31 @@ import com.my.version.feature.evaluate.result.state.EvaluationResultUiState
 
 @Composable
 fun EvaluationResultRoute(
-    evaluationId: String,
+    title: String,
+    createdDate: String,
+    mostSimilarPeriod: Double,
+    leastSimilarPeriod: Double,
+    timeLength: Int,
+    coverUrl: String,
+    recordUrl: String,
     navigateUp: () -> Unit = {},
     modifier: Modifier = Modifier,
     viewModel: EvaluationResultViewModel = hiltViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle(lifecycleOwner = lifecycleOwner)
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(true) {
+        viewModel.updateUiState(
+            title = title,
+            createdDate = createdDate,
+            mostSimilarPeriod = mostSimilarPeriod,
+            leastSimilarPeriod = leastSimilarPeriod,
+            timeLength = timeLength,
+            coverUrl = coverUrl,
+            recordUrl = recordUrl
+        )
+    }
 
     EvaluationResultScreen(
         uiState = uiState,

@@ -6,17 +6,23 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class EvaluationListResponse(
     @SerialName("id")
-    val title: String,
+    val id: Int,
     @SerialName("userId")
     val userId: String,
+    @SerialName("recordLocation")
+    val recordUrl: String,
+    @SerialName("coverLocation")
+    val coverUrl: String,
+    @SerialName("createTime")
+    val title: String,
     @SerialName("similarity")
-    val similarityScore: Double,
+    val similarityScore: String,
     @SerialName("worst_time")
-    val leastSimilarPeriod: Double,
+    val leastSimilarPeriod: String,
     @SerialName("best_time")
-    val mostSimilarPeriod: Double,
+    val mostSimilarPeriod: String,
     @SerialName("time_length")
-    val similarityTimeLength: Int,
+    val similarityTimeLength: String,
     @SerialName("imgLocation")
     val imageUrl: String
 )

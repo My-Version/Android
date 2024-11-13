@@ -1,9 +1,9 @@
 package com.my.version.core.domain.entity
 
-import androidx.compose.runtime.Immutable
+import kotlinx.serialization.Serializable
 
-@Immutable
-data class EvaluationResult(
+@Serializable
+data class EvaluationDetail(
     val title: String,
     val date: String,
     val similarity: Int,

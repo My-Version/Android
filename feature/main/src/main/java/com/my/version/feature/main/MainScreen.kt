@@ -118,7 +118,9 @@ private fun MyVersionNavHost(
         evaluationScreen(
             modifier = modifier,
             navigateToSelect = navController::navigateToEvaluationSelect,
-            navigateToResult = navController::navigateToEvaluationResult
+            navigateToResult = { evaluationDetail ->
+                navController.navigateToEvaluationResult(evaluationDetail = evaluationDetail)
+            }
         )
         evaluationResultScreen(
             modifier = noBottomBarModifier, navigateUp = navController::navigateUp
@@ -181,12 +183,12 @@ private fun MainBottomBar(
                         )
                     },
                     colors = androidx.compose.material3.NavigationBarItemDefaults.colors(
-                            selectedIconColor = Black,
-                            selectedTextColor = Black,
-                            unselectedIconColor = Grey300,
-                            unselectedTextColor = Grey300,
-                            indicatorColor = White
-                        ),
+                        selectedIconColor = Black,
+                        selectedTextColor = Black,
+                        unselectedIconColor = Grey300,
+                        unselectedTextColor = Grey300,
+                        indicatorColor = White
+                    ),
                 )
             }
         }

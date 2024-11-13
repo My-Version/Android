@@ -2,6 +2,7 @@ plugins {
     id("my.version.plugin.library")
     id("my.version.plugin.hilt")
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -32,4 +33,6 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.junit.ktx)
     testImplementation(libs.junit)
+
+    implementation(libs.kotlinx.serialization.json)
 }

@@ -7,29 +7,47 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.my.version.core.common.navigation.Route
-import com.my.version.feature.evaluate.record.EvaluationRecordRoute
+import com.my.version.core.domain.entity.EvaluationDetail
 import com.my.version.feature.evaluate.result.EvaluationResultRoute
-import com.my.version.feature.evaluate.upload.navigation.EvaluationUpload
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
-fun NavController.navigateToEvaluationResult(evaluationId: String, navOptions: NavOptions? = null) =
-    navigate(EvaluationResult(evaluationId), navOptions)
+fun NavController.navigateToEvaluationResult(
+    evaluationDetail: EvaluationDetail,
+    navOptions: NavOptions? = null
+) {
+    val evaluationDetailJson = Json.encodeToString(EvaluationDetail.serializer(), evaluationDetail)
+
+    navigate(
+        route = EvaluationResult(evaluationDetailJson),
+        navOptions = navOptions
+    )
+}
 
 fun NavGraphBuilder.evaluationResultScreen(
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    composable<EvaluationResult> {backStackEntry ->
-        val evaluationId = backStackEntry.toRoute<EvaluationResult>().evaluationId
+    composable<EvaluationResult> { backStackEntry ->
+        val json = backStackEntry.toRoute<EvaluationResult>().evaluationDetailJson
+        val evaluationResult = Json.decodeFromString<EvaluationDetail>(json)
+
         EvaluationResultRoute(
             modifier = modifier,
             navigateUp = navigateUp,
-            evaluationId = evaluationId,
+            title = evaluationResult.title,
+            createdDate = evaluationResult.date,
+            mostSimilarPeriod = evaluationResult.mostSimilarPeriod,
+            leastSimilarPeriod = evaluationResult.leastSimilarPeriod,
+            timeLength = evaluationResult.timeLength,
+            coverUrl = "",
+            recordUrl = ""
         )
     }
 }
 
+
 @Serializable
 data class EvaluationResult(
-    val evaluationId: String = ""
+    val evaluationDetailJson: String
 ) : Route

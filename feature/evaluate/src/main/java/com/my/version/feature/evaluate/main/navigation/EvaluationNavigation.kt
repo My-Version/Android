@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.my.version.core.common.navigation.MainTabRoute
+import com.my.version.core.domain.entity.EvaluationDetail
 import com.my.version.feature.evaluate.main.EvaluationRoute
 import kotlinx.serialization.Serializable
 
@@ -14,7 +15,7 @@ fun NavController.navigateToEvaluation(navOptions: NavOptions? = null) = navigat
 fun NavGraphBuilder.evaluationScreen(
     modifier: Modifier,
     navigateToSelect: () -> Unit,
-    navigateToResult: (String) -> Unit,
+    navigateToResult: (EvaluationDetail) -> Unit,
 ) {
     composable<Evaluation>{
         EvaluationRoute(

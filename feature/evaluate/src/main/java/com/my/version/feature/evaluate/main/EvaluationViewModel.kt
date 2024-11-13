@@ -3,6 +3,7 @@ package com.my.version.feature.evaluate.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.my.version.core.common.state.UiState
+import com.my.version.core.domain.entity.EvaluationDetail
 import com.my.version.core.domain.repository.EvaluationRepository
 import com.my.version.feature.evaluate.R
 import com.my.version.feature.evaluate.main.state.EvaluationUiState
@@ -39,6 +40,7 @@ class EvaluationViewModel @Inject constructor(
                 }
             }
             .onFailure {
+                it.printStackTrace()
                 _sideEffect.emit(EvaluationSideEffect.ShowToast(R.string.evaluation_main_get_list_failed))
                 _uiState.update { currentState ->
                     currentState.copy(
@@ -46,7 +48,10 @@ class EvaluationViewModel @Inject constructor(
                     )
                 }
             }
+    }
 
+    fun onEvaluationResultSelected(result: EvaluationDetail) = viewModelScope.launch {
+        _sideEffect.emit(EvaluationSideEffect.NavigateToResult(result))
     }
 
     fun updateSortByIndex(index: Int) = _uiState.update { currentState ->
