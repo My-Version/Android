@@ -43,7 +43,7 @@ import com.my.version.feature.evaluate.record.state.EvaluationRecordUiState
 @Composable
 fun EvaluationRecordRoute(
     navigateUp: () -> Unit,
-    navigateToEvaluationUpload: (String) -> Unit,
+    navigateToEvaluationUpload: (String, Long) -> Unit,
     modifier: Modifier = Modifier,
     musicUriString: String = "Ditto-NewJeans.mp3",
     viewModel: EvaluationRecordViewModel = hiltViewModel()
@@ -63,7 +63,7 @@ fun EvaluationRecordRoute(
                         navigateUp()
 
                     is EvaluationRecordSideEffect.NavigateToUpload ->
-                        navigateToEvaluationUpload(sideEffect.recordId)
+                        navigateToEvaluationUpload(sideEffect.recordId, 1)
                 }
             }
     }

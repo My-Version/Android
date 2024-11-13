@@ -13,7 +13,7 @@ fun NavController.navigateToEvaluationRecord(navOptions: NavOptions? = null) = n
 
 fun NavGraphBuilder.evaluationRecordScreen(
     navigateUp: () -> Unit,
-    navigateToEvaluationUpload: (String) -> Unit,
+    navigateToEvaluationUpload: (String, Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     composable<EvaluationRecord>{
