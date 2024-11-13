@@ -13,8 +13,11 @@ import javax.inject.Inject
 class CoverDataSourceImpl @Inject constructor(
     private val coverService: CoverService,
 ) : CoverDataSource {
-    override suspend fun getCoverList(userId: String): List<CoverListResponse> =
-        coverService.getCoverList(userId = userId)
+    override suspend fun getCoverList(userId: String): List<CoverListResponse> {
+        val coverList = coverService.getCoverList(userId = userId)
+
+        return coverList
+    }
 
     override suspend fun postCoverUpload(
         file: File,

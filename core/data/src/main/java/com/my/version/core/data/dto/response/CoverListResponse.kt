@@ -5,8 +5,16 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CoverListResponse(
-    @SerialName("music")
+    @SerialName("id")
+    val id: Int,
+    @SerialName("userId")
+    val userId: String,
+    @SerialName("artist")
+    val artist: String,
+    @SerialName("songTitle")
     val music: String,
-    @SerialName("singer")
-    val artist: String
+    @SerialName("s3FileLocation")
+    val s3FileLocation: String?,
+    @SerialName("createdDate")
+    val createdDate: String
 )

@@ -34,6 +34,7 @@ fun MyVersionVerticalItemTwoButton(
     title: String,
     subTitle: String,
     modifier: Modifier = Modifier,
+    textColor: Color = Black,
     firstItemIconColor: Color = Black,
     secondItemIconColor: Color = Black
 ) {
@@ -54,11 +55,13 @@ fun MyVersionVerticalItemTwoButton(
             ) {
                 SingleLineText(
                     text = title,
+                    color = textColor,
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 SingleLineText(
                     text = subTitle,
+                    color = textColor,
                     style = MaterialTheme.typography.labelMedium,
                 )
             }

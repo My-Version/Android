@@ -253,11 +253,16 @@ private fun SuccessScreen(
         contentPadding = PaddingValues(vertical = 12.dp)
     ) {
         itemsIndexed(coverList) { index, cover ->
+            val color = if (cover.audio.isNotBlank()) Black else Grey350
+
             MyVersionVerticalItemTwoButton(
                 firstItemType = VerticalItemType.DOWNLOAD,
                 secondItemType = VerticalItemType.COVER,
-                onClickFirstItem = { onCoverDownloadClicked(cover) },
-                onClickSecondItem = { onCoverSelected(cover) },
+                onClickFirstItem = { if (cover.audio.isNotBlank()) onCoverDownloadClicked(cover) },
+                onClickSecondItem = { if (cover.audio.isNotBlank()) onCoverSelected(cover) },
+                textColor = color,
+                firstItemIconColor = color,
+                secondItemIconColor = color,
                 title = cover.title,
                 subTitle = stringResource(id = R.string.cover_created_date, cover.createdDate)
             )

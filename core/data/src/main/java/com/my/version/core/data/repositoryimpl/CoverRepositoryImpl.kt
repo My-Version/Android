@@ -10,6 +10,7 @@ class CoverRepositoryImpl @Inject constructor(
     private val coverDataSource: CoverDataSource,
     private val preferenceUtil: PreferenceUtil
 ) : CoverRepository {
+
     override suspend fun getCoverList(): Result<List<CoverAudio>> = runCatching {
         coverDataSource.getCoverList(
             userId = preferenceUtil.idToken
@@ -17,12 +18,8 @@ class CoverRepositoryImpl @Inject constructor(
             CoverAudio(
                 title = it.music,
                 createdDate = it.artist,
-                audio = AUDIO_FORMAT.format(it.music, it.artist)
+                audio = it.s3FileLocation.orEmpty()
             )
         }
-    }
-
-    companion object {
-        private const val AUDIO_FORMAT = "%s-%s.wav"
     }
 }
