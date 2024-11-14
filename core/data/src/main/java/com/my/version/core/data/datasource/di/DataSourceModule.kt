@@ -11,6 +11,7 @@ import com.my.version.core.data.datasourceimpl.local.ScopedStorageDataSourceImpl
 import com.my.version.core.data.datasourceimpl.remote.AuthDataSourceImpl
 import com.my.version.core.data.datasourceimpl.remote.CoverDataSourceImpl
 import com.my.version.core.data.datasourceimpl.remote.EvaluationDataSourceImpl
+import com.my.version.core.data.datasourceimpl.remote.LyricDataSourceImpl
 import com.my.version.core.data.datasourceimpl.remote.MusicDataSourceImpl
 import dagger.Binds
 import dagger.Module
@@ -57,4 +58,11 @@ abstract class DataSourceModule {
     abstract fun bindEvaluationDataSource(
         evaluationDataSourceImpl: EvaluationDataSourceImpl
     ): EvaluationDataSource
+
+
+    @Binds
+    @Singleton
+    abstract fun bindLyricDataSource(
+        lyricDataSourceImpl: LyricDataSourceImpl
+    ): LyricDataSourceImpl
 }

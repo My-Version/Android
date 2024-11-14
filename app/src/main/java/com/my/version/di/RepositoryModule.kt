@@ -5,6 +5,7 @@ import com.my.version.core.data.repositoryimpl.CoverRepositoryImpl
 import com.my.version.core.data.repositoryimpl.CoverUploadRepositoryImpl
 import com.my.version.core.data.repositoryimpl.EvaluationRepositoryImpl
 import com.my.version.core.data.repositoryimpl.EvaluationUploadRepositoryImpl
+import com.my.version.core.data.repositoryimpl.LyricRepositoryImpl
 import com.my.version.core.data.repositoryimpl.MusicRepositoryImpl
 import com.my.version.core.data.repositoryimpl.RecordLocalRepositoryImpl
 import com.my.version.core.data.repositoryimpl.RecordRepositoryImpl
@@ -14,6 +15,7 @@ import com.my.version.core.domain.repository.CoverRepository
 import com.my.version.core.domain.repository.CoverUploadRepository
 import com.my.version.core.domain.repository.EvaluationRepository
 import com.my.version.core.domain.repository.EvaluationUploadRepository
+import com.my.version.core.domain.repository.LyricRepository
 import com.my.version.core.domain.repository.MusicRepository
 import com.my.version.core.domain.repository.RecordLocalRepository
 import com.my.version.core.domain.repository.RecordRepository
@@ -82,4 +84,11 @@ abstract class RepositoryModule {
     abstract fun bindEvaluationUploadepository(
         evaluationUploadRepositoryImpl: EvaluationUploadRepositoryImpl
     ): EvaluationUploadRepository
+
+
+    @Binds
+    @Singleton
+    abstract fun bindLyricRepository(
+        lyricRepositoryImpl: LyricRepositoryImpl
+    ): LyricRepository
 }
