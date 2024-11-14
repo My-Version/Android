@@ -70,6 +70,7 @@ class EvaluationRecordViewModel @Inject constructor(
                     )
                 }
             }.onFailure {
+                it.printStackTrace()
                 _sideEffect.emit(EvaluationRecordSideEffect.ShowToast(R.string.evaluation_record_lyric_fail))
             }
     }

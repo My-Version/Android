@@ -11,7 +11,8 @@ class LyricRepositoryImpl @Inject constructor(
         music: String,
         artist: String
     ): Result<LinkedHashMap<Long, String>> = runCatching {
-        val fileName = FILE_FORMAT.format(music, artist)
+        //TODO: val fileName = FILE_FORMAT.format(music, artist)
+        val fileName = FILE_FORMAT.format("Ditto", "NewJeans")
         lyricDataSource.fetchLyrics(fileName)
     }
 
