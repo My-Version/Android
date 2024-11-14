@@ -18,6 +18,7 @@ fun NavController.navigateToEvaluationUpload(
 
 fun NavGraphBuilder.evaluationUploadScreen(
     navigateToEvaluationMain: () -> Unit,
+    navigateUp: () -> Unit,
     modifier: Modifier
 ) {
     composable<EvaluationUpload> { backStackEntry ->
@@ -28,9 +29,11 @@ fun NavGraphBuilder.evaluationUploadScreen(
             music = "Ditto",
             artist = "NewJeans",
             modifier = modifier,
-            onNavigateToHome = navigateToEvaluationMain,
             filePath = filePath,
-            coverId = coverId
+            coverId = coverId,
+
+            onNavigateToHome = navigateToEvaluationMain,
+            onNavigateUp = navigateUp
         )
     }
 }

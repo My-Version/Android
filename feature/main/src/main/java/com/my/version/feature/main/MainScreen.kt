@@ -141,6 +141,7 @@ private fun MyVersionNavHost(
             modifier = noBottomBarModifier
         )
         evaluationUploadScreen(
+            navigateUp = navController::navigateUp,
             navigateToEvaluationMain = navController::navigateToEvaluation,
             modifier = noBottomBarModifier
         )

@@ -37,10 +37,6 @@ import com.my.version.feature.evaluate.upload.state.EvaluationUploadUiState
 import timber.log.Timber
 import com.my.version.core.designsystem.R as DesignSystemR
 
-/**
- * 초 표시
- */
-
 @Composable
 fun EvaluationUploadRoute(
     coverId: Long,
@@ -48,6 +44,7 @@ fun EvaluationUploadRoute(
     artist: String,
     filePath: String,
     onNavigateToHome: () -> Unit,
+    onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: EvaluationUploadViewModel = hiltViewModel()
 ) {
@@ -69,10 +66,15 @@ fun EvaluationUploadRoute(
     EvaluationUploadScreen(
         modifier = modifier,
         uiState = uiState,
-        onClickBack = {},
+        artist = artist,
+        music = music,
+        onClickBack = onNavigateUp,
         onClickUpload = { viewModel.updateUploadDialogVisibility(true) },
         onClickPlay = viewModel::playAudio,
-        onClickClose = viewModel::stopAudio,
+        onClickClose = {
+            /*TODO: X 버튼 눌렀을 때 이벤트 설정*/
+            onNavigateUp()
+        },
         onChangeSlider = viewModel::changeSlider,
     )
 
@@ -89,13 +91,15 @@ fun EvaluationUploadRoute(
 
     DisposableEffect(true) {
         onDispose {
-            /*TODO: AudioPlayer 종료*/
+            viewModel.stopAudio()
         }
     }
 }
 
 @Composable
 private fun EvaluationUploadScreen(
+    music: String,
+    artist: String,
     onClickBack: () -> Unit,
     onClickPlay: () -> Unit,
     onClickClose: () -> Unit,
@@ -118,8 +122,8 @@ private fun EvaluationUploadScreen(
         )
 
         TitleWithDivider(
-            text = stringResource(id = R.string.evaluation_on_boarding_title2),
-            textStyle = MaterialTheme.typography.titleMedium,
+            text = "$artist - $music",
+            textStyle = MaterialTheme.typography.titleSmall,
             modifier = commonModifier
         )
 
@@ -136,6 +140,10 @@ private fun EvaluationUploadScreen(
         MyVersionHorizontalDivider(
             modifier = commonModifier
         )
+
+        /**
+         * TODO: 재생시간 표시하기
+         */
 
         Slider(
             value = uiState.progress,
@@ -181,7 +189,9 @@ private fun EvaluationRecordScreenPreview() {
             onClickPlay = {},
             onChangeSlider = {},
             modifier = Modifier.background(MyVersionBackground),
-            uiState = EvaluationUploadUiState()
+            uiState = EvaluationUploadUiState(),
+            artist = "NewJeans",
+            music = "Ditto"
         )
     }
 }
