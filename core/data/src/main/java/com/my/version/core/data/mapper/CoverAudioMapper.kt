@@ -20,6 +20,10 @@ fun CoverListResponse.toCoverAudio(): CoverAudio {
         createdDate = formattedDateString,
         audio = this.s3FileLocation.orEmpty(),
         artist = this.artist,
-        music = this.music
+        music = this.music,
+        dateString = this.createdDate,
+        fileName = FILE_FORMAT.format(this.music, this.userId, this.createdDate)
     )
 }
+
+private const val FILE_FORMAT = "%s-%s-%s.wav"

@@ -7,6 +7,7 @@ import com.my.version.core.common.musicplayer.StreamMediaPlayer
 import com.my.version.core.common.state.UiState
 import com.my.version.core.domain.entity.CoverAudio
 import com.my.version.core.domain.repository.CoverRepository
+import com.my.version.core.domain.repository.TokenRepository
 import com.my.version.feature.cover.BuildConfig.DOWNLOAD_HOST
 import com.my.version.feature.cover.main.state.CoverUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CoverViewModel @Inject constructor(
     private val coverRepository: CoverRepository,
+    private val tokenRepository: TokenRepository,
     private val streamMediaPlayer: StreamMediaPlayer
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CoverUiState())
@@ -166,25 +168,24 @@ class CoverViewModel @Inject constructor(
 
 
     fun downloadAudio(cover: CoverAudio) = viewModelScope.launch {
-        val encodedCoverName = Uri.encode(cover.audio)
+        //val encodedCoverName = Uri.encode(cover.fileName)
+        val outputFileName = FILE_FORMAT.format(cover.title, cover.dateString)
         val downloadUri = Uri.parse(
-            "$DOWNLOAD_SCHEME://$DOWNLOAD_HOST/$DOWNLOAD_PATH?$DOWNLOAD_QUERY_FILE_NAME=${encodedCoverName}&$DOWNLOAD_QUERY_BUCKET=$DOWNLOAD_QUERY_BUCKET_VALUE"
+            "$DOWNLOAD_SCHEME://$DOWNLOAD_HOST/$DOWNLOAD_PATH?$DOWNLOAD_QUERY_FILE_NAME=${cover.fileName}"
         )
-
         _sideEffect.emit(
             CoverSideEffect.DownloadAudio(
                 uri = downloadUri,
-                outputPath = cover.audio,
-                notificationTitle = cover.audio
+                outputPath = outputFileName,
+                notificationTitle = outputFileName
             )
         )
     }
 
     companion object {
+        private const val FILE_FORMAT = "%s_%s.wav"
         private const val DOWNLOAD_SCHEME = "http"
         private const val DOWNLOAD_PATH = "download"
         private const val DOWNLOAD_QUERY_FILE_NAME = "fileName"
-        private const val DOWNLOAD_QUERY_BUCKET = "bucketName"
-        private const val DOWNLOAD_QUERY_BUCKET_VALUE = "cover"
     }
 }

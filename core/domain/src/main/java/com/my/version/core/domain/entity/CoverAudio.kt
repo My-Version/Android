@@ -6,5 +6,7 @@ data class CoverAudio(
     val createdDate: String = "",
     val audio: String = "",
     val artist: String = "",
-    val music: String = ""
+    val music: String = "",
+    val dateString: String = "",
+    val fileName: String = ""
 )

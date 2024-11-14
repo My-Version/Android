@@ -17,14 +17,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.my.version.core.common.media.LrcConverter
 import com.my.version.core.designsystem.component.button.RectangleButton
 import com.my.version.core.designsystem.component.dialog.ConfirmDialog
 import com.my.version.core.designsystem.component.divider.MyVersionHorizontalDivider
@@ -39,29 +37,28 @@ import com.my.version.feature.evaluate.upload.state.EvaluationUploadUiState
 import timber.log.Timber
 import com.my.version.core.designsystem.R as DesignSystemR
 
-/**
- * 초 표시
- */
-
 @Composable
 fun EvaluationUploadRoute(
     coverId: Long,
+    music: String,
+    artist: String,
     filePath: String,
     onNavigateToHome: () -> Unit,
+    onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: EvaluationUploadViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle(lifecycleOwner)
 
     LaunchedEffect(true) {
         Timber.tag("StreamMediaPlayer").d(filePath)
         with(viewModel) {
-            setAudioData(
+            updateFilePath(
+                //TODO: filePath = filePath
                 filePath = "/storage/emulated/0/Android/data/com.my.version/files/Music/Ditto_NewJeans.mp3",
-                songLyrics = LrcConverter.convertToLyricMap(context.resources.openRawResource(R.raw.ditto))
             )
+            getLyrics(music, artist)
             prepareAudio()
         }
     }
@@ -69,10 +66,15 @@ fun EvaluationUploadRoute(
     EvaluationUploadScreen(
         modifier = modifier,
         uiState = uiState,
-        onClickBack = {},
+        artist = artist,
+        music = music,
+        onClickBack = onNavigateUp,
         onClickUpload = { viewModel.updateUploadDialogVisibility(true) },
         onClickPlay = viewModel::playAudio,
-        onClickClose = viewModel::stopAudio,
+        onClickClose = {
+            /*TODO: X 버튼 눌렀을 때 이벤트 설정*/
+            onNavigateUp()
+        },
         onChangeSlider = viewModel::changeSlider,
     )
 
@@ -89,13 +91,15 @@ fun EvaluationUploadRoute(
 
     DisposableEffect(true) {
         onDispose {
-            /*TODO: AudioPlayer 종료*/
+            viewModel.stopAudio()
         }
     }
 }
 
 @Composable
 private fun EvaluationUploadScreen(
+    music: String,
+    artist: String,
     onClickBack: () -> Unit,
     onClickPlay: () -> Unit,
     onClickClose: () -> Unit,
@@ -118,8 +122,8 @@ private fun EvaluationUploadScreen(
         )
 
         TitleWithDivider(
-            text = stringResource(id = R.string.evaluation_on_boarding_title2),
-            textStyle = MaterialTheme.typography.titleMedium,
+            text = "$artist - $music",
+            textStyle = MaterialTheme.typography.titleSmall,
             modifier = commonModifier
         )
 
@@ -136,6 +140,10 @@ private fun EvaluationUploadScreen(
         MyVersionHorizontalDivider(
             modifier = commonModifier
         )
+
+        /**
+         * TODO: 재생시간 표시하기
+         */
 
         Slider(
             value = uiState.progress,
@@ -181,7 +189,9 @@ private fun EvaluationRecordScreenPreview() {
             onClickPlay = {},
             onChangeSlider = {},
             modifier = Modifier.background(MyVersionBackground),
-            uiState = EvaluationUploadUiState()
+            uiState = EvaluationUploadUiState(),
+            artist = "NewJeans",
+            music = "Ditto"
         )
     }
 }
