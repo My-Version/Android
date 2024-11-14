@@ -5,6 +5,7 @@ import com.my.version.core.data.datasource.local.ScopedStorageDataSource
 import com.my.version.core.data.datasource.remote.AuthDataSource
 import com.my.version.core.data.datasource.remote.CoverDataSource
 import com.my.version.core.data.datasource.remote.EvaluationDataSource
+import com.my.version.core.data.datasource.remote.LyricDataSource
 import com.my.version.core.data.datasource.remote.MusicDataSource
 import com.my.version.core.data.datasourceimpl.local.RecordDataSourceImpl
 import com.my.version.core.data.datasourceimpl.local.ScopedStorageDataSourceImpl
@@ -64,5 +65,5 @@ abstract class DataSourceModule {
     @Singleton
     abstract fun bindLyricDataSource(
         lyricDataSourceImpl: LyricDataSourceImpl
-    ): LyricDataSourceImpl
+    ): LyricDataSource
 }

@@ -20,6 +20,9 @@
     <string name="evaluation_select_empty">Cover Not Available</string>
     <string name="evaluation_select_empty_guide1">create cover to continue</string>
 
+    <!--Evaluation Record Screen-->
+    <string name="evaluation_record_lyric_fail">failed to load lyrics</string>
+
     <!--Evaluation Result Screen-->
     <string name="evaluation_result_similarity">Similarity</string>
     <string name="evaluation_result_similarity_1">Very Similar to AI cover</string>

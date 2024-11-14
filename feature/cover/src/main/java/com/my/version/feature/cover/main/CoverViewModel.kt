@@ -168,7 +168,7 @@ class CoverViewModel @Inject constructor(
     fun downloadAudio(cover: CoverAudio) = viewModelScope.launch {
         val encodedCoverName = Uri.encode(cover.audio)
         val downloadUri = Uri.parse(
-            "$DOWNLOAD_SCHEME://$DOWNLOAD_HOST/$DOWNLOAD_PATH?$DOWNLOAD_QUERY_FILE_NAME=${encodedCoverName}&$DOWNLOAD_QUERY_BUCKET=$DOWNLOAD_QUERY_BUCKET_VALUE"
+            "$DOWNLOAD_SCHEME://$DOWNLOAD_HOST/$DOWNLOAD_PATH?$DOWNLOAD_QUERY_FILE_NAME=${encodedCoverName}"//&$DOWNLOAD_QUERY_BUCKET=$DOWNLOAD_QUERY_BUCKET_VALUE"
         )
 
         _sideEffect.emit(
@@ -184,7 +184,5 @@ class CoverViewModel @Inject constructor(
         private const val DOWNLOAD_SCHEME = "http"
         private const val DOWNLOAD_PATH = "download"
         private const val DOWNLOAD_QUERY_FILE_NAME = "fileName"
-        private const val DOWNLOAD_QUERY_BUCKET = "bucketName"
-        private const val DOWNLOAD_QUERY_BUCKET_VALUE = "cover"
     }
 }

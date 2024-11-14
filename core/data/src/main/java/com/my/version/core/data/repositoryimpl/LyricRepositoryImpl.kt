@@ -7,9 +7,12 @@ import javax.inject.Inject
 class LyricRepositoryImpl @Inject constructor(
     private val lyricDataSource: LyricDataSource
 ) : LyricRepository {
-    override suspend fun getLyrics(music: String, artist: String): LinkedHashMap<Long, String> {
+    override suspend fun getLyrics(
+        music: String,
+        artist: String
+    ): Result<LinkedHashMap<Long, String>> = runCatching {
         val fileName = FILE_FORMAT.format(music, artist)
-        return lyricDataSource.fetchLyrics(fileName)
+        lyricDataSource.fetchLyrics(fileName)
     }
 
     companion object {

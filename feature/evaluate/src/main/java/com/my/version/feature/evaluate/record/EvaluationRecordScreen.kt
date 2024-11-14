@@ -21,7 +21,6 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.my.version.core.common.extension.showToast
-import com.my.version.core.common.media.LrcConverter
 import com.my.version.core.designsystem.component.button.RectangleButton
 import com.my.version.core.designsystem.component.divider.MyVersionHorizontalDivider
 import com.my.version.core.designsystem.component.divider.TitleWithDivider
@@ -74,11 +73,12 @@ fun EvaluationRecordRoute(
     LaunchedEffect(true) {
         with(viewModel) {
             prepareMusic(uriString = musicUriString)
-            prepareMusicLyrics(
+            prepareLyrics(music = music, artist = artist)
+            /*prepareMusicLyrics(
                 lyric = LrcConverter.convertToLyricMap(
                     context.resources.openRawResource(R.raw.ditto)
                 )
-            )
+            )*/
         }
     }
 

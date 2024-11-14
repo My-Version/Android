@@ -6,8 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.my.version.core.common.musicplayer.StreamMediaPlayer
 import com.my.version.core.common.watch.StopWatch
+import com.my.version.core.domain.repository.LyricRepository
 import com.my.version.core.domain.repository.RecordRepository
 import com.my.version.feature.evaluate.BuildConfig.MUSIC_STREAM_URL
+import com.my.version.feature.evaluate.R
 import com.my.version.feature.evaluate.record.state.EvaluationRecordUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +33,7 @@ import javax.inject.Inject
 @HiltViewModel
 class EvaluationRecordViewModel @Inject constructor(
     private val recordRepository: RecordRepository,
+    private val lyricRepository: LyricRepository,
     private val streamMediaPlayer: StreamMediaPlayer
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(EvaluationRecordUiState())
@@ -58,10 +61,25 @@ class EvaluationRecordViewModel @Inject constructor(
 
     }
 
-    fun prepareMusicLyrics(lyric: LinkedHashMap<Long, String>) = _uiState.update { currentState ->
-        currentState.copy(
-            songLyrics = lyric
-        )
+    fun prepareLyrics(music: String, artist: String) = viewModelScope.launch {
+        lyricRepository.getLyrics(music, artist)
+            .onSuccess { lyricMap ->
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        songLyrics = lyricMap
+                    )
+                }
+            }.onFailure {
+                _sideEffect.emit(EvaluationRecordSideEffect.ShowToast(R.string.evaluation_record_lyric_fail))
+            }
+    }
+
+    fun prepareMusicLyrics(lyric: LinkedHashMap<Long, String>) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                songLyrics = lyric
+            )
+        }
     }
 
     private fun onBufferingComplete() {
