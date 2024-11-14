@@ -15,15 +15,23 @@ android {
 
     defaultConfig {
         consumerProguardFiles("consumer-rules.pro")
+
+        buildConfigField(
+            "String",
+            "BASE_URL",
+            properties.getProperty("base.url")
+        )
+
+        buildConfigField(
+            "String",
+            "LYRIC_URL",
+            properties.getProperty("lyric.stream.url")
+        )
     }
 
     buildTypes {
         debug {
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                properties.getProperty("base.url")
-            )
+
         }
 
         release {

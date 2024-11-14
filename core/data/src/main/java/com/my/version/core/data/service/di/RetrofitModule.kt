@@ -1,7 +1,9 @@
 package com.my.version.core.data.service.di
 
 import com.my.version.core.data.BuildConfig.BASE_URL
+import com.my.version.core.data.BuildConfig.LYRIC_URL
 import com.my.version.core.data.service.di.qualifier.JWT
+import com.my.version.core.data.service.di.qualifier.LYRIC
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,6 +44,16 @@ object RetrofitModule {
             level = HttpLoggingInterceptor.Level.BODY
         }).build())
         .addConverterFactory(ScalarsConverterFactory.create())
+        .addConverterFactory(factory)
+        .build()
+
+    @Provides
+    @Singleton
+    @LYRIC
+    fun provideLyricRetrofit(
+        @JWT factory: Converter.Factory,
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(LYRIC_URL)
         .addConverterFactory(factory)
         .build()
 }
