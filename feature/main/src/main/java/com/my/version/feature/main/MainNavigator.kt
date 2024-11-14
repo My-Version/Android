@@ -32,9 +32,11 @@ class MainNavigator(
             navController.currentDestination?.route?.let {
                 popUpTo(it) {
                     inclusive = true
+                    saveState = true
                 }
             }
             launchSingleTop = true
+            restoreState = true
         }
 
         when (tab) {
