@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.my.version.core.common.state.UiState
 import com.my.version.core.domain.repository.EvaluationUploadRepository
+import com.my.version.core.domain.repository.LyricRepository
 import com.my.version.feature.evaluate.upload.state.EvaluationUploadUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EvaluationUploadViewModel @Inject constructor(
-    private val evaluationUploadRepository: EvaluationUploadRepository
+    private val evaluationUploadRepository: EvaluationUploadRepository,
+    private val lyricRepository: LyricRepository
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(EvaluationUploadUiState())
     val uiState = _uiState.asStateFlow()
@@ -29,15 +31,26 @@ class EvaluationUploadViewModel @Inject constructor(
 
     private var mediaPlayer: MutableStateFlow<MediaPlayer?> = MutableStateFlow(null)
 
-    fun setAudioData(
-        filePath: String, songLyrics: Map<Long, String>
+    fun updateFilePath(
+        filePath: String
     ) = _uiState.update { currentState ->
         currentState.copy(
-            filePath = filePath,
-            songLyrics = songLyrics
+            filePath = filePath
         )
     }
 
+    fun getLyrics(music: String, artist: String) = viewModelScope.launch {
+        lyricRepository.getLyrics(music, artist)
+            .onSuccess { lyricMap ->
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        songLyrics = lyricMap
+                    )
+                }
+            }.onFailure {
+                it.printStackTrace()
+            }
+    }
 
     fun prepareAudio() {
         try {

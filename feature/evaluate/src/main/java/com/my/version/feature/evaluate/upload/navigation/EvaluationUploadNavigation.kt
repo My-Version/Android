@@ -25,6 +25,8 @@ fun NavGraphBuilder.evaluationUploadScreen(
         val coverId = backStackEntry.toRoute<EvaluationUpload>().coverId
 
         EvaluationUploadRoute(
+            music = "Ditto",
+            artist = "NewJeans",
             modifier = modifier,
             onNavigateToHome = navigateToEvaluationMain,
             filePath = filePath,

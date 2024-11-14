@@ -17,14 +17,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.my.version.core.common.media.LrcConverter
 import com.my.version.core.designsystem.component.button.RectangleButton
 import com.my.version.core.designsystem.component.dialog.ConfirmDialog
 import com.my.version.core.designsystem.component.divider.MyVersionHorizontalDivider
@@ -46,22 +44,24 @@ import com.my.version.core.designsystem.R as DesignSystemR
 @Composable
 fun EvaluationUploadRoute(
     coverId: Long,
+    music: String,
+    artist: String,
     filePath: String,
     onNavigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: EvaluationUploadViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle(lifecycleOwner)
 
     LaunchedEffect(true) {
         Timber.tag("StreamMediaPlayer").d(filePath)
         with(viewModel) {
-            setAudioData(
+            updateFilePath(
+                //TODO: filePath = filePath
                 filePath = "/storage/emulated/0/Android/data/com.my.version/files/Music/Ditto_NewJeans.mp3",
-                songLyrics = LrcConverter.convertToLyricMap(context.resources.openRawResource(R.raw.ditto))
             )
+            getLyrics(music, artist)
             prepareAudio()
         }
     }
