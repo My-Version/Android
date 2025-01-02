@@ -75,4 +75,8 @@
 | [이석준](https://github.com/boiledEgg-s) |
 | 건국대학교 컴퓨터공학부 |
 
+<br>
+
+### ⏭️ [발표 영상 보러가기](https://www.youtube.com/watch?v=_716Th1Tdc4)
+
 </p>
